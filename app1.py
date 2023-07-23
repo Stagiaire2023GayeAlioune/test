@@ -154,7 +154,7 @@ from keras import optimizers
 from keras.applications import VGG16
 from keras.models import Model
 import os;
-import cv2 
+#import cv2 
 import seaborn as sns
 from PIL import Image
 from tensorflow import keras
@@ -163,7 +163,7 @@ from sklearn.model_selection import train_test_split
 from keras.models import Sequential
 from keras.layers import Conv2D,MaxPooling2D,Dense,Flatten,Dropout
 import os
-from tensorflow.keras.preprocessing import image
+#from tensorflow.keras.preprocessing import image
 
 #url="https://www.linkedin.com/in/alioune-gaye-1a5161172/"
 
