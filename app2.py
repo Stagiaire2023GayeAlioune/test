@@ -289,7 +289,7 @@ if __name__ == "__main__":
 
 
 
-dir_path='Z:\1_Data\1_Experiments\1_FENNEC\2_Stagiaires\2023_Alioune\Identification_2023\machine_Learning\code\mon_appli_autoML\base'
+dir_path='Z:/1_Data/1_Experiments/1_FENNEC/2_Stagiaires/2023_Alioune/Identification_2023/machine_Learning/code/mon_appli_autoML/base'
 fichier=[]
 labels=[]
 for i in os.listdir(dir_path):
