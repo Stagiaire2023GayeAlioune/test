@@ -86,7 +86,7 @@ def main():
 
     col4.image("https://formation-professionnelle.universite-lyon.fr/var/site/storage/images/3/3/5/0/533-17-fre-FR/Lyon-1-Claude-Bernard.png", use_column_width=True)
 
-    st.sidebar.write("<p style='text-align: center;'> Sokhna Faty Bousso : Stagiaire ILM (%s)</p>" % url, unsafe_allow_html=True)
+    st.sidebar.write("<p style='text-align: center;'> Sokhna Faty Bousso & Alioune Gaye : Stagiaire ILM (%s)</p>" % url, unsafe_allow_html=True)
 
     st.sidebar.write("<p style='text-align: center;'>Apprentissage par régression ou classification.</p>", unsafe_allow_html=True)
 
