@@ -65,8 +65,7 @@ from tensorflow.keras.preprocessing import image
 
 
 
-
-url = "https://www.linkedin.com/in/sokhna-faty-bousso-110891190/"
+url = "https://www.linkedin.com/in/alioune-gaye-1a5161172/"
 
 @st.cache_data
 
@@ -292,7 +291,7 @@ from keras.models import load_model
 
 st.markdown('<h1 style="text-align: center;">Prédiction image 3D </h1>', unsafe_allow_html=True)
 
-model = load_model('model_final2.h5')
+model = load_model('model_final2.pkl')
 
 
 
