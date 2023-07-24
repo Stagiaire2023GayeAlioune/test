@@ -182,7 +182,7 @@ def main():
 
                   col7.image("Confusion Matrix.png")
 
-                  tuned_model = tune_model(final_model1,optimize='AUC',round=2,n_iter=10);# optimiser le modéle
+                  tuned_model = tune_model(final_model1)  # optimiser le modéle
 
                   col8.write("boundary")
 
