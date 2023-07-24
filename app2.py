@@ -40,8 +40,6 @@ from keras.applications import VGG16
 
 from keras.models import Model
 
-import os;
-
 #import cv2 
 
 import seaborn as sns
@@ -62,6 +60,7 @@ import os
 
 from tensorflow.keras.preprocessing import image
 
+from keras import optimizers
 
 
 
@@ -286,6 +285,9 @@ def main():
 if __name__ == "__main__":
 
     main()
+
+
+
 
 dir_path='Z:/1_Data/1_Experiments/1_FENNEC/2_Stagiaires/2023_Alioune/Identification_2023/machine_Learning/code/mon_appli_autoML/base'
 fichier=[]
