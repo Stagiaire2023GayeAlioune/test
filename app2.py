@@ -382,9 +382,9 @@ from scipy import stats
 
 from sklearn.linear_model import LinearRegression
 
-from tkinter import *
+#from tkinter import *
 
-from tkinter import filedialog
+#from tkinter import filedialog
 
 from sklearn.preprocessing import StandardScaler
 
