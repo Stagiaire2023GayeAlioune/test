@@ -9,28 +9,6 @@ from pycaret.classification import setup, compare_models, blend_models, finalize
 from pycaret.classification import *
 #from pycaret.regression import *
 from pycaret import *
-import tensorflow as tf
-import keras.preprocessing.image
-from keras.models import Sequential
-from keras import layers
-from keras.layers import Conv2D, MaxPooling2D, Dropout, Flatten, Dense, Activation,GlobalMaxPooling2D
-from keras import applications
-from keras.preprocessing.image import ImageDataGenerator
-from keras import optimizers
-from keras.applications import VGG16
-from keras.models import Model
-import os;
-#import cv2 
-import seaborn as sns
-from PIL import Image
-from tensorflow import keras
-import tensorflow as tf
-from sklearn.model_selection import train_test_split
-from keras.models import Sequential
-from keras.layers import Conv2D,MaxPooling2D,Dense,Flatten,Dropout
-import os
-#from tensorflow.keras.preprocessing import image
-
 
 #url = "https://www.linkedin.com/in/sokhna-faty-bousso-110891190/"
 @st.cache_data
@@ -143,39 +121,7 @@ def main():
 
 if __name__ == "__main__":
     main()
-from keras.models import load_model
-st.markdown('<h1 style="text-align: center;">Prédiction image 3D </h1>', unsafe_allow_html=True)
-model = load_model('model_final2.h5')
 
-
-f=['A','A+D','D','E']
-from PIL import Image
-def preprocess_image(image_path, target_size=(224, 224)):
-    image = Image.open(image_path)
-    if image.mode == 'RGBA':
-        image = image.convert('RGB')
-    image = image.resize(target_size)
-    return np.array(image) / 255.0
-
-def predict_class(model, image_path):
-    img = preprocess_image(image_path)
-    img = np.expand_dims(img, axis=0)
-    pred = model.predict(img)
-    index = np.argmax(pred)
-    f.sort()
-    pred_value = f[index]
-    return pred_value
-
-file = st.file_uploader("Entrer l'image", type=["jpg", "png"])
-if file is None:
-    st.text("entrer l'image à prédire")
-else:
-    label = predict_class(model, file)
-    st.image(file, use_column_width=True)
-    st.markdown("## Résultats de la prédiction ")
-    st.markdown("## Il s'agit du polluant")
-    st.write(label)
-st.image("https://ilm.univ-lyon1.fr//images/slides/SLIDER7.png")
 
 
 
@@ -199,7 +145,7 @@ import statsmodels.formula.api as smf
 from sklearn.preprocessing import StandardScaler 
 import seaborn as sns
 from sympy import symbols
-from sympy import cos, exp
+##from sympy import cos, exp
 from sympy import lambdify
 import statsmodels.formula.api as smf
 from sympy import *
