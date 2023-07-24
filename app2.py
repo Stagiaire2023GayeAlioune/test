@@ -158,10 +158,12 @@ from termcolor import colored
 import streamlit as st
 st.markdown('<h1 style="text-align: center;">Quantification du  polluant</h1>', unsafe_allow_html=True)
 def cal_conc(x,y,z,h,Ca,Cd):
-    a=h/Ca
-    a1=z/Cd
-    C_A=(y-a1*x)/(1-a1*a)
-    C_D=(x-a*y)/(1-a1*a)
+    a=-z/Ca # serie 
+    a1=-h/Cd
+    y1=-y
+    y3=-x
+    C_A=(a*y3-y1)/(a1*a-1)
+    C_D=(a1*y1-y3)/(a1*a-1)
     conc=pd.DataFrame([C_A,C_D])
     conc.index=['C_A','C_D']
     return(conc) 
