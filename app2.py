@@ -137,8 +137,8 @@ import scipy.integrate as spi
 from sklearn import preprocessing
 from scipy import stats
 from sklearn.linear_model import LinearRegression
-from tkinter import *
-from tkinter import filedialog
+#from tkinter import *
+#from tkinter import filedialog
 from sklearn.preprocessing import StandardScaler
 import statsmodels.api as sm
 import statsmodels.formula.api as smf
