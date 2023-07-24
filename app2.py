@@ -272,7 +272,7 @@ def main():
 
     
 
-        model = load_model('best_model')
+        model = load_model('best_class_model')
 
         pred=predict_quality(model, df_to_predict)
 
