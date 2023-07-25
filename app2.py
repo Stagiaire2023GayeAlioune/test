@@ -20,9 +20,8 @@ from pycaret.classification import *
 #from pycaret.regression import *
 
 from pycaret import *
-
 import tensorflow as tf
-
+import keras as keras
 import keras.preprocessing.image
 
 from keras.models import Sequential
@@ -59,7 +58,7 @@ from keras.layers import Conv2D,MaxPooling2D,Dense,Flatten,Dropout
 
 import os
 
-from tensorflow.keras.preprocessing import image
+#from tensorflow.keras.preprocessing import image
 
 from keras import optimizers
 
