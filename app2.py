@@ -79,7 +79,7 @@ def identification():
     def main():
         st.markdown('<h1 style="text-align: center;">Identification des polluants</h1>', unsafe_allow_html=True)
         st.markdown('Chercher un model de classification le plus efficace qui permet de mieux classers les polluants :  🎈', unsafe_allow_html=True)
-        st.markdown('<h1 style="text-align: center;">Charger la base de donnée</h1>',unsafe_allow_html=True)
+        st.markdown('Charger la base de donnée</h1>',unsafe_allow_html=True)
         col3,col4=st.sidebar.columns(2)
         col3.image("https://ilm.univ-lyon1.fr/templates/mojito/images/logo.jpg", use_column_width=True)
         col4.image("https://formation-professionnelle.universite-lyon.fr/var/site/storage/images/3/3/5/0/533-17-fre-FR/Lyon-1-Claude-Bernard.png", use_column_width=True)
@@ -88,12 +88,12 @@ def identification():
         st.sidebar.write("<p style='text-align: center;'>Apprentissage par classification.</p>", unsafe_allow_html=True)
         st.sidebar.markdown("<p style='text-align: center;'>Dans cette partie vous allez : :</p>", unsafe_allow_html=True)
         st.sidebar.markdown("<p style='text-align: center;'>1 - Chargement la base de donnée en premier lieu</p>", unsafe_allow_html=True)
-        st.sidebar.markdown("<p style='text-align: center;'>2 - Ensuite vous tapez sur :green[Statistiques descriptives] , l' analyse exploratoire des données s'affiche</p>", unsafe_allow_html=True)
+        st.sidebar.markdown("<p style='text-align: center;'>2 - Ensuite vous tapez sur [Statistiques descriptives] , l' analyse exploratoire des données s'affiche</p>", unsafe_allow_html=True)
         st.sidebar.markdown("<p style='text-align: center;'>3 - Aprés,vous sélectionez la variable cible(clf) et la méthode d'apprentissage (classification)</p>", unsafe_allow_html=True)
-        st.sidebar.markdown("<p style='text-align: center;'>4 - En cliquant sur :green[les performances du model] le model se construit tout seul et toutes les performances modèle s'afficheront</p>", unsafe_allow_html=True)
+        st.sidebar.markdown("<p style='text-align: center;'>4 - En cliquant sur [les performances du model] le model se construit tout seul et toutes les performances modèle s'afficheront</p>", unsafe_allow_html=True)
         st.sidebar.markdown("<p style='text-align: center;'>5 - Ainsi, vous pouvez téléchargemer le pipeline du modèle pour le deploiement</p>", unsafe_allow_html=True)
         st.sidebar.markdown("<p style='text-align: center;'>6 -Maintenant le model est deja deploiement et préte à faire des Prédictions(</p>", unsafe_allow_html=True)
-        st.sidebar.markdown("<p style='text-align: center;'>6 -Dans la partie :green[prediction avec le model deployé] ,importer votre fichier et la prediction s'affichera(</p>", unsafe_allow_html=True)
+        st.sidebar.markdown("<p style='text-align: center;'>6 -Dans la partie [prediction avec le model deployé] ,importer votre fichier et la prediction s'affichera(</p>", unsafe_allow_html=True)
         file = st.file_uploader("entrer les données ", type=['csv'])
         if file is not None:
             df=load_data(file)
@@ -168,7 +168,7 @@ def identification():
     if __name__ == "__main__":
          main()
     st.markdown('<h1 style="text-align: center;">Prédiction avec le model deployé </h1>', unsafe_allow_html=True)
-    st.markdown('<h1 style="text-align: center;">Charger lesw données à predir </h1>', unsafe_allow_html=True)
+    st.markdown('Charger les données  ', unsafe_allow_html=True)
 
     def main():
         file_to_predict = st.file_uploader("Choisir un fichier à prédire", type=['csv'])
