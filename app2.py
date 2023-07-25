@@ -118,7 +118,8 @@ def identification():
                      st.write("youpiiiii Voici les performance de notre model de  classification \U0001F604")
                 
                      #final_model1 = create_model(r,fold=5,round=2)
-                     final_model1=best_class_model
+                     #final_model1=best_class_model
+                     final_model1=load_model('best_class_model.pkl')
                      col5,col6=st.columns(2)
                      col5.write('AUC')
                      plot_model(final_model1,plot='auc',save=True)
@@ -143,8 +144,8 @@ def identification():
                      col10.write("learning")
                      plot_model(estimator = final_model1, plot = 'learning',save=True)
                      col10.image("Learning Curve.png")
-                     with open("best_model.pkl",'rb') as f :
-                          st.download_button("Telecharger le pipline du modele" , f, file_name="best_model.pkl")
+                     #with open("best_model.pkl",'rb') as f :
+                          #st.download_button("Telecharger le pipline du modele" , f, file_name="best_model.pkl")
           
           
             if methode=="Regression":
@@ -175,7 +176,7 @@ def identification():
                   predictions_data = predict_model(estimator = model, data = df)
                   return predictions_data
     
-            model = load_model('best_model')
+            model = load_model('best_class_model.pkl')
             pred=predict_quality(model, df_to_predict)
             st.dataframe(pred[pred.columns[-3:]].head())
         else:
@@ -453,6 +454,9 @@ def Quantification():
         return(con_poly3)
     
     Taux4 = pd.DataFrame()
+
+    
+    
     def main():
         col3,col4=st.sidebar.columns(2)
         col3.image("https://ilm.univ-lyon1.fr/templates/mojito/images/logo.jpg", use_column_width=True)
