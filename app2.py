@@ -1,4 +1,5 @@
 import streamlit as st
+import numba
 
 from PIL import Image, ImageOps
 
@@ -73,8 +74,6 @@ def load_data(file):
     data=pd.read_csv(file)
 
     return data
-import numba
-@numba.jit(nopython=True)
 
 def main():
 
@@ -251,7 +250,6 @@ if __name__ == "__main__":
 st.markdown('<h1 style="text-align: center;">Prédiction</h1>', unsafe_allow_html=True)
 
 
-@numba.jit(nopython=True)
 def main():
 
     file_to_predict = st.file_uploader("Choisir un fichier à prédire", type=['csv'])
