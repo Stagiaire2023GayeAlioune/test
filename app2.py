@@ -184,7 +184,7 @@ def main():
 
                   col7.image("Confusion Matrix.png")
 
-                  tuned_model = tune_model(final_model1,optimize='AUC',round=2,n_iter=10);# optimiser le modéle
+                  tuned_model = tune_model(final_model1)  # optimiser le modéle
 
                   col8.write("boundary")
 
@@ -288,13 +288,16 @@ if __name__ == "__main__":
 
     main()
 
+<<<<<<< HEAD
 
 
+=======
+>>>>>>> 17fd126864321669e3226a13428f337eeebb8aa9
 from keras.models import load_model
 
 st.markdown('<h1 style="text-align: center;">Prédiction image 3D </h1>', unsafe_allow_html=True)
 
-model = load_model('model_final2.h')
+model = load_model('model_final2.pkl')
 
 
 
@@ -385,9 +388,9 @@ from scipy import stats
 
 from sklearn.linear_model import LinearRegression
 
-from tkinter import *
+#from tkinter import *
 
-from tkinter import filedialog
+#from tkinter import filedialog
 
 from sklearn.preprocessing import StandardScaler
 
