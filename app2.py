@@ -283,10 +283,11 @@ def Quantification():
             y=df[df.columns[(2*i)+1]]; # Intensités de fluorescence
             popt,pcov=curve_fit(f_decay,x,y,bounds=(0, np.inf));
             df1=df1.append({'A'+VAR.split('/')[-1] :popt[0] , 'Tau'+VAR.split('/')[-1] :popt[1]} , ignore_index=True)
-        return(df1)   
-    def double_exp(df,VAR):
-        T1=0.3
-        T2=1.3
+        return(df1) 
+
+    def double_exp2(df,VAR):
+        T1=0.092
+        T2=1.317
         #df=pd.read_csv(VAR,sep=delimit)
         #-------------Nettoyage du dataframe----------------#
         for i in df.columns:
@@ -314,7 +315,11 @@ def Quantification():
             A2=popt[1]*T2
             A=A1+A2 # l'aire sous la courbe de l'intensité de fluorescence 
             df1=df1.append({'A_'+VAR.split('/')[-1] :A1,'Aire_'+VAR.split('/')[-1] :A} , ignore_index=True);
-        return(df1)   
+        return(df1)  
+
+    
+
+    
     def tri_exp(df,VAR):
         for i in df.columns:
             if (df[i].isnull()[0]==True): # On elimine les colonnes vides
@@ -358,6 +363,8 @@ def Quantification():
         plt.show();
     
         return(df2)
+
+    
     ## regression avec linearregression
     def regression1(result,std,unk,ss,d):
         concentration=pd.DataFrame(columns=['polyfit'])
@@ -403,6 +410,8 @@ def Quantification():
             Cx=(y_intercept-tau[0])/slope
             concentration=concentration.append({'polyfit':round(x_inter[0],2)},ignore_index=True)
         return(concentration)
+
+   
     def fun(tau):
         sum_k=1/tau
         kch=-sum_k+sum_k[0]
@@ -425,7 +434,12 @@ def Quantification():
            kchel=sum_kchel[sum_kchel.columns[2*i+1]]
            sum_k=sum_kchel[sum_kchel.columns[2*i+1]]
            kchel=kchel[1:(n-1)]
-           mymodel = np.poly1d(np.polyfit(x, kchel, 3))
+           #mymodel = np.poly1d(np.polyfit(x, kchel, 3))
+           ## Fonction exponentielle
+           exp_func = lambda x, a, b, c: a*np.exp((-b * x))+c 
+           mymodel=exp_func
+           exp_params, _ = curve_fit(exp_func, x, kchel)
+           exp_r2 = r2_score(kchel, exp_func(x, *exp_params)) 
            #st.write(f"\033[031m {result.columns[2*i+1][4:]} \033[0m")
            plt.scatter(x, kchel)
            plt.plot(x, mymodel(x),'m')
@@ -434,22 +448,27 @@ def Quantification():
            plt.title('Courbe de calibration'+'du polluant '+result.columns[2*i+1][4:])
            plt.legend();
            col[i].pyplot(fig)
-           col[i].write(r2_score(kchel, mymodel(x)))
+           col[i].write( exp_r2)
            # Calcul de l'ordonnée à l'origine (y_intercept)
-           y_intercept = mymodel(0)
+           #y_intercept = mymodel(0)
+           y_intercept = exp_func(0, *exp_params)
            col[i].write("y_intercept")
            col[i].write(y_intercept)
            # Calcul des racines (x_intercept)
-           roots = np.roots(mymodel)
-           x_intercepts = [root for root in roots if np.isreal(root)]
-           x_inter=fsolve(mymodel,0)
+           #roots = np.roots(mymodel)
+           x_inter = a*np.log(exp_params[1] /2) / exp_params[2]
+           x_inter=np.array([x_inter])
+           #x_intercepts = [root for root in roots if np.isreal(root)]
+           #x_inter=fsolve(mymodel,0)
            con_poly3.append(x_inter)
            col[i].write("x_intercept")
            col[i].write(x_inter)
-           slope=mymodel.coef[0]
+           #slope=mymodel.coef[0]
+           slope = -exp_params[1] * exp_func(x_inter, *exp_params)
            col[i].write("slope")
            col[i].write(slope)
-           xinter=y_intercept/slope
+           #xinter=y_intercept/slope
+           con_poly3.append(x_inter)
            con2.append(xinter)
         return(con_poly3)
     
