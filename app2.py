@@ -114,8 +114,8 @@ def identification():
                         normalize = False,normalize_method = None,fold=5)
                      r=compare_models(round=2)
                      save_model(r,"best_model")
-                     st.success("youpiiiii Voici les performance de notre model de  classification \U0001F604")
-                     st.write("youpiiiii Voici les performance de notre model de  classification \U0001F604")
+                     st.success("youpiiiii  votre model de  classification est prete \U0001F604")
+                     st.write("Maintenant verifions  les performances de votre model de  classification \U0001F604")
                 
                      final_model1 = create_model(r,fold=5,round=2)
                      final_model1=best_class_model
