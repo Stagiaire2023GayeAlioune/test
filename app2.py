@@ -288,11 +288,7 @@ if __name__ == "__main__":
 
     main()
 
-<<<<<<< HEAD
 
-
-=======
->>>>>>> 17fd126864321669e3226a13428f337eeebb8aa9
 from keras.models import load_model
 
 st.markdown('<h1 style="text-align: center;">Prédiction image 3D </h1>', unsafe_allow_html=True)
