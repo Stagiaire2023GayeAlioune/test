@@ -109,16 +109,16 @@ def identification():
             df=df.dropna(subset=target)
             if methode=="Classification":
                 if st.button(" les performances du modèle "):
-                     #setup_data = setup(data=df,target = target,
-                        #train_size =0.75,categorical_features =None,
-                        #normalize = False,normalize_method = None,fold=5)
-                     #r=compare_models(round=2)
-                     #save_model(r,"best_model")
-                     #st.success("youpiiiii Voici les performance de notre model de  classification \U0001F604")
+                     setup_data = setup(data=df,target = target,
+                        train_size =0.75,categorical_features =None,
+                        normalize = False,normalize_method = None,fold=5)
+                     r=compare_models(round=2)
+                     save_model(r,"best_model")
+                     st.success("youpiiiii Voici les performance de notre model de  classification \U0001F604")
                      st.write("youpiiiii Voici les performance de notre model de  classification \U0001F604")
                 
-                     #final_model1 = create_model(r,fold=5,round=2)
-                     #final_model1=best_class_model
+                     final_model1 = create_model(r,fold=5,round=2)
+                     final_model1=best_class_model
                      final_model1=load_model('best_class_model.pkl')
                      col5,col6=st.columns(2)
                      col5.write('AUC')
@@ -144,8 +144,8 @@ def identification():
                      col10.write("learning")
                      plot_model(estimator = final_model1, plot = 'learning',save=True)
                      col10.image("Learning Curve.png")
-                     #with open("best_model.pkl",'rb') as f :
-                          #st.download_button("Telecharger le pipline du modele" , f, file_name="best_model.pkl")
+                     with open("best_model.pkl",'rb') as f :
+                          st.download_button("Telecharger le pipline du modele" , f, file_name="best_model.pkl")
           
           
             if methode=="Regression":
