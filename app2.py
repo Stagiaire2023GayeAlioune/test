@@ -75,7 +75,8 @@ def les_codes():
     
      
 def identification():
-    st.sidebar.markdown('<h1 style="text-align: center;">Identification du polluants 🎈</h1>', unsafe_allow_html=True)
+    st.sidebar.markdown('<h1 style="text-align: center;">La partie Identification des polluants:  🎈</h1>', unsafe_allow_html=True)
+    st.sidebar.markdown('Chercher un model de classification le plus efficace qui permet de mieux classers les polluants :  🎈', unsafe_allow_html=True)
     def main():
         st.markdown('<h1 style="text-align: center;">Identification du polluants</h1>', unsafe_allow_html=True)
         st.markdown('<h1 style="text-align: center;">Base de donnée</h1>',unsafe_allow_html=True)
