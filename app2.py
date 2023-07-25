@@ -63,7 +63,7 @@ from colorama import init, Style
 from termcolor import colored
 import streamlit as st
 
-url = "https://www.linkedin.com/in/alioune-gaye-1a5161172/"
+url ="https://www.linkedin.com/in/alioune-gaye-1a5161172/"
 @st.cache_data
 def load_data(file):
     data=pd.read_csv(file)
@@ -78,21 +78,22 @@ def identification():
     st.sidebar.markdown('<h1 style="text-align: center;">La partie Identification des polluants:  🎈</h1>', unsafe_allow_html=True)
     def main():
         st.markdown('<h1 style="text-align: center;">Identification des polluants</h1>', unsafe_allow_html=True)
-        st.sidebar.markdown('Chercher un model de classification le plus efficace qui permet de mieux classers les polluants :  🎈', unsafe_allow_html=True)
+        st.markdown('Chercher un model de classification le plus efficace qui permet de mieux classers les polluants :  🎈', unsafe_allow_html=True)
         st.markdown('<h1 style="text-align: center;">Charger la base de donnée</h1>',unsafe_allow_html=True)
         col3,col4=st.sidebar.columns(2)
         col3.image("https://ilm.univ-lyon1.fr/templates/mojito/images/logo.jpg", use_column_width=True)
         col4.image("https://formation-professionnelle.universite-lyon.fr/var/site/storage/images/3/3/5/0/533-17-fre-FR/Lyon-1-Claude-Bernard.png", use_column_width=True)
         st.sidebar.write("<p style='text-align: center;'> Sokhna Faty Bousso & Alioune Gaye : Stagiaire ILM (%s)</p>" % url, unsafe_allow_html=True)
-        st.sidebar.write("<p style='text-align: center;'> Encadrant:Martini Matéo (%s)</p>", unsafe_allow_html=True)
-        st.sidebar.write("<p style='text-align: center;'>Apprentissage par régression ou classification.</p>", unsafe_allow_html=True)
-        st.sidebar.markdown("<p style='text-align: center;'>Nous allons procéder comme suit :</p>", unsafe_allow_html=True)
-        st.sidebar.markdown("<p style='text-align: center;'>1 - Chargement des données</p>", unsafe_allow_html=True)
-        st.sidebar.markdown("<p style='text-align: center;'>2 - Analyse exploratoire des données</p>", unsafe_allow_html=True)
-        st.sidebar.markdown("<p style='text-align: center;'>3 - Sélection de la cible et de la méthode d'apprentissage</p>", unsafe_allow_html=True)
-        st.sidebar.markdown("<p style='text-align: center;'>4 - Construction du modèle</p>", unsafe_allow_html=True)
-        st.sidebar.markdown("<p style='text-align: center;'>5 - Téléchargement du modèle</p>", unsafe_allow_html=True)
-        st.sidebar.markdown("<p style='text-align: center;'>6 - Prédiction</p>", unsafe_allow_html=True)
+        st.sidebar.write("<p style='text-align: center;'> Encadrent:Martini Matéo </p>", unsafe_allow_html=True)
+        st.sidebar.write("<p style='text-align: center;'>Apprentissage par classification.</p>", unsafe_allow_html=True)
+        st.sidebar.markdown("<p style='text-align: center;'>Dans cette partie vous allez : :</p>", unsafe_allow_html=True)
+        st.sidebar.markdown("<p style='text-align: center;'>1 - Chargement la base de donnée en premier lieu</p>", unsafe_allow_html=True)
+        st.sidebar.markdown("<p style='text-align: center;'>2 - Ensuite vous tapez sur "Statistiques descriptives"et l' analyse exploratoire des données s'affiche</p>", unsafe_allow_html=True)
+        st.sidebar.markdown("<p style='text-align: center;'>3 - Aprés,vous sélectionez la variable cible(clf) et la méthode d'apprentissage (classification)</p>", unsafe_allow_html=True)
+        st.sidebar.markdown("<p style='text-align: center;'>4 - En cliquant sur "les performances du model" le model se construit tout seul et toutes les performances modèle s'afficheront</p>", unsafe_allow_html=True)
+        st.sidebar.markdown("<p style='text-align: center;'>5 - Ainsi, vous pouvez téléchargemer le pipeline du modèle pour le deploiement</p>", unsafe_allow_html=True)
+        st.sidebar.markdown("<p style='text-align: center;'>6 -Maintenant le model est deja deploiement et préte à faire des Prédictions(</p>", unsafe_allow_html=True)
+        st.sidebar.markdown("<p style='text-align: center;'>6 -Dans la partie "prediction avec le model deployé" ,importer votre fichier et la prediction s'affichera(</p>", unsafe_allow_html=True)
         file = st.file_uploader("entrer les données ", type=['csv'])
         if file is not None:
             df=load_data(file)
@@ -100,7 +101,7 @@ def identification():
             n=len(df.columns)
             X=df[df.columns[:(n-1)]]# on prend les variables numériques 
             y=df[df.columns[-1]] # le target
-            st.dataframe(df.head())
+            st.dataframe(df)
             pr = df.profile_report()
             if st.button('statistique descriptive'):
                  st_profile_report(pr)
@@ -157,7 +158,7 @@ def identification():
                         normalize = False,normalize_method = None)
                     r=compare_models_reg()
                     save_model(r,"best_model")
-                    st.success("youpiiiii classition fonctionne")
+                    st.success("youpiiiii le model de Regression est prete pour le deploiement ")
                     final_model1 = create_model_reg(r)
         
         else:
@@ -166,7 +167,8 @@ def identification():
         
     if __name__ == "__main__":
          main()
-    st.markdown('<h1 style="text-align: center;">Prédiction</h1>', unsafe_allow_html=True)
+    st.markdown('<h1 style="text-align: center;">Prédiction avec le model deployé </h1>', unsafe_allow_html=True)
+    st.markdown('<h1 style="text-align: center;">Charger lesw données à predir </h1>', unsafe_allow_html=True)
 
     def main():
         file_to_predict = st.file_uploader("Choisir un fichier à prédire", type=['csv'])
@@ -180,7 +182,7 @@ def identification():
     
             model = load_model('best_class_model.pkl')
             pred=predict_quality(model, df_to_predict)
-            st.dataframe(pred[pred.columns[-3:]].head())
+            st.dataframe(pred[pred.columns[-2:]].head())
         else:
             st.image("https://ilm.univ-lyon1.fr//images/slides/Germanium%20ILM.jpg")
 
