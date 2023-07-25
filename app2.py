@@ -76,14 +76,15 @@ def les_codes():
      
 def identification():
     st.sidebar.markdown('<h1 style="text-align: center;">La partie Identification des polluants:  🎈</h1>', unsafe_allow_html=True)
-    st.sidebar.markdown('Chercher un model de classification le plus efficace qui permet de mieux classers les polluants :  🎈', unsafe_allow_html=True)
     def main():
-        st.markdown('<h1 style="text-align: center;">Identification du polluants</h1>', unsafe_allow_html=True)
-        st.markdown('<h1 style="text-align: center;">Base de donnée</h1>',unsafe_allow_html=True)
+        st.markdown('<h1 style="text-align: center;">Identification des polluants</h1>', unsafe_allow_html=True)
+        st.sidebar.markdown('Chercher un model de classification le plus efficace qui permet de mieux classers les polluants :  🎈', unsafe_allow_html=True)
+        st.markdown('<h1 style="text-align: center;">Charger la base de donnée</h1>',unsafe_allow_html=True)
         col3,col4=st.sidebar.columns(2)
         col3.image("https://ilm.univ-lyon1.fr/templates/mojito/images/logo.jpg", use_column_width=True)
         col4.image("https://formation-professionnelle.universite-lyon.fr/var/site/storage/images/3/3/5/0/533-17-fre-FR/Lyon-1-Claude-Bernard.png", use_column_width=True)
         st.sidebar.write("<p style='text-align: center;'> Sokhna Faty Bousso & Alioune Gaye : Stagiaire ILM (%s)</p>" % url, unsafe_allow_html=True)
+        st.sidebar.write("<p style='text-align: center;'> Encadrant:Martini Matéo (%s)</p>", unsafe_allow_html=True)
         st.sidebar.write("<p style='text-align: center;'>Apprentissage par régression ou classification.</p>", unsafe_allow_html=True)
         st.sidebar.markdown("<p style='text-align: center;'>Nous allons procéder comme suit :</p>", unsafe_allow_html=True)
         st.sidebar.markdown("<p style='text-align: center;'>1 - Chargement des données</p>", unsafe_allow_html=True)
