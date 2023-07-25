@@ -118,7 +118,7 @@ def identification():
                      st.write("youpiiiii Voici les performance de notre model de  classification \U0001F604")
                 
                      #final_model1 = create_model(r,fold=5,round=2)
-                     final_model1=best_class_model.pkl
+                     final_model1=best_class_model
                      col5,col6=st.columns(2)
                      col5.write('AUC')
                      plot_model(final_model1,plot='auc',save=True)
