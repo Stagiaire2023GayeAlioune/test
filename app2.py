@@ -1,5 +1,4 @@
 import streamlit as st
-import numba
 
 from PIL import Image, ImageOps
 
@@ -20,8 +19,9 @@ from pycaret.classification import *
 #from pycaret.regression import *
 
 from pycaret import *
+
 import tensorflow as tf
-import keras as keras
+
 import keras.preprocessing.image
 
 from keras.models import Sequential
@@ -58,7 +58,7 @@ from keras.layers import Conv2D,MaxPooling2D,Dense,Flatten,Dropout
 
 import os
 
-#from tensorflow.keras.preprocessing import image
+from tensorflow.keras.preprocessing import image
 
 from keras import optimizers
 
@@ -182,7 +182,7 @@ def main():
 
                   col7.image("Confusion Matrix.png")
 
-                  tuned_model = tune_model(final_model1)  # optimiser le modéle
+                  tuned_model = tune_model(final_model1,optimize='AUC',round=2,n_iter=10);# optimiser le modéle
 
                   col8.write("boundary")
 
@@ -249,6 +249,7 @@ if __name__ == "__main__":
 st.markdown('<h1 style="text-align: center;">Prédiction</h1>', unsafe_allow_html=True)
 
 
+
 def main():
 
     file_to_predict = st.file_uploader("Choisir un fichier à prédire", type=['csv'])
@@ -286,13 +287,15 @@ if __name__ == "__main__":
     main()
 
 
+
+
+
+
 from keras.models import load_model
 
 st.markdown('<h1 style="text-align: center;">Prédiction image 3D </h1>', unsafe_allow_html=True)
 
 model = load_model('model_final2.pkl')
-
-
 
 
 
@@ -351,6 +354,7 @@ else:
     st.write(label)
 
 st.image("https://ilm.univ-lyon1.fr//images/slides/SLIDER7.png")
+
 
 
 
@@ -1230,6 +1234,3 @@ def main():
 if __name__ == "__main__":
 
     main()
-
-
-
