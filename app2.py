@@ -214,7 +214,7 @@ def image():
         pred_value = f[index]
         return pred_value
 
-    file = st.file_uploader("Entrer l'image", type=["jpg", "png"])
+    file = st.file_uploader("Entrer l'image", type=["jpg", "png","pdf"])
     if file is None:
         st.text("entrer l'image à prédire")
     else:
