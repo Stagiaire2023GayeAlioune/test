@@ -68,6 +68,11 @@ url = "https://www.linkedin.com/in/alioune-gaye-1a5161172/"
 def load_data(file):
     data=pd.read_csv(file)
     return data
+
+def les_codes():
+    def main():
+        st.markdown('')
+    
      
 def identification():
     st.sidebar.markdown('<h1 style="text-align: center;">Identification du polluants 🎈</h1>', unsafe_allow_html=True)
@@ -104,15 +109,16 @@ def identification():
             df=df.dropna(subset=target)
             if methode=="Classification":
                 if st.button(" les performances du modèle "):
-                     setup_data = setup(data=df,target = target,
-                        train_size =0.75,categorical_features =None,
-                        normalize = False,normalize_method = None,fold=5)
-                     r=compare_models(round=2)
-                     save_model(r,"best_model")
-                     st.success("youpiiiii classification fonctionne \U0001F604")
-                     st.write("Performances du modèle :")
+                     #setup_data = setup(data=df,target = target,
+                        #train_size =0.75,categorical_features =None,
+                        #normalize = False,normalize_method = None,fold=5)
+                     #r=compare_models(round=2)
+                     #save_model(r,"best_model")
+                     #st.success("youpiiiii Voici les performance de notre model de  classification \U0001F604")
+                     st.write("youpiiiii Voici les performance de notre model de  classification \U0001F604")
                 
-                     final_model1 = create_model(r,fold=5,round=2)
+                     #final_model1 = create_model(r,fold=5,round=2)
+                     final_model1=best_class_model.pkl
                      col5,col6=st.columns(2)
                      col5.write('AUC')
                      plot_model(final_model1,plot='auc',save=True)
