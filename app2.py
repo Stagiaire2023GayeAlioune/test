@@ -425,61 +425,90 @@ def Quantification():
         sum_k=1/tau
         kch=-sum_k+sum_k[0]
         return(sum_k,kch)
-    def regression2(result,std,unk,ss,sum_kchel):
-        col1, col2 ,col3,col4= st.columns(4)
+
+
+    
+    def regression2(result, std,unk, ss, sum_kchel):
+        col1, col2 ,col3,col4=
+        st.columns(4)
+
         col=[col1,col2,col3,col4]
-        con_poly3=[]
-        con2=[]
+
+        con_poly3 = []
+
+        con2 = []
+
         for i in range(len(ss)):
-           fig, ax = plt.subplots()
-           tau=result[result.columns[2*i+1]]
-           cc=tau;
-           y=np.array(cc); 
-           std=np.array(std) 
-           conc=ss[i]*std/unk
-           x=conc;
-           n=len(x)
-           x=x[1:(n-1)]
-           kchel=sum_kchel[sum_kchel.columns[2*i+1]]
-           sum_k=sum_kchel[sum_kchel.columns[2*i+1]]
-           kchel=kchel[1:(n-1)]
-           #mymodel = np.poly1d(np.polyfit(x, kchel, 3))
-           ## Fonction exponentielle
-           exp_func = lambda x, a, b, c: a*np.exp((-b * x))+c 
-           mymodel=exp_func
-           exp_params, _ = curve_fit(exp_func, x, kchel)
-           exp_r2 = r2_score(kchel, exp_func(x, *exp_params)) 
-           #st.write(f"\033[031m {result.columns[2*i+1][4:]} \033[0m")
-           plt.scatter(x, kchel)
-           plt.plot(x, mymodel(x),'m')
-           plt.xlabel('Concentration solution standard(ppm)');
-           plt.ylabel('nombre d\'ion chélaté ' );
-           plt.title('Courbe de calibration'+'du polluant '+result.columns[2*i+1][4:])
-           plt.legend();
-           col[i].pyplot(fig)
-           col[i].write( exp_r2)
-           # Calcul de l'ordonnée à l'origine (y_intercept)
-           #y_intercept = mymodel(0)
-           y_intercept = exp_func(0, *exp_params)
-           col[i].write("y_intercept")
-           col[i].write(y_intercept)
-           # Calcul des racines (x_intercept)
-           #roots = np.roots(mymodel)
-           x_inter = a*np.log(exp_params[1] /2) / exp_params[2]
-           x_inter=np.array([x_inter])
-           #x_intercepts = [root for root in roots if np.isreal(root)]
-           #x_inter=fsolve(mymodel,0)
-           con_poly3.append(x_inter)
-           col[i].write("x_intercept")
-           col[i].write(x_inter)
-           #slope=mymodel.coef[0]
-           slope = -exp_params[1] * exp_func(x_inter, *exp_params)
-           col[i].write("slope")
-           col[i].write(slope)
-           #xinter=y_intercept/slope
-           con_poly3.append(x_inter)
-           con2.append(xinter)
-        return(con_poly3)
+
+            fig, ax = plt.subplots()
+
+            tau = result[result.columns[2*i+1]]
+
+            cc = tau
+
+            y = np.array(cc)
+
+            std = np.array(std)
+
+            conc = ss[i]* std / unk
+
+            x = conc
+
+            n = len(x)
+
+            x = x[1:(n-1)]
+
+            kchel = sum_kchel[sum_kchel.columns[2*i+1]]
+
+            sum_k = sum_kchel[sum_kchel.columns[2*i+1]]
+
+            kchel = kchel[1:(n-1)]
+
+            def func(x, a,b, c): # x-shifted log
+                 return a*np.log(x+ b)/2+c
+
+            initialParameters = np.array([1.0,1.0, 1.0])
+
+            log_params, _= curve_fit(func,x, kchel, initialParameters,maxfev=50000)
+
+            log_r2 = r2_score(kchel,func(x,*log_params))
+
+            best_model = func(x,*log_params)
+
+            plt.scatter(x, kchel)
+
+            plt.plot(x, best_model,'m')
+
+            col[i].pyplot(fig)
+
+            col[i].write(log_r2)
+
+            y_intercept = func(0,*log_params)
+
+            col[i].write("y_intercept")
+
+            col[i].write(y_intercept)
+
+            x_inter = np.exp(-2*log_params[2]/log_params[0])- log_params[1]
+
+            x_inter=np.array([x_inter])
+
+            col[i].write("x_intercept")
+
+            col[i].write(x_inter)
+
+            slope = -log_params[1]*func(x_inter, *log_params)
+
+            #[i].write("slope")
+
+            #col[i].write(slope)
+
+            con_poly3.append(x_inter)
+
+            con2.append(x_inter)
+        return con_poly3
+
+    
     
     Taux4 = pd.DataFrame()
 
@@ -547,7 +576,7 @@ def Quantification():
                 col2.write(r2.style.background_gradient(cmap="Greens"))
                 st.markdown('## <h1 style="text-align: center;"> Resultats de la regression non linéaire</h1>',unsafe_allow_html=True)
                 col1,col2=st.columns(2)
-                concentration4=regression1(Taux4,std,unk,ss,3) 
+                concentration4=regression2(Taux4,std,unk,ss,Taux4)
                 col1.write(concentration4)
                 polyfit=concentration4[concentration4.columns[0]]
                 r2=cal_conc(*polyfit,Ca,Cd)
@@ -606,7 +635,7 @@ def Quantification():
                 col2.write(r2.style.background_gradient(cmap="Blues"))
                 st.markdown('## <h1 style="text-align: center;"> Resultats de la regression linéaire</h1>',unsafe_allow_html=True)
                 col1,col2=st.columns(2)
-                concentration4=regression1(Taux4,std,unk,ss,3) 
+                concentration4=regression2(Taux4,std,unk,ss,Taux4) 
                 col1.write(concentration4)
                 polyfit=concentration4[concentration4.columns[0]]
                 r2=cal_conc(*polyfit,Ca,Cd)
@@ -660,7 +689,7 @@ def Quantification():
                 col2.write(r2.style.background_gradient(cmap="Purples"))
                 st.markdown('## <h1 style="text-align: center;"> Resultats de la regression linéaire</h1>',unsafe_allow_html=True)
                 col1,col2=st.columns(2)
-                concentration4=regression1(Taux4,std,unk,ss,3) 
+                concentration4=regression2(Taux4,std,unk,ss,Taux4)
                 col1.write(concentration4)
                 polyfit=concentration4[concentration4.columns[0]]
                 r2=cal_conc(*polyfit,Ca,Cd)
