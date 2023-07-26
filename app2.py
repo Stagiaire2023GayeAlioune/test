@@ -124,7 +124,7 @@ def identification():
                 
                      final_model1 = create_model(r,fold=5,round=2)
                      #final_model1=best_class_model
-                     final_model1=load_model('best_class_model.pkl')
+                     #final_model1=load_model('best_class_model.pkl')
                      col5,col6=st.columns(2)
                      col5.write('AUC')
                      plot_model(final_model1,plot='auc',save=True)
