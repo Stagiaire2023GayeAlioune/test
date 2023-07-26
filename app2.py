@@ -136,6 +136,12 @@ def browseFiles():
  
  df=pd.read_csv(VAR)
  df.info()
+
+
+ ### Afficher d
+ df
+
+ 
  
  
  ''', language='python')
