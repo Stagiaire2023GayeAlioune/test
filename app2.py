@@ -120,7 +120,7 @@ import pickle ### on utilise ce bibliotheque pour sauvegarder notre modél , qui
 
 ##### code qui permet de selectionner votre fichier csv n'importe ou dans votre machine 
 def browseFiles():
-	filename = filedialog.askopenfilename(initialdir = "Z:\1_Data\1_Experiments\1_FENNEC\2_Stagiaires\2022_Alvin\7 Samples\ATMP_DTPMP",
+	filename = filedialog.askopenfilename(initialdir ="mettez ici n'importe quelle chemin ",
 										title = "Select a File",
 										filetypes = (("Csv files",
 														"*.csv*"),
