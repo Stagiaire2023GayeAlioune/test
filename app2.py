@@ -122,16 +122,20 @@ import pickle ### on utilise ce bibliotheque pour sauvegarder notre modél , qui
 def browseFiles():
 	filename = filedialog.askopenfilename(initialdir ="mettez ici n'importe quelle chemin ",
 										title = "Select a File",
-										filetypes = (("Csv files",
-														"*.csv*"),
-													("all files",
-														"*.*")))
+										filetypes = (("Csv files","*.csv*"),("all files","*.*")))
 	return(filename)
 
  ### Appel de la fonction browseFiles pour importer votre fichier 
 
  VAR=browseFiles()
-VAR
+ VAR
+
+
+
+ ##lire le fichier et regarder ceux qu'il contient et voir s'il y'a des valeurs manquantes , absoletes , lignes vides ou autre pour pouvoir faire la preparation des données 
+ 
+ df=pd.read_csv(VAR)
+ df.info()
  
  
  ''', language='python')
