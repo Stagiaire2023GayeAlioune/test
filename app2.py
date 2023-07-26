@@ -239,8 +239,10 @@ def image():
 
 
 def Quantification():
-    st.markdown('<h1 style="text-align: center;"> Quantification du polluants 🎉 </h1>', unsafe_allow_html=True)
-    st.sidebar.markdown('<h1 style="text-align: center;"> Quantification du polluants 🎉 </h1>', unsafe_allow_html=True)
+    st.markdown('<h1 style="text-align: center;"> Quantification des polluants: la mthode du double ajouts dosées 🎉 </h1>', unsafe_allow_html=True)
+    st.sidebar.markdown('<h1 style="text-align: center;"> Quantification des polluants heterogéne 🎉 </h1>', unsafe_allow_html=True)
+    st.sidebar.write("<p style='text-align: center;'> Encadrent:Martini Matéo </p>", unsafe_allow_html=True)
+
     def cal_conc2(x,y,z,h,Ca,Cd):
         a=h/Ca
         a1=z/Cd
