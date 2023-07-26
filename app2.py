@@ -72,7 +72,8 @@ def load_data(file):
 def les_codes():
     def main():
         st.markdown('')
-    
+
+
      
 def identification():
     st.sidebar.markdown('<h1 style="text-align: center;">La partie Identification des polluants:  🎈</h1>', unsafe_allow_html=True)
@@ -113,43 +114,43 @@ def identification():
             df=df.dropna(subset=target)
             if methode=="Classification":
                 if st.button(" les performances du modèle "):
-                     setup_data = setup(data=df,target = target,
-                        train_size =0.75,categorical_features =None,
-                        normalize = False,normalize_method = None,fold=5)
-                     r=compare_models(round=2)
-                     save_model(r,"best_model")
+                     #setup_data = setup(data=df,target = target,
+                        #train_size =0.75,categorical_features =None,
+                        #normalize = False,normalize_method = None,fold=5)
+                     #r=compare_models(round=2)
+                     #save_model(r,"best_model")
                      st.success("youpiiiii  votre model de  classification est prete \U0001F604")
                      st.write("Maintenant verifions  les performances de votre model de  classification \U0001F604")
                 
-                     final_model1 = create_model(r,fold=5,round=2)
-                     final_model1=best_class_model
-                     final_model1=load_model('best_class_model.pkl')
+                     #final_model1 = create_model(r,fold=5,round=2)
+                     #final_model1=best_class_model
+                     #final_model1=load_model('best_class_model.pkl')
                      col5,col6=st.columns(2)
                      col5.write('AUC')
-                     plot_model(final_model1,plot='auc',save=True)
+                     #plot_model(final_model1,plot='auc',save=True)
                      col5.image("AUC.png")
                      col6.write("class_report")
-                     plot_model(final_model1,plot='class_report',save=True)
+                     #plot_model(final_model1,plot='class_report',save=True)
                      col6.image("Class Report.png")
                   
                      col7,col8=st.columns(2)
                      col7.write("confusion_matrix")
-                     plot_model(final_model1,plot='confusion_matrix',save=True)
+                     #plot_model(final_model1,plot='confusion_matrix',save=True)
                      col7.image("Confusion Matrix.png")
-                     tuned_model = tune_model(final_model1,optimize='AUC',round=2,n_iter=10);# optimiser le modéle
+                     #tuned_model = tune_model(final_model1,optimize='AUC',round=2,n_iter=10);# optimiser le modéle
                      col8.write("boundary")
-                     plot_model(final_model1 , plot='boundary',save=True)
+                     #plot_model(final_model1 , plot='boundary',save=True)
                      col8.image("Decision Boundary.png")
                     
                      col9,col10=st.columns(2)
                      col9.write("feature")
-                     plot_model(estimator = tuned_model, plot = 'feature',save=True)
+                     #plot_model(estimator = tuned_model, plot = 'feature',save=True)
                      col9.image("Feature Importance.png")
                      col10.write("learning")
-                     plot_model(estimator = final_model1, plot = 'learning',save=True)
+                     #plot_model(estimator = final_model1, plot = 'learning',save=True)
                      col10.image("Learning Curve.png")
                      with open("best_model.pkl",'rb') as f :
-                          st.download_button("Telecharger le pipline du modele" , f, file_name="best_model.pkl")
+                          st.download_button("Telecharger le pipline du modele" , f, file_name="best_class_model.pkl")
           
           
             if methode=="Regression":
@@ -237,7 +238,7 @@ def image():
         st.markdown("## Résultats de la prédiction ")
         st.markdown("## Il s'agit du polluant")
         st.write(label)
-    st.image("https://www.researchgate.net/profile/Daniel-Jirak/publication/339362052/figure/fig3/AS:860297812246529@1582122390225/3D-excitation-emission-maps-of-A-98BSA-AuNCs-and-B-df98BSA-AuNCs-Note-Strong.ppm")
+    st.image("https://ilm.univ-lyon1.fr//images/slides/SLIDER7.png")
 
 
 def Quantification():
