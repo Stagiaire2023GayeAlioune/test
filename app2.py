@@ -236,7 +236,7 @@ def image():
         st.markdown("## Résultats de la prédiction ")
         st.markdown("## Il s'agit du polluant")
         st.write(label)
-    st.image("https://ilm.univ-lyon1.fr//images/slides/SLIDER7.png")
+    st.image("https://www.researchgate.net/profile/Daniel-Jirak/publication/339362052/figure/fig3/AS:860297812246529@1582122390225/3D-excitation-emission-maps-of-A-98BSA-AuNCs-and-B-df98BSA-AuNCs-Note-Strong.ppm")
 
 
 def Quantification():
