@@ -138,17 +138,17 @@ def identification():
                      #plot_model(final_model1,plot='confusion_matrix',save=True)
                      col7.image("Confusion Matrix.png")
                      #tuned_model = tune_model(final_model1,optimize='AUC',round=2,n_iter=10);# optimiser le modéle
-                     col8.write("boundary")
+                     #col8.write("boundary")
                      #plot_model(final_model1 , plot='boundary',save=True)
-                     col8.image("Decision Boundary.png")
+                     #col8.image("Decision Boundary.png")
                     
                      col9,col10=st.columns(2)
                      col9.write("feature")
                      #plot_model(estimator = tuned_model, plot = 'feature',save=True)
                      col9.image("Feature Importance.png")
-                     col10.write("learning")
+                     #col10.write("learning")
                      #plot_model(estimator = final_model1, plot = 'learning',save=True)
-                     col10.image("Learning Curve.png")
+                     #col10.image("Learning Curve.png")
                      with open("best_model.pkl",'rb') as f :
                           st.download_button("Telecharger le pipline du modele" , f, file_name="best_class_model.pkl")
           
