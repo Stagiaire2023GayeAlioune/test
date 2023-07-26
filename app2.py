@@ -239,7 +239,7 @@ def image():
 
 
 def Quantification():
-    st.markdown('<h1 style="text-align: center;"> Quantification des polluants: la mthode du double ajouts dosées 🎉 </h1>', unsafe_allow_html=True)
+    st.markdown('<h1 style="text-align: center;"> Quantification des polluants: la méthode du double ajouts dosées 🎉 </h1>', unsafe_allow_html=True)
     st.sidebar.markdown('<h1 style="text-align: center;"> Quantification des polluants heterogéne 🎉 </h1>', unsafe_allow_html=True)
     st.sidebar.write("<p style='text-align: center;'> Encadrent:Martini Matéo </p>", unsafe_allow_html=True)
 
@@ -488,11 +488,12 @@ def Quantification():
         col3.image("https://ilm.univ-lyon1.fr/templates/mojito/images/logo.jpg", use_column_width=True)
         col4.image("https://formation-professionnelle.universite-lyon.fr/var/site/storage/images/3/3/5/0/533-17-fre-FR/Lyon-1-Claude-Bernard.png", use_column_width=True)
         st.sidebar.write("<p style='text-align: center;'> Sokhna Faty Bousso & Alioune Gaye : Stagiaire ILM (%s)</p>" % url, unsafe_allow_html=True)
-        st.sidebar.write("<p style='text-align: center;'>  Mélange de polluants  </p>", unsafe_allow_html=True)
+        st.sidebar.write("<p style='text-align: center;'> Encadrent:Martini Matéo </p>", unsafe_allow_html=True)
+        st.sidebar.write("<p style='text-align: center;'>  Les methodes utilisées sont:  </p>", unsafe_allow_html=True)
         st.sidebar.markdown("<p style='text-align: center;'>1 - Méthode mono_exponentielle : </p>", unsafe_allow_html=True)
         st.sidebar.markdown("<p style='text-align: center;'>2 - Méthode double_exponentielle :</p>", unsafe_allow_html=True)
         st.sidebar.markdown("<p style='text-align: center;'>3 - Méthode gaussienne  : </p>", unsafe_allow_html=True) 
-        st.sidebar.markdown("<p style='text-align: center;'>Dans chaque méthode nous allons procéder comme suit : Calcul de la concentration dans chaque série  à partir de (durée de vie et nombre d'ion chélaté ) en fonction de la concentration standard dans chaque mélange avec une regression linéaire et non linéaire afin d'utiliser le systéme d'équation (P) pour trouver la concentration de chaque polluant dans le mélange\n </p>", unsafe_allow_html=True)
+        st.sidebar.markdown("<p style='text-align: center;'>Dans chacune des  méthode nous avons procéder comme suit : On Calcul de la concentration inconnue pour chacune des séries, en passant par les courbes de calibrations (durée de vie et nombre d'ion chélaté ) en fonction de la concentration en solution standard par une regression linéaire et non linéaire succesivement afin d'utiliser le systéme d'équation (P) pour trouver la concentration de chaque polluant dans le mélange\n </p>", unsafe_allow_html=True)
         st.latex(r'''P = \begin{cases} -C_{HD} = C_D + K_{A-D}C_A &\text{S1 }  \\ - C_{HA}= C_A + K_{D-A}C_D &\text{S2 } \\- C_{DA} = K_{D-A}C_D^0  &\text{S3 }   \\ - C_{AD} = K_{A-D}C_A^0 &\text{S4 }  \end{cases}''')
         uploaded_files = st.file_uploader("Choisir les fichiers csv ", accept_multiple_files=True)
         st.image("https://ilm.univ-lyon1.fr//images/slides/CARROUSSEL-17.png")
