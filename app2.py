@@ -72,8 +72,10 @@ def load_data(file):
 def Code_identification():
     def main():
         st.sidebar.markdown('<h1 style="text-align: center;">Les codes pour la partie identification:  🎈</h1>', unsafe_allow_html=True)
-        st.code('''import pandas as pd
-        import numpy as np 
+        st.code('''
+#### les biliotheques necessiares         
+import pandas as pd
+import numpy as np 
 import matplotlib.pyplot as plt;
 from tkinter import filedialog
 from tkinter import *
@@ -113,7 +115,18 @@ import scipy.stats
 from mlxtend.plotting import plot_pca_correlation_graph
 import scipy.stats as stats
 from sklearn.ensemble import GradientBoostingClassifier
-import pickle ### on utilise ce bibliotheque pour sauvegarder notre modél , qui nous servira pour la partie deployement ''', language='python')
+import pickle ### on utilise ce bibliotheque pour sauvegarder notre modél , qui nous servira pour la partie deployement
+
+
+##### code qui permet de selectionner votre fichier csv n'importe ou dans votre machine 
+def browseFiles():
+	filename = filedialog.askopenfilename(initialdir = "Z:\1_Data\1_Experiments\1_FENNEC\2_Stagiaires\2022_Alvin\7 Samples\ATMP_DTPMP",
+										title = "Select a File",
+										filetypes = (("Csv files",
+														"*.csv*"),
+													("all files",
+														"*.*")))
+	return(filename)''', language='python')
     if __name__ == "__main__":
          main()    
     
