@@ -72,7 +72,7 @@ def load_data(file):
 def Code_identification():
     def main():
         st.sidebar.markdown('<h1 style="text-align: center;">Les codes pour la partie identification:  🎈</h1>', unsafe_allow_html=True)
-        st.code(import pandas as pd
+        st.code('''import pandas as pd
         import numpy as np 
 import matplotlib.pyplot as plt;
 from tkinter import filedialog
@@ -113,7 +113,7 @@ import scipy.stats
 from mlxtend.plotting import plot_pca_correlation_graph
 import scipy.stats as stats
 from sklearn.ensemble import GradientBoostingClassifier
-import pickle ### on utilise ce bibliotheque pour sauvegarder notre modél , qui nous servira pour la partie deployement , language='python')
+import pickle ### on utilise ce bibliotheque pour sauvegarder notre modél , qui nous servira pour la partie deployement ''', language='python')
     if __name__ == "__main__":
          main()    
     
