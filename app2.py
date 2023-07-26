@@ -123,7 +123,7 @@ def identification():
                      st.write("Maintenant verifions  les performances de votre model de  classification \U0001F604")
                 
                      final_model1 = create_model(r,fold=5,round=2)
-                     final_model1=best_class_model
+                     #final_model1=best_class_model
                      final_model1=load_model('best_class_model.pkl')
                      col5,col6=st.columns(2)
                      col5.write('AUC')
@@ -581,7 +581,7 @@ def Quantification():
                 st.latex(r'''\fcolorbox{red}{blue}{$Aire = a1t1 + a2t2 $}''')
                 Taux4 = pd.DataFrame()
                 for uploaded_file in uploaded_files:
-                       df = pd.read_csv(uploaded_file, delimiter=",")
+                       df = pd.read_csv(uploaded_file, delimiter="\t")
                        Q=double_exp(df,uploaded_file.name)
                        T=pd.concat([Taux4,Q], axis=1)
                        Taux4=T
@@ -635,7 +635,7 @@ def Quantification():
                 st.latex(r'''\fcolorbox{red}{purple}{$f_decay (x,a1,t1,c) =  \epsilon + a1\exp (\frac{-x}{t1} )  +\frac{a2}{2}\exp (\frac{-x}{t1+1.177c} ) +\frac{a2}{2}\exp (\frac{-x}{t1-1.177c})$}''')
                 Taux4 = pd.DataFrame()
                 for uploaded_file in uploaded_files:
-                       df = pd.read_csv(uploaded_file, delimiter=",")
+                       df = pd.read_csv(uploaded_file, delimiter="\t")
                        Q=tri_exp(df,uploaded_file.name)
                        T=pd.concat([Taux4,Q], axis=1)
                        Taux4=T
