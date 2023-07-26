@@ -69,7 +69,7 @@ def load_data(file):
     data=pd.read_csv(file)
     return data
 
-def Code_identification()
+def Code_identification():
     def main():
         st.sidebar.markdown('<h1 style="text-align: center;">Les codes pour la partie identification:  🎈</h1>', unsafe_allow_html=True)
     if __name__ == "__main__":
