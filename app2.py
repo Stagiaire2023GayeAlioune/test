@@ -577,8 +577,24 @@ def Quantification():
                 col1,col2=st.columns(2)
                 concentration4=regression2(Taux4,std,unk,ss,Taux4)
                 col1.write(concentration4)
-                polyfit=concentration4[concentration4.columns[0]]
-                r2=cal_conc(*polyfit,Ca,Cd)
+                #polyfit=concentration4[concentration4.columns[0]]
+                #r2=cal_conc(*polyfit,Ca,Cd)
+                #col2.write(r2.style.background_gradient(cmap="Greens"))
+                concentration4=regression6(Taux4,std,unk,ss,Taux4)
+                #col1.write(concentration4)
+
+                #polyfit=concentration4[concentration4.columns[0]]
+
+                concen =pd.DataFrame(concentration4)
+
+                serie=['s1','s2','s3','s4']
+
+                concen.index=serie
+
+                col1.dataframe(concen)
+
+                r2=cal_conc(*concentration4,Ca,Cd)
+
                 col2.write(r2.style.background_gradient(cmap="Greens"))
 
 
@@ -690,9 +706,30 @@ def Quantification():
                 col1,col2=st.columns(2)
                 concentration4=regression2(Taux4,std,unk,ss,Taux4)
                 col1.write(concentration4)
-                polyfit=concentration4[concentration4.columns[0]]
-                r2=cal_conc(*polyfit,Ca,Cd)
-                col2.write(r2.style.background_gradient(cmap="Purples"))
+                #polyfit=concentration4[concentration4.columns[0]]
+                #r2=cal_conc(*polyfit,Ca,Cd)
+                #col2.write(r2.style.background_gradient(cmap="Purples"))
+
+                
+
+                concentration4=regression6(Taux4,std,unk,ss,Taux4)
+
+                #col1.write(concentration4)
+
+                #polyfit=concentration4[concentration4.columns[0]]
+
+                concen =pd.DataFrame(concentration4)
+
+                serie=['s1','s2','s3','s4']
+
+                concen.index=serie
+
+                col1.dataframe(concen)
+
+                r2=cal_conc(*concentration4,Ca,Cd)
+
+                col2.write(r2.style.background_gradient(cmap="Greens"))
+
 
                 st.markdown('## <h1 style="text-align: center;">Calcul de la concentration en fonction de nombre d\'ion chélaté </h1>',unsafe_allow_html=True) 
                 st.write(sum_kchel3.style.background_gradient(cmap="Purples")) 
@@ -709,9 +746,29 @@ def Quantification():
                 col1,col2=st.columns(2)
                 concentration4=regression1(sum_kchel3,std,unk,ss,1) 
                 col1.write(concentration4)
-                polyfit=concentration4[concentration4.columns[0]]
-                r2=cal_conc(*polyfit,Ca,Cd)
-                col2.write(r2.style.background_gradient(cmap="Purples"))
+                #polyfit=concentration4[concentration4.columns[0]]
+                #r2=cal_conc(*polyfit,Ca,Cd)
+                #col2.write(r2.style.background_gradient(cmap="Purples"))
+
+                concentration4=regression6(Taux4,std,unk,ss,Taux4)
+
+                #col1.write(concentration4)
+
+                #polyfit=concentration4[concentration4.columns[0]]
+
+                concen =pd.DataFrame(concentration4)
+
+                serie=['s1','s2','s3','s4']
+
+                concen.index=serie
+
+                col1.dataframe(concen)
+
+                r2=cal_conc(*concentration4,Ca,Cd)
+
+                col2.write(r2.style.background_gradient(cmap="Greens"))
+
+
                 
     if __name__ == "__main__":
          main()
