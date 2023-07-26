@@ -129,12 +129,12 @@ def identification():
                      col5.write('AUC')
                      #plot_model(final_model1,plot='auc',save=True)
                      col5.image("AUC.png")
-                     col6.write("class_report")
+                     #col6.write("class_report")
                      #plot_model(final_model1,plot='class_report',save=True)
-                     col6.image("Class Report.png")
+                     #col6.image("Class Report.png")
                   
                      col7,col8=st.columns(2)
-                     col7.write("confusion_matrix")
+                     col7.write("Confusion_matrix")
                      #plot_model(final_model1,plot='confusion_matrix',save=True)
                      col7.image("Confusion Matrix.png")
                      #tuned_model = tune_model(final_model1,optimize='AUC',round=2,n_iter=10);# optimiser le modéle
