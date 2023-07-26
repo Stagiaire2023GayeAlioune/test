@@ -522,7 +522,7 @@ def Quantification():
             if col5.button("Méthode mono_exponentielle"):
                 st.latex(r''' \fcolorbox{red}{green}{$f_decay(x,a,tau) =  \epsilon + a\exp (\frac{-x}{tau} ) $}''')
                 for uploaded_file in uploaded_files:
-                    df = pd.read_csv(uploaded_file, delimiter=",")
+                    df = pd.read_csv(uploaded_file, delimiter="\t")
                     Q=mono_exp(df,uploaded_file.name)
                     T=pd.concat([Taux4,Q], axis=1)
                     Taux4=T
