@@ -182,8 +182,7 @@ def identification():
                   return predictions_data
             model = load_model('poluant_pipeline')
             pred=predict_quality(model, df_to_predict)
-            st.write("A: 0, A+D: 1, A+G: 2, D: 3, D+G: 4, G: 5")
-            st.dataframe(pred[pred.columns[-3:]][-20:])
+            st.dataframe(pred[pred.columns[-2:]])
         else:
             st.image("https://ilm.univ-lyon1.fr//images/slides/Germanium%20ILM.jpg")
     if __name__ == "__main__":
