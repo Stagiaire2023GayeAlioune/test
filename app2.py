@@ -897,6 +897,7 @@ page_names_to_funcs = {
     "identification": identification,
     "image": image,
     "Quantification": Quantification,
+    "Code_identification":Code_identification
 }
 
 selected_page = st.sidebar.selectbox("Selectionner ", page_names_to_funcs.keys())
