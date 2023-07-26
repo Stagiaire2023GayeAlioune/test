@@ -72,51 +72,6 @@ def load_data(file):
 def Code_identification():
     st.sidebar.markdown('<h1 style="text-align: center;">Les codes pour la partie identification:  🎈</h1>', unsafe_allow_html=True)
     def main():
-        st.text('
-import pandas as pd
-import numpy as np 
-import matplotlib.pyplot as plt;
-from tkinter import filedialog
-from tkinter import *
-import seaborn as sns
-from sklearn.model_selection import train_test_split,KFold , cross_val_score,cross_validate 
-from sklearn.tree import DecisionTreeClassifier ,plot_tree,ExtraTreeClassifier
-from sklearn.ensemble import ExtraTreesClassifier
-from sklearn.metrics import accuracy_score,precision_score ,classification_report,RocCurveDisplay , auc
-from sklearn.neighbors import KNeighborsClassifier
-from sklearn.metrics import confusion_matrix
-from sklearn.neural_network import MLPClassifier
-from sklearn.preprocessing import StandardScaler , MinMaxScaler
-from sklearn.metrics import recall_score,fbeta_score, make_scorer,roc_curve ,roc_auc_score
-from sklearn.decomposition import PCA
-from sklearn.naive_bayes import GaussianNB
-from sklearn.ensemble import BaggingClassifier,AdaBoostClassifier
-from sklearn.svm import SVC
-import time
-from sklearn.pipeline import Pipeline
-from sklearn.feature_selection import SelectFromModel
-from sklearn.preprocessing import StandardScaler
-import pickle
-from sklearn.ensemble import RandomForestClassifier
-import plotly.express as px
-from sklearn.model_selection import cross_val_predict
-from sklearn.linear_model import LogisticRegression
-from sklearn.metrics import confusion_matrix, ConfusionMatrixDisplay
-from pycaret.regression import setup, compare_models, blend_models, finalize_model, predict_model, plot_model
-from pycaret.classification import *
-from scipy.stats import kstest, expon
-from scipy.stats import chisquare, poisson
-from fitter import Fitter, get_common_distributions, get_distributions
-from sklearn.decomposition import PCA
-from scipy.stats import expon, poisson, gamma, lognorm, weibull_min, kstest,norm
-import scipy
-import scipy.stats
-from mlxtend.plotting import plot_pca_correlation_graph
-import scipy.stats as stats
-from sklearn.ensemble import GradientBoostingClassifier
-import pickle ### on utilise ce bibliotheque pour sauvegarder notre modél , qui nous servira pour la partie deployement. ')
-    if __name__ == "__main__":
-         main()
 
 
 
