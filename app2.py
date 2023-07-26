@@ -429,8 +429,7 @@ def Quantification():
 
     
     def regression2(result, std,unk, ss, sum_kchel):
-        col1, col2 ,col3,col4=
-        st.columns(4)
+        col1, col2 ,col3,col4=st.columns(4)
 
         col=[col1,col2,col3,col4]
 
