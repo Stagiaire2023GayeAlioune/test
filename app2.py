@@ -124,7 +124,7 @@ def identification():
                 
                      final_model1 = create_model(r,fold=5,round=2)
                      #final_model1=best_class_model
-                     #final_model1=load_model('best_class_model.pkl')
+                     #final_model1=load_model('best_model.pkl')
                      col5,col6=st.columns(2)
                      col5.write('AUC')
                      plot_model(final_model1,plot='auc',save=True)
@@ -150,7 +150,7 @@ def identification():
                      plot_model(estimator = final_model1, plot = 'learning',save=True)
                      col10.image("Learning Curve.png")
                      with open("best_model.pkl",'rb') as f :
-                          st.download_button("Telecharger le pipline du modele" , f, file_name="best_class_model.pkl")
+                          st.download_button("Telecharger le pipline du modele" , f, file_name="best_model.pkl")
           
           
             if methode=="Regression":
@@ -181,7 +181,7 @@ def identification():
             def predict_quality(model, df):
                   predictions_data = predict_model(estimator = model, data = df)
                   return predictions_data
-            model = load_model('best_model.pkl')
+            model =load_model('best_model.pkl')
             pred=predict_quality(model, df_to_predict)
             st.dataframe(pred[pred.columns[-3:]].head())
         else:
