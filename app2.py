@@ -126,7 +126,15 @@ def browseFiles():
 														"*.csv*"),
 													("all files",
 														"*.*")))
-	return(filename)''', language='python')
+	return(filename)
+
+ ### Appel de la fonction browseFiles pour importer votre fichier 
+
+ VAR=browseFiles()
+VAR
+ 
+ 
+ ''', language='python')
     if __name__ == "__main__":
          main()    
     
