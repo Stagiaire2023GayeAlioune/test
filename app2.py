@@ -74,7 +74,6 @@ def les_codes():
         st.markdown('')
 
 
-     
 def identification():
     st.sidebar.markdown('<h1 style="text-align: center;">La partie Identification des polluants:  🎈</h1>', unsafe_allow_html=True)
     def main():
@@ -173,20 +172,20 @@ def identification():
     st.markdown('Charger les données  ', unsafe_allow_html=True)
 
     def main():
-        file_to_predict = st.file_uploader("Choisir un fichier à prédire", type=['csv'])
+        file_to_predict = st.file_uploader("Choisirun fichier à prédire", type=['csv'])
         if file_to_predict is not None:
             #rain(emoji="🎈",font_size=54,falling_speed=5,animation_length="infinite",)
             df_to_predict = load_data(file_to_predict)
             st.subheader("Résultats des prédictions")
             def predict_quality(model, df):
-                  predictions_data = predict_model(estimator = model, data = df)
+                  predictions_data = predict_model(estimator= model, data = df)
                   return predictions_data
-            model =load_model('best_class_model1.pkl')
+            model = load_model('best_model.pkl')
             pred=predict_quality(model, df_to_predict)
-            st.dataframe(pred[pred.columns[-3:]].head())
+            st.write("A: 0, A+D: 1, A+G: 2, D: 3, D+G: 4, G: 5")
+            st.dataframe(pred[pred.columns[-3:]][-20:])
         else:
             st.image("https://ilm.univ-lyon1.fr//images/slides/Germanium%20ILM.jpg")
-
     if __name__ == "__main__":
          main()
 
