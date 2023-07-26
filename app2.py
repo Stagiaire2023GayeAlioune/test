@@ -190,7 +190,7 @@ def identification():
          main()
 
 def image():
-    st.markdown("# Idendification des polluant par des spectre3D (image 3D) ❄️")
+    st.markdown("# Idendification des polluants  ❄️")
     st.sidebar.markdown('<h1 style="text-align: center;">Identification des polluants à partir des scan spectrale 3D ❄️ </h1>', unsafe_allow_html=True)
     col3,col4=st.sidebar.columns(2)
     col3.image("https://ilm.univ-lyon1.fr/templates/mojito/images/logo.jpg", use_column_width=True)
