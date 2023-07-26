@@ -190,15 +190,16 @@ def identification():
          main()
 
 def image():
-    st.markdown("# Idendification des polluant par des spectres (image 3D) ❄️")
+    st.markdown("# Idendification des polluant par des spectre3D (image 3D) ❄️")
     st.sidebar.markdown('<h1 style="text-align: center;">Identification d\'images ❄️ </h1>', unsafe_allow_html=True)
     col3,col4=st.sidebar.columns(2)
     col3.image("https://ilm.univ-lyon1.fr/templates/mojito/images/logo.jpg", use_column_width=True)
     col4.image("https://formation-professionnelle.universite-lyon.fr/var/site/storage/images/3/3/5/0/533-17-fre-FR/Lyon-1-Claude-Bernard.png", use_column_width=True)
     st.sidebar.write("<p style='text-align: center;'> Sokhna Faty Bousso & Alioune Gaye : Stagiaire ILM (%s)</p>" % url, unsafe_allow_html=True)
-    st.sidebar.write("<p style='text-align: center;'> modèle pré-entrainé </p>", unsafe_allow_html=True)
-    st.sidebar.markdown("<p style='text-align: center;'>Nous allons procéder comme suit :</p>", unsafe_allow_html=True)
-    st.sidebar.markdown("<p style='text-align: center;'>1 - Aprés avoir la base d'images , nous avons divisé la base de données en ensembles d'entraînement  et de validation </p>", unsafe_allow_html=True)
+    st.sidebar.write("<p style='text-align: center;'> Encadrent:Martini Matéo </p>", unsafe_allow_html=True)
+    st.sidebar.write("<p style='text-align: center;'> modèle pré-entrainé (prete pour la rediction) </p>", unsafe_allow_html=True)
+    st.sidebar.markdown("<p style='text-align: center;'>Nous avons procéder comme suit :</p>", unsafe_allow_html=True)
+    st.sidebar.markdown("<p style='text-align: center;'>1 -On a créer une base de données d'images 3D à partir de données spectrales  , nous avons divisé la base de données en ensembles d'entraînement  et de validation </p>", unsafe_allow_html=True)
     st.sidebar.markdown("<p style='text-align: center;'>2 - créé un modèle de classification basé sur le modèle VGG16 en utilisant Keras</p>", unsafe_allow_html=True)
     st.sidebar.markdown("<p style='text-align: center;'>3 -  utilisé les 15 premiers couches du modèle </p>", unsafe_allow_html=True)
     st.sidebar.markdown("<p style='text-align: center;'>4 - ajouté une couche de classification à la sortie du modèle avec une activation sigmoid pour la classification multi-classes.</p>", unsafe_allow_html=True)
@@ -225,7 +226,7 @@ def image():
         pred_value = f[index]
         return pred_value
 
-    file = st.file_uploader("Entrer l'image", type=["jpg", "png","pdf"])
+    file = st.file_uploader("Entrer l'image", type=["jpg", "png"])
     if file is None:
         st.text("entrer l'image à prédire")
     else:
