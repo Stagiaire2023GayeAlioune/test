@@ -72,6 +72,9 @@ def load_data(file):
 def Code_identification():
     st.sidebar.markdown('<h1 style="text-align: center;">Les codes pour la partie identification:  🎈</h1>', unsafe_allow_html=True)
     def main():
+    if __name__ == "__main__":
+         main()    
+    
 
 
 
