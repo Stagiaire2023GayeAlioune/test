@@ -809,211 +809,7 @@ c1 = c.sort_values(by='accuracy',ascending=False)
 c1.style.highlight_max(subset=['accuracy'], color='orange')
 
 
-# 
-
-# In[116]:
-
-
-
-
-
-# In[ ]:
-
-
-
-
-
-# In[ ]:
-
-
-
-
-
 # ## Maintenant cherchons les variables les plus significatifs (importantes pour  classifier les polluants )  , avec des tests d'hypothéses  sous R .... Ensuite , passons au deployement de notre model avec mlfow puis l'utiliser pour la prediction....
-
-# In[ ]:
-
-
-
-
-
-# In[ ]:
-
-
-
-
-
-# In[ ]:
-
-
-
-
-
-# In[ ]:
-
-
-
-
-
-# In[ ]:
-
-
-
-
-
-# In[ ]:
-
-
-
-
-
-# In[ ]:
-
-
-
-
-
-# In[ ]:
-
-
-
-
-
-# In[ ]:
-
-
-
-
-
-# In[56]:
-
-
-
-
-
-# In[ ]:
-
-
-
-
-
-# In[ ]:
-
-
-
-
-
-# In[ ]:
-
-
-
-
-
-# In[ ]:
-
-
-
-
-
-# In[ ]:
-
-
-
-
-
-# In[ ]:
-
-
-
-
-
-# In[ ]:
-
-
-
-
-
-# In[ ]:
-
-
-
-
-
-# In[ ]:
-
-
-
-
-
-# In[ ]:
-
-
-
-
-
-# In[ ]:
-
-
-
-
-
-# In[34]:
-
-
-
-
-
-# In[ ]:
-
-
-
-
-
-# In[ ]:
-
-
-
-
-
-# In[ ]:
-
-
-
-
-
-# In[ ]:
-
-
-
-
-
-# In[ ]:
-
-
-
-
-
-# In[ ]:
-
-
-
-
-
-# In[ ]:
-
-
-
-
-
-# In[ ]:
-
-
-
-
-
-# In[ ]:
-
-
 
 
 ''', language='python')
@@ -1464,95 +1260,6 @@ bounds = (bounds_lower, bounds_upper)
 calcul_para(VARS,bornes(),5)
 
 
-# 
-
-# In[323]:
-
-
-
-
-
-# In[331]:
-
-
-
-
-
-# In[ ]:
-
-
-
-
-
-# 
-
-# In[292]:
-
-
-
-
-
-# In[57]:
-
-
-
-
-
-# In[58]:
-
-
-
-
-
-# In[64]:
-
-
-
-
-
-# In[65]:
-
-
-
-
-
-# In[ ]:
-
-
-
-
-
-# In[ ]:
-
-
-
-
-
-# In[ ]:
-
-
-
-
-
-# In[ ]:
-
-
-
-
-
-# In[ ]:
-
-
-
-
-
-# In[ ]:
-
-
-
-
-
-		
 
 	''', language='python')
     if __name__ == "__main__":
@@ -2256,7 +1963,6 @@ def Quantification():
 
                 col2.write(r2.style.background_gradient(cmap="Greens"))
 
-
                 
     if __name__ == "__main__":
          main()
@@ -2264,28 +1970,14 @@ def Quantification():
 
 
 
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-        
+
 
 page_names_to_funcs = {
     "identification": identification,
     "image": image,
     "Quantification": Quantification,
     "Code_classification_polluants_heterogene":Code_classification_polluants_heterogene
+    "Code_lissage_deconvolution_spectrale": Code_lissage_deconvolution_spectrale	
 }
 
 selected_page = st.sidebar.selectbox("Selectionner ", page_names_to_funcs.keys())
