@@ -69,14 +69,22 @@ def load_data(file):
     data=pd.read_csv(file)
     return data
 
+
 def Code_identification():
     def main():
         st.sidebar.markdown('<h1 style="text-align: center;">Les codes pour la partie identification:  🎈</h1>', unsafe_allow_html=True)
         st.code('''
-#### les biliotheques necessiares         
+#!/usr/bin/env python
+# coding: utf-8
+
+# ## Importation des biliotheques necessaires
+
+# In[53]:
+
+
 import pandas as pd
 import numpy as np 
-import matplotlib.pyplot as plt;
+import matplotlib.pyplot as plt  
 from tkinter import filedialog
 from tkinter import *
 import seaborn as sns
@@ -93,7 +101,7 @@ from sklearn.decomposition import PCA
 from sklearn.naive_bayes import GaussianNB
 from sklearn.ensemble import BaggingClassifier,AdaBoostClassifier
 from sklearn.svm import SVC
-import time
+import time                                                         
 from sklearn.pipeline import Pipeline
 from sklearn.feature_selection import SelectFromModel
 from sklearn.preprocessing import StandardScaler
@@ -112,39 +120,1095 @@ from sklearn.decomposition import PCA
 from scipy.stats import expon, poisson, gamma, lognorm, weibull_min, kstest,norm
 import scipy
 import scipy.stats
-from mlxtend.plotting import plot_pca_correlation_graph
+from mlxtend.plotting import plot_pca_correlation_graph 
 import scipy.stats as stats
 from sklearn.ensemble import GradientBoostingClassifier
-import pickle ### on utilise ce bibliotheque pour sauvegarder notre modél , qui nous servira pour la partie deployement
+import pickle ### on utilise ce bibliotheque pour sauvegarder notre modél , qui nous servira pour la partie deployement .  
 
 
-##### code qui permet de selectionner votre fichier csv n'importe ou dans votre machine 
+# ## Fonction qui nous permettte de selectionner n'importe quel fichier
+# dans l'ordinateur 
+
+# In[2]:
+
+
 def browseFiles():
-	filename = filedialog.askopenfilename(initialdir ="mettez ici n'importe quelle chemin ",
+	filename = filedialog.askopenfilename(initialdir = "Z:\1_Data\1_Experiments\1_FENNEC\2_Stagiaires\2022_Alvin\7 Samples\ATMP_DTPMP",
 										title = "Select a File",
-										filetypes = (("Csv files","*.csv*"),("all files","*.*")))
+										filetypes = (("Csv files",
+														"*.csv*"),
+													("all files",
+														"*.*")))
 	return(filename)
 
- ### Appel de la fonction browseFiles pour importer votre fichier 
 
- VAR=browseFiles()
- VAR
+# ## Appel de la fonction  browseFiles() :La base de donnée est le fichier nommé "Base_amecT_bdt_gly (3).csv" 
 
-
-
- ##lire le fichier et regarder ceux qu'il contient et voir s'il y'a des valeurs manquantes , absoletes , lignes vides ou autre pour pouvoir faire la preparation des données 
- 
- df=pd.read_csv(VAR)
- df.info()
+# In[3]:
 
 
- ### Afficher d
- df
+VAR=browseFiles()
 
- 
- 
- 
- ''', language='python')
+
+# In[8]:
+
+
+VAR
+
+
+# In[9]:
+
+
+df2=pd.read_csv(VAR,sep=',',index_col=0)
+
+
+# In[6]:
+
+
+df2
+
+
+# ## Aprés avoir visualiser notre base de donnée , on a cpnstaté que les deux premieres colonnes ne nous interessent pas , aussi les 5 derniéres colonnes . Mais avant de supprimer les colonnes A, D et G , on essaye de faire un encodage de ces derniéres en creant une variable cible nommé "clf " 
+
+# In[10]:
+
+
+df2=df2.drop(["A+D","A+G","D+G","sum"],axis=1)  ## Supression des colonne ""A+D","A+G","D+G","sum"" 
+
+
+# ## Aprés la supresion 
+
+# In[12]:
+
+
+df2
+
+
+# In[ ]:
+
+
+
+
+
+# ## Tran sformation des colonnes A , D , G en une seule variable cible 
+
+# ### Label pour les 3 polluants 
+
+# In[14]:
+
+
+## Fonction pour créer un label pour  trois polluants 
+clf=[]
+for i in range(len(df2['A'])):
+    if(df2['A'][i]!=0. and df2['D'][i]!=0 and df2['G'][i]!=0):
+        clf.append('[A,D,G]')
+    if(df2['A'][i]!=0 and df2['D'][i]!=0):    
+         clf.append('[A,D]')
+    if(df2['A'][i]!=0 and df2['G'][i]!=0):    
+         clf.append('[A,G]')        
+    if(df2['G'][i]!=0 and df2['D'][i]!=0):    
+         clf.append('[G,D]')     
+    if(df2['A'][i]==0 and df2['D'][i]==0 and df2['G'][i]!=0):    
+         clf.append('[G]')     
+    if(df2['A'][i]==0 and df2['D'][i]!=0 and df2['G'][i]==0):
+         clf.append('[D]')   
+    if(df2['A'][i]!=0 and df2['D'][i]==0 and df2['G'][i]==0):
+         clf.append('[A]')                
+
+
+# 
+
+# ### la variable cible 
+
+# In[15]:
+
+
+clf
+
+
+# ## Maintenant , on rajoute la colonne clf dans notre base de donnée .
+
+# In[16]:
+
+
+df2['clf']=clf
+
+
+# In[17]:
+
+
+df2
+
+
+# #### Distribution des differents polluants 
+
+# In[19]:
+
+
+ax=df2['A'].hist(bins=15, density=True , stacked=True, color='green' , alpha=0.8)
+df2['A'].plot(kind='density' , color='blue')
+ax.set(xlabel='A')
+
+
+# In[20]:
+
+
+ax=df2['D'].hist(bins=15, density=True , stacked=True, color='green' , alpha=0.8)
+df2['D'].plot(kind='density' , color='yellow')
+ax.set(xlabel='D')
+
+
+# In[21]:
+
+
+## Pour le trisiémé polluant
+ax=df2['G'].hist(bins=15, density=True , stacked=True, color='green' , alpha=0.6)
+df2['G'].plot(kind='density' , color='red')
+ax.set(xlabel='G')
+
+
+# In[23]:
+
+
+### On aura besoin plud d'experience avec les melanges de deux polluants surtout le polluants G . En effet , on a moins de données pour ce polluant 
+## 1 ) Spectre d'excitation  avec un seul polluant : le G surtout et si possible le D 
+## 2) Spectre d'excitation  avec le melange de polluants : (G,D), (G,A) , (G,D) .....
+
+
+# ## Les detailes de notre base de donnée 
+
+# In[25]:
+
+
+df2.info()
+
+
+# In[27]:
+
+
+n=len(df2.columns)
+numerical = [var for var in df2.columns] ## les diferentes colonnes de notre jeu de donnée .....
+features = numerical
+##Recherce des fichiers dupliquer , pour  aprés supprimer les doublons . 
+print(df2[features[0:(n-4)]].duplicated().sum())
+
+
+# 
+
+# ## Supression des lignes doubles en gardant une d'eux 
+
+# In[28]:
+
+
+df2=df2.drop_duplicates()
+
+
+# In[29]:
+
+
+df2
+
+
+# ## Enregistrement de la base de donnée netoyer et on eleve maintenant les colonne A , D et G qui ne nous interessent pas  . 
+
+# In[54]:
+
+
+from pathlib import Path
+df3=df2.drop(["A","G","D"],axis=1)
+filepath=Path("Z:/1_Data/1_Experiments/1_FENNEC/2_Stagiaires/2023_Alioune/Identification_2023/machine_Learning/base_de_donnee/csv_Melange de polluant/base de donnée/base_de_donnée_final.csv")
+filepath.parent.mkdir(parents=True, exist_ok=True)
+df3.to_csv(filepath,index=False)
+
+
+# ## Ainsi notre base de donnée netoyer et préparer se nomme "base_de_donnée_final.csv"
+
+# ## Decomposition des données  en targets et variables ( variables explivcatives et expliquées )
+
+# In[ ]:
+
+
+
+
+
+# In[65]:
+
+
+df=df2
+n=len(df.columns)
+X=df[df.columns[2:(n-4)]] # on prend les variables numériques 
+y=df[df.columns[-1]] # le target , le variables cible ("clf")  
+
+
+# In[67]:
+
+
+y
+
+
+# ## Statistiques descriptives
+
+# In[ ]:
+
+
+
+
+
+# In[32]:
+
+
+import seaborn as sns
+colors = ['#06344d', '#00b2ff' , '#00b1ff' ]
+sns.set(palette = colors, font = 'Serif', style = 'white', 
+        rc = {'axes.facecolor':'#f1f1f1', 'figure.facecolor':'#f1f1f1'})
+
+fig = plt.figure(figsize = (10, 6))
+ax = sns.countplot(x = 'clf', data = df)
+
+
+for i in ax.patches:
+    ax.text(x = i.get_x() + i.get_width()/2, y = i.get_height()/7, 
+            s = f"{np.round(i.get_height()/len(df)*100, 0)}%", 
+            ha = 'center', size = 50, weight = 'bold', rotation = 90, color = 'white')
+
+    
+plt.title("histogramme des polluants", size = 20, weight = 'bold')
+
+plt.annotate(text = "polluant A", xytext = (-0.4, 140), xy = (0.1, 100),
+             arrowprops = dict(arrowstyle = "->", color = 'black', connectionstyle = "angle3, angleA = 0, angleB = 90"), 
+             color = 'green', weight = 'bold', size = 14)
+
+plt.annotate(text = "polluant D ", xytext = (0.15, 150), xy = (1,110), 
+             arrowprops = dict(arrowstyle = "->", color = 'black', connectionstyle = "angle3, angleA = 0, angleB = 90"), 
+             color = 'red', weight = 'bold', size = 14)
+
+plt.annotate(text = "polluant [A,D] ", xytext = (1, 150), xy = (2, 110), 
+             arrowprops = dict(arrowstyle = "->", color = 'black',  connectionstyle = "angle3, angleA = 0, angleB = 90"), 
+             color = 'blue', weight = 'bold', size = 14)
+
+
+plt.xlabel('classes', weight = 'bold')
+plt.ylabel('observation', weight = 'bold')
+
+
+# ## On constate que , 35% des données sont des spectres avec 100% polluant A , 27%  des données sont des spectres  avec 100%  de polluant D et les 12 %  qui repreente le melange [A,D] , 4% le polluant [A,G] et 4 % du melange [G,D] .  Ainsi ,  il faut prevoir plus de données avec seulement le polluant G  et les mélanges des polluants . Les codes pour refaire une autre base de données , faire l'apprentissage automatique , créer votre model , enregistrement du model (le pipeline) et le deploiment du model et faire des predictions avec le model deployé seront automatique dans une application qu'on va créer à la fin de ce stage .
+
+# ## Etude des variables descriptives 
+
+# In[33]:
+
+
+X.describe()
+
+
+# In[34]:
+
+
+numerical = [var for var in df.columns ]
+features = numerical
+colors = ['blue']
+df[features[2:(n-4)]].hist(figsize=(9, 6), color=colors, alpha=0.7)
+plt.show()
+
+
+# ### On constate que les Ai suivent la meme distribution ::: qui resemble à peut prés a une loi logarithmique ou exponentielle deroissante 
+
+# In[ ]:
+
+
+
+
+
+# ## LA distribution des variables explicatives 
+
+# In[ ]:
+
+
+
+
+
+# In[35]:
+
+
+a=[df['A1'],df['A2'],df['A3'],df['A4']]
+for aa in a:
+    f = Fitter(aa,
+           distributions=['gamma',
+                          'lognorm',
+                          "beta",
+                         'poisson','norm','exp'])
+    f.fit()
+    f.summary()
+    print(aa.name,f.get_best(method = 'sumsquare_error'))
+
+
+# ## Correlation entre les variables 
+
+# In[36]:
+
+
+# matrice de corrélation 
+plt.figure(figsize=(12,6))
+corr_matrix = df[features[2:(n-4)]].corr()
+sns.heatmap(corr_matrix,annot=True)
+plt.show()
+
+
+# # Comme on peut le constater A1 est fortement positevement correlé avec E1 et faiblement corrélé avec les autres variables ,C1 fortement negativement corrélé avec C2 et faiblement corrélé avec les autres variables  
+
+# ## Coorelation entre les variables explicatives 
+
+# In[38]:
+
+
+## l'encodage pour la partie sklearn 
+from sklearn.preprocessing import LabelEncoder # nous permet de faire l'encodage , avec ordinalencoder fait la même mais avec plusieurs variable encoder
+encoder=LabelEncoder()
+y_code=encoder.fit_transform(y)
+
+
+# ## Utilusons le PCA pour regarder les corélations des variables 
+
+# In[40]:
+
+
+#grâce à sklearn on peut importer standardscaler .
+
+ss=StandardScaler()# enleve la moyenne et divise par l'ecartype
+ss.fit(X)
+X_norm=ss.transform(X)# tranform X 
+figure, correlation_matrix = plot_pca_correlation_graph(X_norm, features[2:(n-4)], dimensions=(1, 2),figure_axis_size=8)
+figure, correlation_matrix = plot_pca_correlation_graph(X_norm, features[2:(n-4)],dimensions=(1, 3),figure_axis_size=8)
+figure, correlation_matrix = plot_pca_correlation_graph(X_norm, features[2:(n-4)],dimensions=(1, 4),figure_axis_size=8)
+
+
+# # Ici on utilise pycaret pour chercher notre meilleures modél de prediction et ses pérformances . 
+
+# In[41]:
+
+
+# Dataset Sampling
+def data_sampling(dataset, frac: float, random_seed: int):
+    data_sampled_a = dataset.sample(frac=frac,
+                                    random_state=random_seed)
+    data_sampled_b =  dataset.drop(data_sampled_a.index).\
+    reset_index(drop=True)
+    data_sampled_a.reset_index(drop=True, inplace=True)
+    return data_sampled_a, data_sampled_b  
+
+
+# ### Separation des données  en donnée  d'entrainement et de test ( 75%  ,  30%)
+
+# On dois supprimer les collonnes A et D et garder  que la colonne label qu'on a encoder (clf) , car c'est cette qui represente notre target .
+
+# ## data_sampling est une fonction que j'ai creer pour separer la base de donnée en base de données d'apprentissage et de test pour simplifier les calcul
+
+# In[43]:
+
+
+train, unseen = data_sampling(df, 0.75, RANDOM_SEED)
+train=train.drop(["A","D","G"], axis=1)
+unseen=unseen.drop(["A","D","G","clf"], axis=1)
+l=len(train.columns)
+train=train[train.columns[2:l]]
+unseen=unseen[unseen.columns[2:l]]
+unseen
+
+
+# # Ici , le dataframe unseen sera utilisé pour la prediction aprés le deploiement , on va l'aapelé "base_de_donnée_de_test.csv" 
+
+# In[44]:
+
+
+### Enregistrement de notre base de donnée de test  
+from pathlib import Path
+filepath=Path("Z:/1_Data/1_Experiments/1_FENNEC/2_Stagiaires/2023_Alioune/Identification_2023/machine_Learning/base_de_donnee/csv_Melange de polluant/base de donnée/base_de_donnée_de_test.csv")
+filepath.parent.mkdir(parents=True, exist_ok=True)
+unseen.to_csv(filepath,index=False)
+
+
+# In[50]:
+
+
+train
+
+
+# ### On commence par créer un setup avec  les données non normalisés et faire l'apprentisage puis comparer avec celui des données normalisée et celui normaliser + PCA . 
+
+# In[61]:
+
+
+# Ici on spécifit les données utilisés , si on doit les normaliser ou pas , utiliser acp ou pas , donner le pourcentage train ...
+# ici on test avec données sans normalisés 
+colonne=features[2:(n-4)]+['clf']
+setup_data = setup(data =train,target = 'clf',index=False,
+                   train_size =0.8,categorical_features =None,
+                   normalize = False,normalize_method = 'zscore' ,remove_multicollinearity =True
+                   ,multicollinearity_threshold =0.8,pca =False, pca_method =None,
+                   pca_components = None,log_experiment='mlflow',experiment_name="polluant_heterogene")
+
+
+# ### Le model à été deployé et sauvegarder dans  Mlflow ...n'empeche le model sera aussi enregistrer sous format pkl ou H dans mon dosier , puis dans l'application prévue avent la fin de l'stage 
+
+# In[ ]:
+
+
+
+
+
+# ### On note que l'encodage pour  les variables cathégorielles (3 polluiants) est  :: [A,D]: 0, [A,G]: 1, [A]: 2, [D]: 3, [G,D]: 4, [G]: 5
+
+# 
+## PyCaret dispose d’un module NLP qui peut automatiser la plupart des choses ennuyeuses, comme l’abaissement de la casse, la suppression des mots vides, le stemming, etc. Donc, une bonne partie de cette partie consiste simplement à configurer PyCaret pour fonctionner. Importons le module.
+# In[ ]:
+
+
+
+
+
+# In[ ]:
+
+
+
+
+
+# ## Comparaison de plusieurs modeles en fonction des metriques comme l'accurancy...
+
+# In[62]:
+
+
+top_model = compare_models()
+
+Le meilleur modèle  est soit EXTRA trees Classifier ou Light Gradient Boosting Machine	 , ces modèles ont obtenu un meilleur score sur les autres métriques, prenons  EXTRA trees Classifier comme modèle de base. Ajustez le modèle pour voir s’il peut être amélioré.
+# ## Ajustement des parametres  du model 
+
+# In[46]:
+
+
+tuned_model = tune_model(top_model[1])
+
+
+# # Le modèle accordé ne reçoit aucune amélioration, donc le modèle de base est le meilleur.
+# Il est temps de construire un ensemble d’ensachages.
+
+# In[63]:
+
+
+bagged_model = ensemble_model(tuned_model) 
+
+
+# ## Et maintenant un Boosting Ensemble.
+
+# In[ ]:
+
+
+
+
+
+# In[ ]:
+
+
+boosted_model = ensemble_model(top_model[1],method="Boosting") 
+
+Le modèle initial (top_model)  est le meilleur et est enregistré comme le meilleur modèle et utilisé pour prédire sur l’ensemble de test.
+# ### Une prediction de notre model avec les données de test générées par pycaret
+
+# In[67]:
+
+
+best_model = top_model
+predict_model(best_model)
+
+
+# ### On a obtenue une bonne prediction avec de meilleurs métriques voir proche de 1 , donc notre model est capable de bien classée les polluants 
+
+# ## Affichzge des hyperparamètres du modèle.
+
+# In[68]:
+
+
+plot_model(best_model, plot="parameter")
+
+
+# ## les performances du model 
+
+# In[113]:
+
+
+final_model1 = best_model
+plot_model(final_model1,plot='auc')
+plot_model(final_model1,plot='class_report')
+plot_model(final_model1 , plot='boundary')
+
+
+# ### Les variables les plus pertinantes 
+
+# In[72]:
+
+
+plot_model(final_model1,plot='feature')
+
+les résultats sont excellents pour les classes (0,1,2). Comme les données de test sont bien ajustées sur le modèle, utilisons-les pour ajuster un modèle final. Pour la classe 0  ( pour les 41 melange du polluant (A,D) , il s'est trompé que 4 fois ) , pour la classe 1 (pour les 125 polluant A detecté , il a mal clasé que 5 ) , enfin pour la classe D ( Pour les 116 polluants D , il s'est trompé que  11 fois ) . 
+# ### Finalisons notre model pour aprés enrégistrer le pipeline 
+
+# In[105]:
+
+
+final_model_ = finalize_model(final_model1)
+final_model_
+
+
+# ## Resumé des performances du model 
+
+# In[106]:
+
+
+evaluate_model(final_model1)#Cette fonction affiche une interface utilisateur pour analyser les performances
+
+
+# ### Sauvegarder le model et passons au deploiement 
+
+# Ainsi , notre model est préte l'emploi , le dep^loiement  , car elle regroupe mainteenant touts les éléments necessaires ppour son deploieement ::Exxemple: pour les entreprise ;pretes pôur l'zmploie business 
+
+# In[ ]:
+
+
+save_model(final_model_,"best_classS_model1")
+
+
+# ### Maintenant essayons avec les données normalisé 
+
+# In[111]:
+
+
+setup_data = setup(data =train,target = 'clf',
+                   train_size =0.8,categorical_features =None,index=False,
+                   normalize = True,normalize_method = 'zscore' ,remove_multicollinearity =True,log_experiment=True,experiment_name="polluant_heterogene",
+                   multicollinearity_threshold =0.8,pca =False, pca_method =None,
+                   pca_components = None,numeric_features =features[2:(n-4)])
+
+
+# In[112]:
+
+
+top_model = compare_models()
+
+
+# 
+# 
+
+# In[87]:
+
+
+type(top_model)
+
+
+# ### Reglage des hyperparametres
+
+# In[88]:
+
+
+tuned_model = tune_model(top_model[1]) 
+
+Le modèle accordé ne reçoit aucune amélioration, donc le modèle de base est le meilleur. Il est temps de construire un ensemble d’ensachages.
+# In[89]:
+
+
+bagged_model = ensemble_model(tuned_model) 
+
+
+# On a  les meilleurs performances avec le model (top_model )
+
+#  
+
+# ## Passons à verifier les performances du model par des graphes 
+
+# In[100]:
+
+
+final_model = top_model
+plot_model(final_model,plot='auc')
+plot_model(final_model,plot='class_report')
+plot_model(final_model,plot='confusion_matrix')
+plot_model(final_model,plot='feature')
+plot_model(final_model , plot='boundary')
+
+
+# On concatete que avec les données non normaliser et sans faire  l'ACP , on obtient les meilleurs perforùance avec notre model . 
+
+# ## Ainsi , on enregistre le model obtenu avec les données non normaliés , ensuite faire le deploiement .
+On garde le model (final_model1)
+# In[103]:
+
+
+type(final_model1)
+
+
+# ## Notre pipeline 
+
+# In[110]:
+
+
+final_model_
+
+
+# ### Aprés comparaison , on a constaté que la meilleur facon de faire une classification des polluant est d'utiliser les données non normaliser , en effet , avec ces derniéres l'algorithme commet peut d'erreurs (confusion ) , en plus on a les meilleurs perdformance aussi .
+# 
+
+# ## Comparaison avec skeatlearn 
+
+# ## Separation des données en data d'enprentissage et de test 
+
+# In[64]:
+
+
+
+
+
+# In[68]:
+
+
+# on utilise train_test_split de sklearn 
+X_train,X_test,Y_train,Y_test=train_test_split(X,y,test_size=0.2,random_state=1)
+X_train
+Y_train
+
+
+# In[69]:
+
+
+pour_A=np.sum(Y_train=='[A]')/len(Y_train)
+pour_D=np.sum(Y_train=='[D]')/len(Y_train)
+pour_G=np.sum(Y_train=='[A,D]')/len(Y_train)
+print(" A pour le train :",np.sum(Y_train=='[A]'),"D pour le train :",np.sum(Y_train=='[D]'),"[A,D] pour le train :",np.sum(Y_train=='[A,D]'))
+print("pourcentage d'exemple A :",pour_A*100,"%")
+print("pourcentage d'exemple D :",pour_D*100,"%")
+pour_pos=np.sum(Y_test=='[A]')/len(Y_test)
+pour_neg=np.sum(Y_test=='[D]')/len(Y_test)
+pour_mixte=np.sum(Y_test=='[A,D]')/len(Y_test)
+
+print(" A pour le test :",np.sum(Y_test=='[A]'),"D pour le test :",np.sum(Y_test=='[D]'))
+print("pourcentage d'exemple A :",pour_pos*100,"%")
+print("pourcentage d'exemple D :",pour_neg*100,"%")
+print("Nombre d'éléments dans le jeu d'entraîntement : {}".format(len(X_train)))
+print("Nombre d'éléments dans le jeu de test : {}".format(len(X_test)))
+
+
+# ## On a eu 43% de polluant A dans le train et 49% dans le test , pour le polluant D on a eu 33.9 % dans le train et 33.4 % dans le test .
+# ## De plus le jeux de donnée d'entrainement conttient 1027 données et le test 257 données . 
+
+# # **<center><font color='blue'>  Comparaison de plusieurs algorithmes d’apprentissage :</font></center>**
+# - On vas essayer de construire un dictionnaire de plusieurs algorithmes pour comparer plusieurs algorithmes sur une même validation croisée
+# - On vas utiliser la technique de KFold cross validate 
+
+# In[106]:
+
+
+from sklearn.tree import DecisionTreeClassifier ,plot_tree,ExtraTreeClassifier
+
+
+# In[70]:
+
+
+#Comparaison de plusieurs algorithmes d’apprentissage , ici clfs regroupe plusieurs algorithmes d'apprentisssage en meme temps , puis 
+### on fait la comparaison de ces algorithmes en utilisant l'accurancy (' le pourcentage de bonne prediction ')
+from sklearn.ensemble import ExtraTreesClassifier
+from sklearn.datasets import make_classification
+clfs = {
+'RF': RandomForestClassifier(n_estimators=100, random_state=1),
+'NBS' : GaussianNB() ,
+'decision_tree' : DecisionTreeClassifier(criterion='gini',random_state=1) ,
+'id3' : DecisionTreeClassifier(criterion='entropy',random_state=1),
+'MLP' : MLPClassifier(hidden_layer_sizes=(100,2),activation='tanh',solver='lbfgs',random_state=1, max_iter=300),
+'BAG': BaggingClassifier( n_estimators=100, random_state=1),
+'AdA': AdaBoostClassifier(n_estimators=100, random_state=1),# algo de boosting , creer un 1er classifier , prédit , il prend ce qui sont mal classés
+'Gau': GaussianNB(),
+'LG' :LogisticRegression(),
+'svc': SVC(),
+'Ext': ExtraTreesClassifier(bootstrap=False, ccp_alpha=0.0, class_weight=None,
+                    criterion='gini', max_depth=None, max_features='sqrt',
+                     max_leaf_nodes=None, max_samples=None,
+                     min_impurity_decrease=0.0, min_samples_leaf=1,
+                     min_samples_split=2, min_weight_fraction_leaf=0.0,
+                    n_estimators=100, n_jobs=-1, oob_score=False,
+                     random_state=1052, verbose=0, warm_start=False),
+'gbc':GradientBoostingClassifier(n_estimators=100, learning_rate=1.0, max_depth=1, random_state=0)}
+
+
+
+## La fonction run-classifiers qui regroupe les algorithmes ci-dessus et les compare par leur accurancy, precission , courbe ROC , recal 
+def run_classifiers(clfs , X,Y) : 
+    kf = KFold(n_splits=10, shuffle=True, random_state=0)
+    df=pd.DataFrame(columns=['algo','accuracy','precision','rappel','air sous la courbe'])
+    for i in clfs:
+        clf = clfs[i]
+        start = time.time()  
+        scoring = {'acc': 'accuracy', 'rec' : 'recall', 'prec' : 'precision','roc' : 'roc_auc'} 
+        scores = cross_validate(clf, X, Y, scoring=scoring, cv=kf, return_train_score=False)
+        print(f"\033[031m {i} \033[0m",'\n')
+        print("Accuracy for {0} is: {1:.3f} +/- {2:.3f}".format(i, np.mean(scores['test_acc']), np.std(scores['test_acc'])))
+        print("Recall for {0} is: {1:.3f} +/- {2:.3f}".format(i, np.mean(scores['test_rec']), np.std(scores['test_rec'])))
+        print("Precision for {0} is: {1:.3f} +/- {2:.3f}".format(i, np.mean(scores['test_prec']), np.std(scores['test_prec'])))
+        print("Aire sous la courbe for {0} is: {1:.3f} +/- {2:.3f}".format(i, np.mean(scores['test_roc']), np.std(scores['test_roc'])))
+        print ('time', time.time() - start, '\n\n')
+        
+        
+        df=df.append({'algo':i,'accuracy':np.mean(scores['test_acc']),'precision':np.mean(scores['test_prec']),
+                     'rappel':np.mean(scores['test_rec']),'air sous la courbe': np.mean(scores['test_roc'])},ignore_index=True)
+        # Ajouter la matrice de confusion
+        y_pred = clf.fit(X, Y).predict(X)
+        cm = confusion_matrix(Y, y_pred)
+        print("Confusion Matrix for {0}:\n{1}".format(i, cm))
+        # Tracer la matrice de confusion avec les valeurs
+        plt.imshow(cm, interpolation='nearest', cmap=plt.cm.Blues)
+        plt.title("Matrice de confusion - {0}".format(i))
+        plt.colorbar()
+        classes = np.unique(Y)
+        tick_marks = np.arange(len(classes))
+        plt.xticks(tick_marks, classes)
+        plt.yticks(tick_marks, classes)
+
+        # Afficher les valeurs dans la matrice
+        thresh = cm.max() / 2.0
+        for i in range(cm.shape[0]):
+            for j in range(cm.shape[1]):
+                plt.text(j, i, format(cm[i, j], 'd'),
+                         horizontalalignment="center",
+                         color="white" if cm[i, j] > thresh else "black")
+
+        plt.xlabel('Classe prédite')
+        plt.ylabel('Classe réelle')
+        plt.tight_layout()
+        plt.show()       
+    return(df)
+
+
+
+#### évaluation des algorithmes de classification ci-dessus en utilisant l'accurancy . 
+def evaluate_classifiers(X, y, classifiers):
+    accur = {}
+    for name, clf in classifiers.items():
+        scores = cross_val_score(clf, X, y, cv=5)
+        accuracy = scores.mean()
+        accur[name]=accuracy
+
+    return accur
+
+
+# ## On pourai aussi utiliser  LazyClassifier  qui permette de comparer plusieurs algo d'apprentissage en meme temps . 
+
+# In[75]:
+
+
+pip install lazypredict
+
+
+# In[ ]:
+
+
+from lazypredict.Supervised import LazyClassifier 
+from sklearn.model_selection import train_test_split
+
+X_train,X_test,y_train,y_test =train_test_split(X,y,test_size=5,random_state=123)
+clf=LazyClassifier(verbose=0,ignore_warnings=True, custom_metric=None)
+models,predictions=clf.fit(X_train, X_test, y_train, y_test)
+print(models)
+
+## Essayons de regerder ExtratreeClassifier à part pour comparer les resultats avec les autres algorithmes de classifications definies ci-dessus 
+# In[109]:
+
+
+kf = KFold(n_splits=10, shuffle=True, random_state=0)
+scores = cross_validate(clfs['Ext'],X_train,Y_train , cv=kf, return_train_score= False)
+scores
+
+
+# In[ ]:
+
+
+
+
+
+# ##  Comparaison des modéles en utilisant les metriques ('accurancy  ... ')
+
+# In[111]:
+
+
+accuracy=evaluate_classifiers(X_train, Y_train, clfs)
+accuracy
+
+
+# ### Cherchons l'algorithme la plus efficace pour classer les polluants avec la plus grande accurancy .
+
+# In[112]:
+
+
+ac=pd.DataFrame(list(accuracy.items()),columns=['algo', 'accuracy'])
+ac.style.highlight_max(subset=['accuracy'], color='orange')  
+
+## On constae que l'algorithme du extratreeClassifier est beaucoup plus performant pour classser les polluants avec un score de 0.877 % , comme en  pycaret aussi ..
+# ### performance de Chacun des algorithmes 
+
+# In[113]:
+
+
+r=run_classifiers(clfs , X_train,Y_train)
+
+
+# ### Regroupons tout les algorithmes avec leur precissions dans un dataframe allant du plus performant au moins performant 
+
+# In[117]:
+
+
+r_sorted = r.sort_values(by='accuracy',ascending=False)
+r_sorted.style.highlight_max(subset=['accuracy'], color='orange')
+
+
+# In[130]:
+
+
+# fonction qui nous permet de  comparer les trois models  
+def Classifieur(Xtrain,Xtest,Ytrain,Ytest,clfs):
+    df=pd.DataFrame(columns=['algo','accuracy','precision','air'])
+    for i in clfs:
+        clf = clfs[i]
+        print(f"\033[031m {clf} \033[0m")
+        clf.fit(Xtrain,Ytrain)
+        YDT=clf.predict(Xtest)
+        print('Accuracy :{0:.2f}'.format(accuracy_score(Ytest,YDT)*100))# {0:0.2f} deux chiffres aprés la virgule 
+        print('roc :{0:.2f}'.format(roc_auc_score(Ytest,YDT)*100),'\n')
+        print('Precision :{0:.2f}'.format(precision_score(Ytest,YDT)*100),'\n')
+        df=df.append({'algo':i,'accuracy':accuracy_score(Ytest,YDT)*100,
+                     'precision':precision_score(Ytest,YDT)*100,
+                     'air':roc_auc_score(Ytest,YDT)*100},ignore_index=True)
+        cm = confusion_matrix(Ytest, YDT, labels=clf.classes_)
+        disp = ConfusionMatrixDisplay(confusion_matrix=cm,display_labels=['A', 'D'])
+        disp.plot()
+        plt.show()
+    return(df)
+
+
+# In[ ]:
+
+
+c=Classifieur(X_train,X_test,Y_train,Y_test,clfs)
+
+
+# In[ ]:
+
+
+c1 = c.sort_values(by='accuracy',ascending=False)
+c1.style.highlight_max(subset=['accuracy'], color='orange')
+
+
+# 
+
+# In[116]:
+
+
+
+
+
+# In[ ]:
+
+
+
+
+
+# In[ ]:
+
+
+
+
+
+# ## Maintenant cherchons les variables les plus significatifs (importantes pour  classifier les polluants )  , avec des tests d'hypothéses  sous R .... Ensuite , passons au deployement de notre model avec mlfow puis l'utiliser pour la prediction....
+
+# In[ ]:
+
+
+
+
+
+# In[ ]:
+
+
+
+
+
+# In[ ]:
+
+
+
+
+
+# In[ ]:
+
+
+
+
+
+# In[ ]:
+
+
+
+
+
+# In[ ]:
+
+
+
+
+
+# In[ ]:
+
+
+
+
+
+# In[ ]:
+
+
+
+
+
+# In[ ]:
+
+
+
+
+
+# In[56]:
+
+
+
+
+
+# In[ ]:
+
+
+
+
+
+# In[ ]:
+
+
+
+
+
+# In[ ]:
+
+
+
+
+
+# In[ ]:
+
+
+
+
+
+# In[ ]:
+
+
+
+
+
+# In[ ]:
+
+
+
+
+
+# In[ ]:
+
+
+
+
+
+# In[ ]:
+
+
+
+
+
+# In[ ]:
+
+
+
+
+
+# In[ ]:
+
+
+
+
+
+# In[ ]:
+
+
+
+
+
+# In[34]:
+
+
+
+
+
+# In[ ]:
+
+
+
+
+
+# In[ ]:
+
+
+
+
+
+# In[ ]:
+
+
+
+
+
+# In[ ]:
+
+
+
+
+
+# In[ ]:
+
+
+
+
+
+# In[ ]:
+
+
+
+
+
+# In[ ]:
+
+
+
+
+
+# In[ ]:
+
+
+
+
+
+# In[ ]:
+
+
+
+
+''', language='python')
     if __name__ == "__main__":
          main()    
     
