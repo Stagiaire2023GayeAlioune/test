@@ -820,7 +820,7 @@ c1.style.highlight_max(subset=['accuracy'], color='orange')
 
 def Code_lissage_deconvolution_spectrale():
     def main():
-		 st.code('''
+	    st.code('''
              #!/usr/bin/env python
 # coding: utf-8
 
