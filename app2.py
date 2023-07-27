@@ -2375,7 +2375,7 @@ r2.style.background_gradient(cmap="Purples")
 
 
 
-  ''',langage='python')
+  ''',language='python')
 
     if __name__ == "__main__":
 	     
