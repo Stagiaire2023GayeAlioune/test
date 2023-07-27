@@ -129,9 +129,6 @@ import pickle ### on utilise ce bibliotheque pour sauvegarder notre modél , qui
 # ## Fonction qui nous permettte de selectionner n'importe quel fichier
 # dans l'ordinateur 
 
-# In[2]:
-
-
 def browseFiles():
 	filename = filedialog.askopenfilename(initialdir = "Z:\1_Data\1_Experiments\1_FENNEC\2_Stagiaires\2022_Alvin\7 Samples\ATMP_DTPMP",
 										title = "Select a File",
@@ -144,58 +141,27 @@ def browseFiles():
 
 # ## Appel de la fonction  browseFiles() :La base de donnée est le fichier nommé "Base_amecT_bdt_gly (3).csv" 
 
-# In[3]:
-
-
 VAR=browseFiles()
-
-
-# In[8]:
-
 
 VAR
 
-
-# In[9]:
-
-
 df2=pd.read_csv(VAR,sep=',',index_col=0)
-
-
-# In[6]:
-
 
 df2
 
 
 # ## Aprés avoir visualiser notre base de donnée , on a cpnstaté que les deux premieres colonnes ne nous interessent pas , aussi les 5 derniéres colonnes . Mais avant de supprimer les colonnes A, D et G , on essaye de faire un encodage de ces derniéres en creant une variable cible nommé "clf " 
 
-# In[10]:
-
-
 df2=df2.drop(["A+D","A+G","D+G","sum"],axis=1)  ## Supression des colonne ""A+D","A+G","D+G","sum"" 
 
 
 # ## Aprés la supresion 
 
-# In[12]:
-
-
 df2
-
-
-# In[ ]:
-
-
-
-
 
 # ## Tran sformation des colonnes A , D , G en une seule variable cible 
 
 # ### Label pour les 3 polluants 
-
-# In[14]:
-
 
 ## Fonction pour créer un label pour  trois polluants 
 clf=[]
@@ -220,21 +186,12 @@ for i in range(len(df2['A'])):
 
 # ### la variable cible 
 
-# In[15]:
-
-
 clf
 
 
 # ## Maintenant , on rajoute la colonne clf dans notre base de donnée .
 
-# In[16]:
-
-
 df2['clf']=clf
-
-
-# In[17]:
 
 
 df2
@@ -242,32 +199,20 @@ df2
 
 # #### Distribution des differents polluants 
 
-# In[19]:
-
 
 ax=df2['A'].hist(bins=15, density=True , stacked=True, color='green' , alpha=0.8)
 df2['A'].plot(kind='density' , color='blue')
 ax.set(xlabel='A')
 
 
-# In[20]:
-
-
 ax=df2['D'].hist(bins=15, density=True , stacked=True, color='green' , alpha=0.8)
 df2['D'].plot(kind='density' , color='yellow')
 ax.set(xlabel='D')
-
-
-# In[21]:
-
 
 ## Pour le trisiémé polluant
 ax=df2['G'].hist(bins=15, density=True , stacked=True, color='green' , alpha=0.6)
 df2['G'].plot(kind='density' , color='red')
 ax.set(xlabel='G')
-
-
-# In[23]:
 
 
 ### On aura besoin plud d'experience avec les melanges de deux polluants surtout le polluants G . En effet , on a moins de données pour ce polluant 
@@ -277,14 +222,7 @@ ax.set(xlabel='G')
 
 # ## Les detailes de notre base de donnée 
 
-# In[25]:
-
-
 df2.info()
-
-
-# In[27]:
-
 
 n=len(df2.columns)
 numerical = [var for var in df2.columns] ## les diferentes colonnes de notre jeu de donnée .....
@@ -297,21 +235,12 @@ print(df2[features[0:(n-4)]].duplicated().sum())
 
 # ## Supression des lignes doubles en gardant une d'eux 
 
-# In[28]:
-
-
 df2=df2.drop_duplicates()
-
-
-# In[29]:
-
 
 df2
 
 
 # ## Enregistrement de la base de donnée netoyer et on eleve maintenant les colonne A , D et G qui ne nous interessent pas  . 
-
-# In[54]:
 
 
 from pathlib import Path
@@ -325,13 +254,6 @@ df3.to_csv(filepath,index=False)
 
 # ## Decomposition des données  en targets et variables ( variables explivcatives et expliquées )
 
-# In[ ]:
-
-
-
-
-
-# In[65]:
 
 
 df=df2
@@ -339,22 +261,10 @@ n=len(df.columns)
 X=df[df.columns[2:(n-4)]] # on prend les variables numériques 
 y=df[df.columns[-1]] # le target , le variables cible ("clf")  
 
-
-# In[67]:
-
-
 y
 
 
 # ## Statistiques descriptives
-
-# In[ ]:
-
-
-
-
-
-# In[32]:
 
 
 import seaborn as sns
@@ -395,13 +305,7 @@ plt.ylabel('observation', weight = 'bold')
 
 # ## Etude des variables descriptives 
 
-# In[33]:
-
-
 X.describe()
-
-
-# In[34]:
 
 
 numerical = [var for var in df.columns ]
@@ -413,21 +317,7 @@ plt.show()
 
 # ### On constate que les Ai suivent la meme distribution ::: qui resemble à peut prés a une loi logarithmique ou exponentielle deroissante 
 
-# In[ ]:
-
-
-
-
-
 # ## LA distribution des variables explicatives 
-
-# In[ ]:
-
-
-
-
-
-# In[35]:
 
 
 a=[df['A1'],df['A2'],df['A3'],df['A4']]
@@ -444,9 +334,6 @@ for aa in a:
 
 # ## Correlation entre les variables 
 
-# In[36]:
-
-
 # matrice de corrélation 
 plt.figure(figsize=(12,6))
 corr_matrix = df[features[2:(n-4)]].corr()
@@ -458,8 +345,6 @@ plt.show()
 
 # ## Coorelation entre les variables explicatives 
 
-# In[38]:
-
 
 ## l'encodage pour la partie sklearn 
 from sklearn.preprocessing import LabelEncoder # nous permet de faire l'encodage , avec ordinalencoder fait la même mais avec plusieurs variable encoder
@@ -468,9 +353,6 @@ y_code=encoder.fit_transform(y)
 
 
 # ## Utilusons le PCA pour regarder les corélations des variables 
-
-# In[40]:
-
 
 #grâce à sklearn on peut importer standardscaler .
 
@@ -483,9 +365,6 @@ figure, correlation_matrix = plot_pca_correlation_graph(X_norm, features[2:(n-4)
 
 
 # # Ici on utilise pycaret pour chercher notre meilleures modél de prediction et ses pérformances . 
-
-# In[41]:
-
 
 # Dataset Sampling
 def data_sampling(dataset, frac: float, random_seed: int):
@@ -503,8 +382,6 @@ def data_sampling(dataset, frac: float, random_seed: int):
 
 # ## data_sampling est une fonction que j'ai creer pour separer la base de donnée en base de données d'apprentissage et de test pour simplifier les calcul
 
-# In[43]:
-
 
 train, unseen = data_sampling(df, 0.75, RANDOM_SEED)
 train=train.drop(["A","D","G"], axis=1)
@@ -517,8 +394,6 @@ unseen
 
 # # Ici , le dataframe unseen sera utilisé pour la prediction aprés le deploiement , on va l'aapelé "base_de_donnée_de_test.csv" 
 
-# In[44]:
-
 
 ### Enregistrement de notre base de donnée de test  
 from pathlib import Path
@@ -527,16 +402,10 @@ filepath.parent.mkdir(parents=True, exist_ok=True)
 unseen.to_csv(filepath,index=False)
 
 
-# In[50]:
-
-
 train
 
 
 # ### On commence par créer un setup avec  les données non normalisés et faire l'apprentisage puis comparer avec celui des données normalisée et celui normaliser + PCA . 
-
-# In[61]:
-
 
 # Ici on spécifit les données utilisés , si on doit les normaliser ou pas , utiliser acp ou pas , donner le pourcentage train ...
 # ici on test avec données sans normalisés 
@@ -550,40 +419,19 @@ setup_data = setup(data =train,target = 'clf',index=False,
 
 # ### Le model à été deployé et sauvegarder dans  Mlflow ...n'empeche le model sera aussi enregistrer sous format pkl ou H dans mon dosier , puis dans l'application prévue avent la fin de l'stage 
 
-# In[ ]:
-
-
-
-
 
 # ### On note que l'encodage pour  les variables cathégorielles (3 polluiants) est  :: [A,D]: 0, [A,G]: 1, [A]: 2, [D]: 3, [G,D]: 4, [G]: 5
 
 # 
 ## PyCaret dispose d’un module NLP qui peut automatiser la plupart des choses ennuyeuses, comme l’abaissement de la casse, la suppression des mots vides, le stemming, etc. Donc, une bonne partie de cette partie consiste simplement à configurer PyCaret pour fonctionner. Importons le module.
-# In[ ]:
-
-
-
-
-
-# In[ ]:
-
-
-
 
 
 # ## Comparaison de plusieurs modeles en fonction des metriques comme l'accurancy...
-
-# In[62]:
-
 
 top_model = compare_models()
 
 Le meilleur modèle  est soit EXTRA trees Classifier ou Light Gradient Boosting Machine	 , ces modèles ont obtenu un meilleur score sur les autres métriques, prenons  EXTRA trees Classifier comme modèle de base. Ajustez le modèle pour voir s’il peut être amélioré.
 # ## Ajustement des parametres  du model 
-
-# In[46]:
-
 
 tuned_model = tune_model(top_model[1])
 
@@ -591,30 +439,15 @@ tuned_model = tune_model(top_model[1])
 # # Le modèle accordé ne reçoit aucune amélioration, donc le modèle de base est le meilleur.
 # Il est temps de construire un ensemble d’ensachages.
 
-# In[63]:
-
-
 bagged_model = ensemble_model(tuned_model) 
 
 
 # ## Et maintenant un Boosting Ensemble.
 
-# In[ ]:
-
-
-
-
-
-# In[ ]:
-
-
 boosted_model = ensemble_model(top_model[1],method="Boosting") 
 
 Le modèle initial (top_model)  est le meilleur et est enregistré comme le meilleur modèle et utilisé pour prédire sur l’ensemble de test.
 # ### Une prediction de notre model avec les données de test générées par pycaret
-
-# In[67]:
-
 
 best_model = top_model
 predict_model(best_model)
@@ -624,16 +457,10 @@ predict_model(best_model)
 
 # ## Affichzge des hyperparamètres du modèle.
 
-# In[68]:
-
-
 plot_model(best_model, plot="parameter")
 
 
 # ## les performances du model 
-
-# In[113]:
-
 
 final_model1 = best_model
 plot_model(final_model1,plot='auc')
@@ -643,15 +470,10 @@ plot_model(final_model1 , plot='boundary')
 
 # ### Les variables les plus pertinantes 
 
-# In[72]:
-
-
 plot_model(final_model1,plot='feature')
 
 les résultats sont excellents pour les classes (0,1,2). Comme les données de test sont bien ajustées sur le modèle, utilisons-les pour ajuster un modèle final. Pour la classe 0  ( pour les 41 melange du polluant (A,D) , il s'est trompé que 4 fois ) , pour la classe 1 (pour les 125 polluant A detecté , il a mal clasé que 5 ) , enfin pour la classe D ( Pour les 116 polluants D , il s'est trompé que  11 fois ) . 
 # ### Finalisons notre model pour aprés enrégistrer le pipeline 
-
-# In[105]:
 
 
 final_model_ = finalize_model(final_model1)
@@ -659,8 +481,6 @@ final_model_
 
 
 # ## Resumé des performances du model 
-
-# In[106]:
 
 
 evaluate_model(final_model1)#Cette fonction affiche une interface utilisateur pour analyser les performances
@@ -670,15 +490,11 @@ evaluate_model(final_model1)#Cette fonction affiche une interface utilisateur po
 
 # Ainsi , notre model est préte l'emploi , le dep^loiement  , car elle regroupe mainteenant touts les éléments necessaires ppour son deploieement ::Exxemple: pour les entreprise ;pretes pôur l'zmploie business 
 
-# In[ ]:
-
 
 save_model(final_model_,"best_classS_model1")
 
 
 # ### Maintenant essayons avec les données normalisé 
-
-# In[111]:
 
 
 setup_data = setup(data =train,target = 'clf',
@@ -688,8 +504,6 @@ setup_data = setup(data =train,target = 'clf',
                    pca_components = None,numeric_features =features[2:(n-4)])
 
 
-# In[112]:
-
 
 top_model = compare_models()
 
@@ -697,16 +511,11 @@ top_model = compare_models()
 # 
 # 
 
-# In[87]:
-
 
 type(top_model)
 
 
 # ### Reglage des hyperparametres
-
-# In[88]:
-
 
 tuned_model = tune_model(top_model[1]) 
 
