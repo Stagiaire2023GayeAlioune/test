@@ -430,7 +430,7 @@ setup_data = setup(data =train,target = 'clf',index=False,
 
 top_model = compare_models()
 
-Le meilleur modèle  est soit EXTRA trees Classifier ou Light Gradient Boosting Machine	 , ces modèles ont obtenu un meilleur score sur les autres métriques, prenons  EXTRA trees Classifier comme modèle de base. Ajustez le modèle pour voir s’il peut être amélioré.
+#Le meilleur modèle  est soit EXTRA trees Classifier ou Light Gradient Boosting Machine	 , ces modèles ont obtenu un meilleur score sur les autres métriques, prenons  EXTRA trees Classifier comme modèle de base. Ajustez le modèle pour voir s’il peut être amélioré.
 # ## Ajustement des parametres  du model 
 
 tuned_model = tune_model(top_model[1])
@@ -472,7 +472,6 @@ plot_model(final_model1 , plot='boundary')
 
 plot_model(final_model1,plot='feature')
 
-les résultats sont excellents pour les classes (0,1,2). Comme les données de test sont bien ajustées sur le modèle, utilisons-les pour ajuster un modèle final. Pour la classe 0  ( pour les 41 melange du polluant (A,D) , il s'est trompé que 4 fois ) , pour la classe 1 (pour les 125 polluant A detecté , il a mal clasé que 5 ) , enfin pour la classe D ( Pour les 116 polluants D , il s'est trompé que  11 fois ) . 
 # ### Finalisons notre model pour aprés enrégistrer le pipeline 
 
 
@@ -519,7 +518,7 @@ type(top_model)
 
 tuned_model = tune_model(top_model[1]) 
 
-Le modèle accordé ne reçoit aucune amélioration, donc le modèle de base est le meilleur. Il est temps de construire un ensemble d’ensachages.
+#Le modèle accordé ne reçoit aucune amélioration, donc le modèle de base est le meilleur. Il est temps de construire un ensemble d’ensachages.
 # In[89]:
 
 
