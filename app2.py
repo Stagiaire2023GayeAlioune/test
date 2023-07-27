@@ -1972,8 +1972,8 @@ page_names_to_funcs = {
     "identification": identification,
     "image": image,
     "Quantification": Quantification,
-    "Code_classification_polluants_heterogene":Code_classification_polluants_heterogene
-    "Code_lissage_deconvolution_spectrale": Code_lissage_deconvolution_spectrale	
+    "Code_classification_polluants_heterogene":Code_classification_polluants_heterogene,
+    "Code_lissage_deconvolution_spectrale":Code_lissage_deconvolution_spectrale	
 }
 
 selected_page = st.sidebar.selectbox("Selectionner ", page_names_to_funcs.keys())
