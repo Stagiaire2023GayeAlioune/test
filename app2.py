@@ -70,7 +70,7 @@ def load_data(file):
     return data
 
 
-def Code_identification_classification_polluants_heterogene():
+def Code_classification_polluants_heterogene():
     def main():
         st.sidebar.markdown('<h1 style="text-align: center;">Les codes pour la partie identification:  🎈</h1>', unsafe_allow_html=True)
         st.code('''
