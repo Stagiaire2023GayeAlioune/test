@@ -1738,69 +1738,13 @@ def Quantification():
     
     
     
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
+        
 
 page_names_to_funcs = {
     "identification": identification,
     "image": image,
     "Quantification": Quantification,
-    "Code_identification":Code_identification
+    "Code_identification_classification_polluants_heterogene":Code_identification_classification_polluants_heterogene
 }
 
 selected_page = st.sidebar.selectbox("Selectionner ", page_names_to_funcs.keys())
