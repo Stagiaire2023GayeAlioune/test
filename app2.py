@@ -1257,13 +1257,9 @@ def calcul_para(VARS,bornes,nombre_peak):
 bounds_lower =[0,borne[-1][0][0],0,0,borne[-1][0][1],0,0,borne[-1][2][0],0,0,borne[-1][3][0],0,0,borne[-1][4][0],0]
 bounds_upper =[np.inf,borne[-1][0][1],np.inf,np.inf,borne[-1][1][1],np.inf,np.inf,borne[-1][2][1],np.inf,np.inf,borne[-1][3][1],np.inf,np.inf,borne[-1][4][1],np.inf]
 bounds = (bounds_lower, bounds_upper)
-calcul_para(VARS,bornes(),5)
-
-
-
-	''', language='python')
-    if __name__ == "__main__":
-         main()    
+calcul_para(VARS,bornes(),5) ''', language='python')
+       if __name__ == "__main__":
+	       main()    
 
 	
 	
