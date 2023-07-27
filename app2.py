@@ -1265,7 +1265,7 @@ calcul_para(VARS,bornes(),5) ''', language='python')
 
 def Quatification_polluant_heterogene():
     def main():
-		st.code(''' 
+	    st.code(''' 
 #!/usr/bin/env python
 # coding: utf-8 
 import pandas as pd
