@@ -1019,6 +1019,547 @@ c1.style.highlight_max(subset=['accuracy'], color='orange')
 ''', language='python')
     if __name__ == "__main__":
          main()    
+
+
+
+def Code_lissage_deconvolution_spectrale():
+	def main():
+		 st.code('''
+             #!/usr/bin/env python
+# coding: utf-8
+
+# # Bibliothéque 
+
+# In[1]:
+
+
+import pandas as pd
+import numpy as np 
+import matplotlib.pyplot as plt
+from tkinter import filedialog
+from tkinter import *
+from scipy.signal import find_peaks
+from scipy.signal import savgol_filter
+from scipy.optimize import curve_fit;
+import math
+import scipy.integrate as spi
+
+
+# 
+# # **<center><font color='blue'>I) Spectre d'excitation </font></center>**
+
+# # **<center><font color='blue'>I.1) Traitement et Préparation des données </font></center>**
+# 
+
+# In[2]:
+
+
+def browseFiles():
+	filename = filedialog.askopenfilename(initialdir = "http://localhost:8888/tree/Stage",
+										title = "Select a File",
+										filetypes = (("Csv files",
+														"*.csv*"),
+													("all files",
+														"*.*")))
+	return(filename)
+
+
+# In[ ]:
+
+
+
+
+
+# In[ ]:
+
+
+
+
+
+# In[ ]:
+
+
+
+
+
+# ## Importation des données
+
+# In[3]:
+
+
+VAR=browseFiles()
+
+
+# In[4]:
+
+
+VAR
+
+
+# In[5]:
+
+
+df=pd.read_csv(VAR,delimiter=";")
+df
+
+
+# 
+# ## Pour voir à quoi resemble les données en entier 
+
+# In[6]:
+
+
+pd.set_option('display.max_rows',df.shape[0]+1)
+df
+
+
+# ## Remarque 
+On constate des valeurs 'NA' dans le les données , des lignes vides , des colonnes vides et des valeurs anormales  .En plus , les colonnes nous indiques les intensités en fonction des longeurs d'ondes pour chaque echantillon , allant de l'echantillon ion à l'échantillon en excé .
+# ## Affichage de quelques lignes 
+
+# In[7]:
+
+
+pd.set_option('display.max_rows',8)  ## 4 premieres ligne et 4 dernieres lignes
+df
+
+
+# ## Voir les valeurs manquantes 
+
+# In[8]:
+
+
+df.info()
+
+
+# ## Remarque 
+Comme on peut le constater on a observer plusieurs valeurs manquantes dans le jeux de données
+# ## On suprime les valeurs manquantes  et les colonnes vides 
+
+# In[9]:
+
+
+for i in df.columns:
+        if (df[i].isnull()[0]==True): # On elimine les colonnes vides
+            del df[i]
+df=df.dropna(axis=0)  # On elimine les lignes qui contiennent des na;
+df=df[1:] ## la premiere ligne du dataframe ne nous interesse pas 
+df=df.astype(float) ## on transforme les valeurs en float
+df
+
+
+# In[10]:
+
+
+df.info()
+
+
+# ## Statistique descriptive
+
+# In[11]:
+
+
+df.describe()
+
+
+# ## Remarque1
+On constate que il y'a plus de valeurs manquantes. Aprés netoyage , on a 151 individus (lignes) au total dans notre jeux de données avec 24 collones ( longueurs d'ondes et intensités pour chaque echantillon et succesivement).
+Ensuite , l'excitation à eu lieu à partir de 250nm et se termine à 400nm pour tout les echantillons . En outre, le jeux de données ne contient pas de variables cathegorielles ou qualitatives .
+# 
+# 
+# 
+# # **<center><font color='blue'>I.2) Visualisation et Deconvolution </font></center>**
+
+# In[12]:
+
+
+df
+
+
+# ##  Visualisation des  spectres d'excitations pour chaque echantillons 
+
+# In[13]:
+
+
+row=int(len(df.columns)/4)  ## nombre d'echantillons / 4 = 6
+row2=int(len(df.columns)/2) ##  nombre d'echantillons 
+
+
+fig, axs = plt.subplots(nrows=2, ncols=row, figsize=(20,6)) ## pour  afficher les courbes sur deux lignes de 6 courbes au max chacune
+for ax, i in zip(axs.flat, range(row2)):
+    x = df[df.columns[0]]   ### colonne longueurs d'ondes
+    y = df[df.columns[2*i+1]]  ### les intensités pour chaque echantillons (colonnes impaires)
+    ax.plot(x,y, label=df.columns[2*i])  
+    ax.set_xlabel("Longeur d'onde")
+    ax.set_ylabel("Intensité")
+    ax.legend()
+plt.show()
+
+
+# ## Remarque1
+On constate que les spectres d'excitation sont trés bruité , ainsi on aura en mesure de determiner le nombre total de pic
+qui exciste dans chaque spectre . Donc , pour remedier à cela , on doit lisser les spectres . Car pour faire la decovulution , on aura besoin des nombres de pics , pour savoir combien de gausienne on aura besoin pour fiter les spectres .
+# ## Lissage des spectres  , recherche de pics , Longeurs d'onde correspondants à chaque pic et les bornes des pics
+
+# 
+
+# Lissage avec algorithme de Savitz-golay
+# La fonction savgol_filter prend en paramètre:
+# 
+# -y ou x : il s'agit de la donnée à filtrer.
+# 
+# - La longueur de la fenetre de lissage.
+# 
+# - Le degré du polynome de lissage. 
+# Elle renvoie: La donnée filtrée.
+
+# In[14]:
+
+
+row=int(len(df.columns)/6)
+row2=int(len(df.columns)/2)
+p=[]
+les_peaks=[]
+borne=[]
+fig, axs = plt.subplots(nrows=3, ncols=row, figsize=(20, 10))
+for ax, i in zip(axs.flat, range(row2)):
+    bor=[]
+    x1=df[df.columns[0]]
+    y=df[df.columns[2*i+1]]
+    y_hat=savgol_filter(y, 11, 2)
+    ax.plot(x1,y, label=df.columns[2*i])
+    ax.plot(x1,y_hat,label='Savitzki-gol')
+    x = y_hat
+    peaks, properties = find_peaks(x, prominence=1, width=1)
+    p.append(len(peaks))
+    xmin=properties["left_ips"]
+    xmax=properties["right_ips"]
+    print("Longeur d'onde de chaque pic pour l'echantillon  ",df.columns[2*i],':',list(x1[peaks]),"nombre de peaks : ",len(peaks))
+    for j in range(len(properties['left_ips'])):
+        bor.append(list([x1[np.around(properties['left_ips'][j])],x1[np.around(properties['right_ips'][j])]]))
+    #print('les bornes des pics pour ',df.columns[2*j],'est',borne)
+    ax.plot(x1[peaks], x[peaks], "x")
+    ax.vlines(x=x1[peaks], ymin=0,ymax = x[peaks], color = "C2")
+    #ax.hlines(y=properties["widths"], xmin=properties['left_ips'],xmax=properties['right_ips'], color = "C1")
+    ax.set_xlabel("Longeur d'onde")
+    ax.set_ylabel("Intensité")
+    ax.legend()
+    les_peaks.append(list(x1[peaks]))
+    les_peak=pd.DataFrame(les_peaks)
+    if (len(bor)==5):
+        borne.append(bor)           ### l'intervalles ou se trouve chaque pics ,pour tout les spectres
+plt.show()
+
+
+# ## Remarque
+
+# In[15]:
+
+
+p
+
+On constate que le  nombre de pics varie d'un echantillon à un autre de 4 à 6 pics, mais le plus frequent est 5 pics .
+# In[16]:
+
+
+borne
+
+
+# ## Déconvolution 
+
+# In[ ]:
+
+
+
+
+
+# In[17]:
+
+
+## Gausienne 
+def expS(x,I,m,b):
+    return(I*np.exp(-((x-m)**2)/(2*(b**2)))/(b*np.sqrt(2*np.pi)))
+
+
+# In[18]:
+
+
+#### 5 Gausiennes 
+def expT(x,I1,m1,b1,I2,m2,b2,I3,m3,b3,I4,m4,b4,I5,m5,b5):
+        return(I1*np.exp(-((x-m1)**2)/(2*(b1**2)))/(b1*np.sqrt(2*np.pi))+
+               I2*np.exp(-((x-m2)**2)/(2*(b2**2)))/(b2*np.sqrt(2*np.pi))+
+               I3*np.exp(-((x-m3)**2)/(2*(b3**2)))/(b3*np.sqrt(2*np.pi))+
+               I4*np.exp(-((x-m4)**2)/(2*(b4**2)))/(b4*np.sqrt(2*np.pi))+
+               I5*np.exp(-((x-m5)**2)/(2*(b5**2)))/(b5*np.sqrt(2*np.pi))
+              )
+    
+
+
+# In[19]:
+
+
+def deconvol1(df1,bounds,nombre_peak):
+    #row=int(len(df.columns)/4)
+    row=3
+    fig, axs = plt.subplots(nrows=4, ncols=row, figsize=(25, 15))
+    for ax, i in zip(axs.flat, range(row2)):
+            x=df1[df1.columns[0]]
+            y=df1[df1.columns[2*i+1]]; # 
+            y = y  / np.max(y) # pour normaliser les intensités
+            y_hat=savgol_filter(y, 11, 2) ### spectre lissé
+            pop1,pcov1=curve_fit(expT,x,y_hat,bounds=bounds) ### on fite avec 5 gaussienne
+            ax.plot(x,y,label=df1.columns[2*i]) ### courbe bruité (initiale)
+            ax.plot(x,y_hat,label='Savitzki-gol') ### spectre lissé
+            ax.plot(x,expT(x,*pop1),label='somme') #### courbe fitée 
+            for j in range(nombre_peak):
+                ax.plot(x, expS(x, *pop1[3*j:3*(j+1)]), label=f'{j+1}ème déconvoluée') ### les deconvolutions 
+            ax.legend()
+    plt.show()
+    return()
+            
+
+
+# In[20]:
+
+
+borne[-1]
+
+
+# In[21]:
+
+
+nbr_p=5 ### nombre de pics 
+def bornes():
+    if(borne==[]):
+        bounds=([0,250,0,0,270,0,0,300,0,0,340,0],[np.inf,270,np.inf,np.inf,300,np.inf,np.inf,340,np.inf,np.inf,360,np.inf])
+    else:    
+        bounds_lower =[0,borne[-1][0][0],0,0,borne[-1][0][1],0,0,borne[-1][2][0],0,0,borne[-1][3][0],0,0,borne[-1][4][0],0]
+        bounds_upper =[np.inf,borne[-1][0][1],np.inf,np.inf,borne[-1][1][1],np.inf,np.inf,borne[-1][2][1],np.inf,np.inf,borne[-1][3][1],np.inf,np.inf,borne[-1][4][1],np.inf]
+        bounds = (bounds_lower, bounds_upper)
+    return(bounds)    
+## Deconvolution des spectres
+deconvol1(df,bornes(),nbr_p)       
+
+
+# ## Remarque
+On constate que avec 5 gausiennes , on obtient un spectre lisé qui fite trés bien avec le spectre initiale .Par contre , avec quatre gausienne il reste toujours des parties qui ne cole pas bien avec le spectre initial.
+# 
+# 
+# 
+# # **<center><font color='blue'>I.3) Calcule des parametres de chaque gaussienne et Construction de la base de donnée</font></center>**
+
+# In[46]:
+
+
+def browseFiles2():
+	filename = filedialog.askopenfilenames(initialdir = "Z:\1_Data\1_Experiments\1_FENNEC\2_Stagiaires\2022_Alvin\7 Samples\ATMP_DTPMP",
+										title = "Select a File",
+										filetypes = (("Csv files",
+														"*.csv*"),
+													("all files",
+														"*.*")))
+	return(filename)
+
+
+# ## Importation de plusieurs fichiers pour gagner du temps 
+
+# In[47]:
+
+
+VARS=browseFiles2()
+
+
+# In[48]:
+
+
+VARS
+
+
+# ## Fonction pour detrminer le nombre de pics qui existe dans chaque fichiers 
+
+# In[49]:
+
+
+def pics(VARS,nombre_pics):
+     for var in VARS:
+        df=pd.read_csv(var,delimiter=",")
+        for i in df.columns:
+            if (df[i].isnull()[0]==True):  #On elimine les colonnes vides
+                del df[i]
+        df=df.dropna(axis=0); # On elimine les lignes qui contiennent des na;
+        df=df[1:]; # voir colonne ci-dessous pour les détails de cette ligne.
+        df=df.astype(float)
+            
+            
+            
+     p=[]
+     les_peaks=[]
+     row2=int(len(df.columns)/2)
+     for i in range(row2):
+        x1=df[df.columns[0]]
+        y=df[df.columns[2*i+1]];
+        y_hat=savgol_filter(y, 11, 2);
+        x = y_hat
+        peaks, properties = find_peaks(x, prominence=1, width=1)
+        p.append(len(peaks))
+        les_peaks.append(list(x1[peaks]))
+        les_peak=pd.DataFrame(les_peaks)
+     nombre_peak=set(p)
+     nombre_peak=list(nombre_peak)
+     les_peaks=np.transpose(les_peak)
+     m_min = [np.nanmin(les_peak[pk]) for pk in range(len(les_peak.columns))]
+     m_max =[np.nanmax(les_peak[pk]) for pk in range(len(les_peak.columns))]
+     return(nombre_peak,m_min,m_max)       
+
+
+# ## Fonction pour estimer les variables pour chaque gausienne pour tout les fichiers en meme temps et elle retourne la base de donnée qui sera utilisé dans  la partie machine learning
+
+# In[27]:
+
+
+def calcul_para(VARS,bornes,nombre_peak):
+    df_dp=pd.DataFrame(columns = ['Fichier','Type','A1','M1','E1','C1','A2','M2','E2','C2','A3','M3','E3','C3','A4','M4','E4','C4','A5','M5','E5','C5'])
+    for var in VARS:
+        df1=pd.read_csv(var,delimiter=",")
+        try:
+            for i in df1.columns:
+                if (df1[i].isnull()[0]==True): # On elimine les colonnes vides
+                    del df1[i];
+            df1=df1.dropna(axis=0); # On elimine les lignes qui contiennent des na;
+            df1=df1[1:]; # voir colonne ci-dessous pour les détails de cette ligne.
+            df1=df1.astype(float)
+    
+    
+    
+            for k in range(int(len(df1.columns)/2)):
+                x=df1[df1.columns[0]]
+                y=df1[df1.columns[2*k+1]]  # 
+                y = (y - np.min(y)) / (np.max(y) - np.min(y)) # pour normaliser les intensités
+                y_hat=savgol_filter(y, 11, 2)
+                pop1,pcov1=curve_fit(expT,x,y,bounds=bounds)
+                c1=spi.simps(expS(x,*pop1[0:3]),x)/spi.simps(expT(x,*pop1),x)
+                c2=spi.simps(expS(x,*pop1[3:6]),x)/spi.simps(expT(x,*pop1),x)
+                c3=spi.simps(expS(x,*pop1[6:9]),x)/spi.simps(expT(x,*pop1),x)
+                c4=spi.simps(expS(x,*pop1[9:12]),x)/spi.simps(expT(x,*pop1),x)
+                c5=spi.simps(expS(x,*pop1[12:]),x)/spi.simps(expT(x,*pop1),x)
+                df_dp=df_dp.append({'Fichier':var.split('/')[-1],'Type':df1.columns[2*k], 
+                                  'A1':pop1[0],'M1':pop1[1],'E1':pop1[2],'C1':c1,'A2':pop1[3],
+                                  'M2':pop1[4],'E2':pop1[5],'C2':c2,'A3':pop1[6],'M3':pop1[7],
+                                  'E3':pop1[8],'C3':c3,'A4':pop1[9],'M4':pop1[10],'E4':pop1[11],
+                                  'C4':c4, 'A5':pop1[12],'M5':pop1[13],'E5':pop1[14],
+                                  'C5':c5},ignore_index=True)
+        except:
+            print('erreur')       
+                              
+    return(df_dp)
+    
+
+
+# In[28]:
+
+
+bounds_lower =[0,borne[-1][0][0],0,0,borne[-1][0][1],0,0,borne[-1][2][0],0,0,borne[-1][3][0],0,0,borne[-1][4][0],0]
+bounds_upper =[np.inf,borne[-1][0][1],np.inf,np.inf,borne[-1][1][1],np.inf,np.inf,borne[-1][2][1],np.inf,np.inf,borne[-1][3][1],np.inf,np.inf,borne[-1][4][1],np.inf]
+bounds = (bounds_lower, bounds_upper)
+calcul_para(VARS,bornes(),5)
+
+
+# 
+
+# In[323]:
+
+
+
+
+
+# In[331]:
+
+
+
+
+
+# In[ ]:
+
+
+
+
+
+# 
+
+# In[292]:
+
+
+
+
+
+# In[57]:
+
+
+
+
+
+# In[58]:
+
+
+
+
+
+# In[64]:
+
+
+
+
+
+# In[65]:
+
+
+
+
+
+# In[ ]:
+
+
+
+
+
+# In[ ]:
+
+
+
+
+
+# In[ ]:
+
+
+
+
+
+# In[ ]:
+
+
+
+
+
+# In[ ]:
+
+
+
+
+
+# In[ ]:
+
+
+
+
+
+		
+
+	''', language='python')
+    if __name__ == "__main__":
+         main()    
+
+	
+	
     
 
 
