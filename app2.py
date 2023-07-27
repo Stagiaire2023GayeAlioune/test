@@ -1500,33 +1500,9 @@ def double_exp2(VAR,T1,T2):
     return(df1)   
 
 
-    
-
-
-# In[ ]:
-
-
-
-
-
-# In[ ]:
-
-
-
-
-
 # 
 # 
 # # **<center><font color='blue'>   méthode  gaussiennes  </font></center>**
-
-# In[ ]:
-
-
-
-
-
-# In[8]:
-
 
 def tri_exp(VAR):
     delimit=find_delimiter(VAR)
@@ -1581,9 +1557,6 @@ def tri_exp(VAR):
     return(df2)
 
 
-# 
-# 
-# 
 # # **<center><font color='blue'> Fonction pour  regression linéaire </font></center>**
 
 # In[9]:
@@ -3120,7 +3093,8 @@ page_names_to_funcs = {
     "image": image,
     "Quantification": Quantification,
     "Code_classification_polluants_heterogene":Code_classification_polluants_heterogene,
-    "Code_lissage_deconvolution_spectrale":Code_lissage_deconvolution_spectrale	
+    "Code_lissage_deconvolution_spectrale":Code_lissage_deconvolution_spectrale,
+    " Quatification_polluant_heterogene"= Quatification_polluant_heterogene	
 }
 
 selected_page = st.sidebar.selectbox("Selectionner ", page_names_to_funcs.keys())
