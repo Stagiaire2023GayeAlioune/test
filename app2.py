@@ -1261,6 +1261,1153 @@ calcul_para(VARS,bornes(),5) ''', language='python')
     if __name__ == "__main__":
 	    main()    
 
+
+
+def Quatification_polluant_heterogene():
+    def main():
+		st.code(''' 
+#!/usr/bin/env python
+# coding: utf-8 
+import pandas as pd
+import numpy as np 
+import matplotlib.pyplot as plt;
+from scipy.optimize import curve_fit,fsolve
+from scipy.signal import savgol_filter
+from scipy import signal
+import sympy as sp 
+from scipy.integrate import quad
+import scipy.integrate as spi
+from sklearn import preprocessing
+from scipy import stats
+from sklearn.linear_model import LinearRegression
+from tkinter import *
+from tkinter import filedialog
+from sklearn.preprocessing import StandardScaler
+import statsmodels.api as sm
+import statsmodels.formula.api as smf
+from sklearn.preprocessing import StandardScaler 
+import seaborn as sns
+from sympy import symbols
+from sympy import cos, exp
+from sympy import lambdify
+import statsmodels.formula.api as smf
+from sympy import *
+import csv
+from scipy import optimize
+from sklearn.metrics import r2_score#pour calculer le coeff R2
+from sklearn.linear_model import RANSACRegressor
+from colorama import init, Style
+from termcolor import colored
+
+
+# 
+# ###  **<center><font>  Fonction qui détermine le délimiter du fichier   </font></center>**
+
+# In[2]:
+
+
+def find_delimiter(filename):
+    sniffer = csv.Sniffer()
+    with open(filename) as fp:
+        delimiter = sniffer.sniff(fp.read(5000)).delimiter
+    return delimiter
+
+
+# 
+# 
+# ###  **<center><font>  Fonction qui calcul les concentrations finale    </font></center>**
+
+
+
+           
+# In[ ]:
+
+
+
+
+
+# In[ ]:
+
+
+
+
+
+# def cal_conc(x,y,z,h,Ca,Cd):
+#     ##    x,y,z,h    sont les concentrations obtenue avec les courbes de calibrations (x_intercept)
+#     a=-z/Ca   ## serie 3 , Cd est la concentratin de D dans la serie3 
+#     a1=-h/Cd  ## serie 4 , Ca est la concentration de A dans la serie4
+#     y1=y   
+#     y3=x
+#     C_A=(-a*y3+y1)/(a1*a-1)
+#     C_D=(-a1*y1+y3)/(a1*a-1)
+#     conc=pd.DataFrame([C_A,C_D])
+#     conc.index=['C_A','C_D']
+#     return(conc) 
+
+# In[4]:
+
+
+def cal_conc(x,y,z,h,Ca,Cd):
+    a=-z/Ca # serie 
+    a1=-h/Cd
+    y1=-y
+    y3=-x
+    C_A=(a*y3-y1)/(a1*a-1)
+    C_D=(a1*y1-y3)/(a1*a-1)
+    conc=pd.DataFrame([C_A,C_D])
+    conc.index=['C_A','C_D']
+    return(conc) 
+
+
+# 
+# 
+# # **<center><font color='blue'> méthode  monoexponentielle </font></center>**
+
+# In[5]:
+
+
+def mono_exp(VAR):
+    delimit=find_delimiter(VAR)
+    df=pd.read_csv(VAR,sep=delimit)
+    #-------------Nettoyage du dataframe----------------#
+    for i in df.columns:
+        if (df[i].isnull()[0]==True):# On elimine les colonnes vides
+            del df[i];
+    df=df.dropna(axis=0);#On elimine les lignes contenant des na
+    df=df[1:];
+    df=df.astype(float); # On convertit les valeurs contenues dans les colonnes en float (à la place de string)
+    df=df[df[df.columns[0]]>=0.1]   
+    ncol=(len(df.columns)) # nombre de colonnes
+    najout=(ncol/2)-3; # nombre d'ajouts en solution standard
+    
+    
+    
+    #--------------First step-----------------#
+    
+    def f_decay(x,a,b,c):
+        return(c+a*np.exp(-x/b))
+    df1=pd.DataFrame(columns=['A'+VAR.split('/')[-1],'Tau'+VAR.split('/')[-1]])
+    row=int(len(df.columns)/5)
+    row2=int(len(df.columns)/2)
+    fig, axs = plt.subplots(nrows=3, ncols=row, figsize=(20, 20))
+    for ax, i in zip(axs.flat, range(int(ncol/2))):
+        x=df[df.columns[0]] # temps
+        y=df[df.columns[(2*i)+1]]   # Intensités de fluorescence
+        plt.scatter(x,np.log(y),label="curve "+df.columns[2*i])
+        ax.set_xlabel('Temps(ms)');
+        ax.set_ylabel('log(Intensité(p.d.u))')    
+        plt.legend()
+        popt,pcov=curve_fit(f_decay,x,y,bounds=(0, np.inf))  
+        df1=df1.append({'A'+VAR.split('/')[-1] :popt[0] , 'Tau'+VAR.split('/')[-1] :popt[1]} , ignore_index=True);
+        ax.plot(x,np.log(y),label="Intensité réelle");
+        ax.plot(x,np.log(f_decay(x,*popt)),label="Intensité estimée");
+        ax.set_title(" solution "+df.columns[2*i]);
+        ax.set_xlabel('Temps(ms)');
+        ax.set_ylabel('log(Intensité(p.d.u))');
+        plt.legend();
+    plt.show();
+    return(df1)   
+    
+
+
+# # **<center><font color='blue'> méthode  double exponentielle </font></center>**
+
+# In[6]:
+
+
+def double_exp(VAR):
+    delimit=find_delimiter(VAR)
+    df=pd.read_csv(VAR,sep=delimit)
+    #-------------Nettoyage du dataframe----------------#
+    for i in df.columns:
+        if (df[i].isnull()[0]==True):# On elimine les colonnes vides
+            del df[i]
+    df=df.dropna(axis=0);#On elimine les lignes contenant des na
+    df=df[1:];
+    df=df.astype(float); # On convertit les valeurs contenues dans les colonnes en float (à la place de string)
+    df=df[df[df.columns[0]]>=0.1]
+    ncol=(len(df.columns)) # nombre de colonnes
+    najout=(ncol/2)-3; # nombre d'ajouts en solution standard
+    #---------------------First step----------------------#
+    def f_decay(x,a1,T1,a2,T2,r):
+        return(r+a1*np.exp(-x/T1)+a2*np.exp(-x/T2));
+    
+    df1=pd.DataFrame(columns=['A'+VAR.split('/')[-1],'Tau'+VAR.split('/')[-1]]);
+    row=int(len(df.columns)/5)
+    row2=int(len(df.columns)/2)
+    fig, axs = plt.subplots(nrows=3, ncols=row, figsize=(20, 20))
+    for ax, i in zip(axs.flat, range(int(ncol/2))):
+        x=df[df.columns[0]]; # temps
+        y=df[df.columns[(2*i)+1]] # Intensités de fluorescence
+        plt.scatter(x,np.log(y),label="curve "+df.columns[2*i])
+        ax.set_xlabel('Temps(ms)');
+        ax.set_ylabel('log(Intensité(p.d.u))')    
+        plt.legend()
+        y=list(y)
+        y0=max(y)   #                                                                                                                                                                                                                                                                            y[1]
+        popt,pcov=curve_fit(f_decay,x,y,bounds=(0,[y0,y0,+np.inf,+np.inf,+np.inf]));
+        tau=(popt[0]*(popt[1])**2+popt[2]*(popt[3])**2)/(popt[0]*(popt[1])+popt[2]*(popt[3]))
+        A=(popt[0]+popt[2])/2
+        df1=df1.append({'A'+VAR.split('/')[-1] :A , 'Tau'+VAR.split('/')[-1] :tau} , ignore_index=True);
+        ax.plot(x,np.log(y),label="Intensité réelle");
+        ax.plot(x,np.log(f_decay(x,*popt)),label="Intensité estimée");
+        ax.set_title(" solution "+df.columns[2*i]);
+        ax.set_xlabel('Temps(ms)');
+        ax.set_ylabel('log(Intensité(p.d.u))');
+        plt.legend();
+    plt.show()
+    return(df1)   
+
+
+# ## Calcul de la concentration à partir de l'aire sous la courbe de l'intensité 
+
+# # f_decay $(x,a1,t1,a2,t2)$ = $ \epsilon + a1\exp (\frac{-x}{t1} ) +a2\exp (\frac{-x}{t2})  $
+# ## $ Aire=\int I(t) \, dt  = a1t1 + a2t2 $
+Ici , on fixe Tau1 et Tau2 puis estimé les valeurs des préexponentielles pour determiner l'aire sur la courbe de l'intensité  
+# In[7]:
+
+
+def double_exp2(VAR,T1,T2): 
+    delimit=find_delimiter(VAR)
+    df=pd.read_csv(VAR,sep=delimit)
+    #-------------Nettoyage du dataframe----------------#
+    for i in df.columns:
+        if (df[i].isnull()[0]==True):# On elimine les colonnes vides
+            del df[i];
+    df=df.dropna(axis=0);#On elimine les lignes contenant des na
+    df=df[1:];
+    df=df.astype(float); # On convertit les valeurs contenues dans les colonnes en float (à la place de string)
+    df=df[df[df.columns[0]]>=0.1]
+    ncol=(len(df.columns)) # nombre de colonnes
+    najout=(ncol/2)-3; # nombre d'ajouts en solution standard
+    #---------------------First step----------------------#
+    def f_decay(x,a1,a2,r):
+        return(r+a1*np.exp(-x/T1)+a2*np.exp(-x/T2))
+
+    
+    df1=pd.DataFrame(columns=['Aire_'+VAR.split('/')[-1]]);
+    for i in range(int(ncol/2)):
+        x=df[df.columns[0]]; # temps
+        y=df[df.columns[(2*i)+1]]; # Intensités de fluorescence
+        y=list(y)
+        y0=max(y)   #y[1]
+        popt,pcov=curve_fit(f_decay,x,y,bounds=(0.1,[y0,y0,+np.inf]))
+        #tau=(popt[0]*(popt[1])**2+popt[2]*(popt[3])**2)/(popt[0]*(popt[1])+popt[2]*(popt[3]))
+        A1=popt[0]*T1  ## Laire sur la courbe du premier monoexponentielle 
+        A2=popt[1]*T2   ## l'aire sur la courbe du deuxiéme monoexponentielle 
+        A=A1+A2  # l'aire sous la courbe de l'intensité de fluorescence 
+        df1=df1.append({'Aire_'+VAR.split('/')[-1] :A} , ignore_index=True) ### on retourne l'aire sous la courbe de l'intensité pour chacune des series 
+    return(df1)   
+
+
+    
+
+
+# In[ ]:
+
+
+
+
+
+# In[ ]:
+
+
+
+
+
+# 
+# 
+# # **<center><font color='blue'>   méthode  gaussiennes  </font></center>**
+
+# In[ ]:
+
+
+
+
+
+# In[8]:
+
+
+def tri_exp(VAR):
+    delimit=find_delimiter(VAR)
+    df=pd.read_csv(VAR,sep=delimit);
+    for i in df.columns:
+        if (df[i].isnull()[0]==True): # On elimine les colonnes vides
+            del df[i];
+    df=df.dropna(axis=0); # On elimine les lignes qui contiennent des na;
+    df=df[1:];
+    df=df.astype(float); # On convertit les valeurs contenues dans les colonnes en float (à la place de string)
+    df=df[df[df.columns[0]]>=0.1]
+    ncol=(len(df.columns)) # nombre de colonnes
+    def f_decay(x,a1,b1,c,r): # Il s'agit de l'équation utilisée pour ajuster l'intensité de fluorescence en fonction du temps(c'est à dire la courbe de durée de vie)
+        return(a1*np.exp(-x/b1)+(a1/2)*np.exp(-x/(b1+1.177*c))+(a1/2)*np.exp(-x/(b1-1.177*c))+r)
+                                           
+    df2=pd.DataFrame(columns=["préexpo_"+VAR.split('/')[-1],"tau_"+VAR.split('/')[-1]]); # Il s'agit du dataframe qui sera renvoyé par la fonction
+    #### Ajustement des courbes de durée de vie de chaque solution en fonction du temps#### 
+    print('polluant '+VAR.split('/')[-1].split('.')[0])
+    row=int(len(df.columns)/5)
+    row2=int(len(df.columns)/2)
+    fig, axs = plt.subplots(nrows=3, ncols=row, figsize=(20, 20))
+    for ax, i in zip(axs.flat, range(int(ncol/2))):
+        x=df[df.columns[0]]; # temps
+        y=df[df.columns[(2*i)+1]]; # Intensités de fluorescence
+        plt.scatter(x,np.log(y),label="curve "+df.columns[2*i])
+        ax.set_xlabel('Temps(ms)');
+        ax.set_ylabel('log(Intensité(p.d.u))')    
+        plt.legend()
+        
+        y=list(y)
+        yo=max(y)#y[1]
+        bound_c=1
+    
+        while True:
+            try:
+                popt,pcov=curve_fit(f_decay,x,y,bounds=(0.1,[yo,+np.inf,bound_c,+np.inf]),method='dogbox') # On utilise une regression non linéaire pour approximer les courbes de durée de vie  
+                #popt correspond aux paramètres a1,b1,c,r de la fonction f_decay de tels sorte que les valeurs de f_decay(x,*popt) soient proches de y (intensités de fluorescence)
+                break;
+            except ValueError:
+                bound_c=bound_c-0.05
+                print("Oops")
+        df2=df2.append({"préexpo_"+VAR.split('/')[-1]:2*popt[0],"tau_"+VAR.split('/')[-1]:popt[1]} , ignore_index=True);# Pour chaque solution , on ajoute la préexponentielle et la durée de vie tau à la dataframe
+    
+        ax.plot(x,np.log(y),label="Intensité réelle");
+        ax.plot(x,np.log(f_decay(x,*popt)),label="Intensité estimée");
+        ax.set_title(" solution "+df.columns[2*i]);
+        ax.set_xlabel('Temps(ms)');
+        ax.set_ylabel('log(Intensité(p.d.u))');
+        plt.legend();
+    plt.show();
+    
+    return(df2)
+
+
+# 
+# 
+# 
+# # **<center><font color='blue'> Fonction pour  regression linéaire </font></center>**
+
+# In[9]:
+
+
+## regression avec linearregression
+def regression1(result,std,unk,ss):
+    concentration=pd.DataFrame(columns=['polyfit'])
+    for t in range(len(ss)): 
+        tau=result[result.columns[2*t+1]]
+        cc=tau;
+        y=np.array(cc); 
+        std=np.array(std)
+        conc=ss[t]*std/unk
+        x=conc;
+        n=len(x)
+        x=x[1:(n-1)]
+        y=y[1:(n-1)]
+        plt.scatter(x,y)
+        ####Construction de la courbe de calibration des durées de vie 
+         #les modéles 
+        
+        
+        slope1, intercept1, r_value1, p_value1, std_err1 = stats.linregress(x, y) # On effectue une régression linéaire entre les concentrations en solution standard (x) et les durées de vie (y)
+        modeleReg1=LinearRegression()
+        modeleReg2=RANSACRegressor()      #regression optimal
+        mymodel = np.poly1d(np.polyfit(x, y, 1))   #polynome de degré 1
+        x=x.reshape(-1,1);
+        modeleReg1.fit(x,y);
+        modeleReg2.fit(x,y)
+        fitLine1 = modeleReg1.predict(x)      #valeurs predites de la regression
+        slope2 = modeleReg2.estimator_.coef_[0]
+        intercept2 = modeleReg2.estimator_.intercept_
+        inlier_mask = modeleReg2.inlier_mask_
+        fitLine2 = modeleReg2.predict(x)       #valeurs predites de la regression
+        y_intercept = mymodel(0)
+        R2=modeleReg2.score(x,y)
+        R1=modeleReg1.score(x,y)
+        r_value = r2_score(y, fitLine2)
+        residuals = y - fitLine2
+        R3=r2_score(y, mymodel(x))
+        
+        # tracer les courbes de calibérations 
+        
+        plt.plot(x, fitLine1, c='r',label='stats.linregress : R² = {} '.format(round(R1,2)));
+        plt.plot(x, mymodel(x),'m',label='np.polyfit : R² = {}'.format(round(R1,)))
+        plt.plot(x, fitLine2, color="black",label='RANSACRegressor : R² = {} '.format(round(R3,2)))
+        plt.xlabel('Concentration solution standard(ppm)');
+        plt.ylabel('durée de vie(ms)');
+        plt.title('Courbe de calibration'+'du polluant '+result.columns[2*t+1][4:])
+        plt.legend()
+        plt.show()
+        # calcul des concentrations
+        Cx1=-(intercept1)/slope1
+        Cx2=-(intercept2)/slope2
+        std_err = np.std(residuals)
+        roots = np.roots(mymodel)
+        x_intercepts = [root for root in roots if np.isreal(root)]
+        x_inter=fsolve(mymodel,0)
+    
+        equation_text1 = 'y = {}x + {}'.format(slope1, intercept1)
+        equation_text2 = 'y = {}x + {}'.format(slope2, intercept2)
+        print("stats.linregress :",equation_text1, '\n'," polyfit :", mymodel , '\n', "RANSACReg : " , equation_text2)
+        concentration=concentration.append({'polyfit':round(x_inter[0],2),'lineaire':Cx1, 'RANSACReg':Cx2},ignore_index=True)
+    return(concentration)
+
+
+# In[10]:
+
+
+## regression avec linearregression
+def regression11(result,std,unk,ss):
+    concentration=pd.DataFrame(columns=['polyfit'])
+    for t in range(len(ss)): 
+        ax1=plt.subplot(211)
+        tau=result[result.columns[t]]
+        cc=tau;
+        y=np.array(cc); 
+        std=np.array(std)
+        conc=ss[t]*std/unk
+        x=conc;
+        n=len(x)
+        x=x[1:(n-1)]
+        y=y[1:(n-1)]
+        plt.scatter(x,y);
+        ## Construction de la courbe de calibration des durées de vie 
+        # les modéles 
+        modeleReg2=RANSACRegressor() # regression optimal
+        mymodel = np.poly1d(np.polyfit(x, y, 1)) # polynome de degré 1
+        x=x.reshape(-1,1);
+        modeleReg2.fit(x,y)
+        slope2 = modeleReg2.estimator_.coef_[0]
+        intercept2 = modeleReg2.estimator_.intercept_
+        inlier_mask = modeleReg2.inlier_mask_
+        fitLine2 = modeleReg2.predict(x);# valeurs predites de la regression
+        y_intercept = mymodel(0)
+        R2=modeleReg2.score(x,y)
+        r_value = r2_score(y, fitLine2)
+        residuals = y - fitLine2
+        R3=r2_score(y, mymodel(x))
+        # tracer les courbes de calibérations 
+        print('\n',f"\033[031m {result.columns[t][4:]} \033[0m",'\n')
+        plt.plot(x, mymodel(x),'m',label='np.polyfit : R² = {}'.format(round(R3,2)))
+        plt.plot(x, fitLine2, color="black",label='RANSACRegressor : R² = {} '.format(round(R2,2)))
+        plt.xlabel('Concentration solution standard(ppm)');
+        plt.ylabel('Aire sous la courbe');
+        plt.title('Courbe de calibration'+'du polluant '+result.columns[t][4:])
+        plt.legend();
+        plt.show();
+        y_intercept = mymodel(0)
+        print("y_intercept:", y_intercept)
+        # Calcul des racines (x_intercept)
+        roots = np.roots(mymodel)
+        x_intercepts = [root for root in roots if np.isreal(root)]
+        x_inter=fsolve(mymodel,0)
+        print("x_intercepts:", x_inter)
+        slope=mymodel.coef[0]
+        print("slope", slope)
+        # calcul des concentrations
+        Cx2=-(intercept2)/slope2
+        std_err = np.std(residuals)
+        roots = np.roots(mymodel)
+        x_intercepts = [root for root in roots if np.isreal(root)]
+        x_inter=fsolve(mymodel,0)
+        equation_text2 = 'y = {}x + {}'.format(slope2, intercept2)
+        print(" polyfit :",equation_text2, '\n', "RANSACReg : " , mymodel)
+        concentration=concentration.append({'polyfit':round(x_inter[0],2)},ignore_index=True)
+    return(concentration)
+
+
+# # **<center><font color='blue'> Fonction pour  regression non linéaire </font></center>**
+def regression2(result,std,unk,ss,sum_kchel):
+    con_poly3=[]
+    con2=[]
+    for i in range(len(ss)):
+        ax1=plt.subplot(211)
+        tau=result[result.columns[2*i+1]]
+        cc=tau;
+        y=np.array(cc); 
+        std=np.array(std) 
+        conc=ss[i]*std/unk
+        x=conc;
+        n=len(x)
+        x=x[1:(n-1)]
+        kchel=sum_kchel[sum_kchel.columns[2*i+1]]
+        sum_k=sum_kchel[sum_kchel.columns[2*i+1]]
+        kchel=kchel[1:(n-1)]
+        mymodel = np.poly1d(np.polyfit(x, kchel, 3))
+        plt.scatter(x, kchel)
+        plt.plot(x, mymodel(x),'m')
+        plt.show() 
+        print(mymodel,'\n','R² = {:.5f}'.format(r2_score(kchel, mymodel(x))))
+        # Calcul de l'ordonnée à l'origine (y_intercept)
+        y_intercept = mymodel(0)
+        print("y_intercept:", y_intercept)
+        # Calcul des racines (x_intercept)
+        roots = np.roots(mymodel)
+        x_intercepts = [root for root in roots if np.isreal(root)]
+        x_inter=fsolve(mymodel,0)
+        print("x_intercepts:", x_inter)
+        con_poly3.append(x_inter)
+        slope=mymodel.coef[0]
+        xinter=y_intercept/slope
+        con2.append(xinter)
+    return(con_poly3)
+# ## On utilise  plusieur fonction pour faire l'ajustement des données , on choisi la meilleure d'entre elle en comparant leur errurs quadratiques 
+
+# In[ ]:
+
+
+
+
+
+# In[84]:
+
+
+def regression2(result, std, unk, ss, sum_kchel):
+    con_poly3 = []
+    con2 = []
+    for i in range(len(ss)):
+        tau = result[result.columns[2*i+1]]
+        cc = tau
+        y = np.array(cc)
+        std = np.array(std)
+        conc = ss[i] * std / unk
+        x = conc
+        n = len(x)
+        x = x[1:(n-1)]
+        kchel = sum_kchel[sum_kchel.columns[2*i+1]]
+        sum_k = sum_kchel[sum_kchel.columns[2*i+1]]
+        kchel = kchel[1:(n-1)]
+        
+        # Fonction polynôme de degré 1
+        poly1 = np.poly1d(np.polyfit(x, kchel, 1))
+        poly1_r2 = r2_score(kchel, poly1(x))
+        
+        # Fonction polynôme de degré 2
+        poly2 = np.poly1d(np.polyfit(x, kchel, 2))
+        poly2_r2 = r2_score(kchel, poly2(x))
+        
+        ## Fonction exponentielle
+        exp_func = lambda x, a, b, c: np.exp(2*(a * x - b))+c 
+        exp_params, _ = curve_fit(exp_func, x, kchel)
+        exp_r2 = r2_score(kchel, exp_func(x, *exp_params))
+        
+        
+        # Sélection de la meilleure fonction
+        best_func = np.argmax([exp_r2])
+        print(best_func)
+        
+        if best_func == 0:
+            
+        
+            # Polynôme de degré 1
+            #best_model = poly1
+        #elif best_func == 1:
+            
+            # Polynôme de degré 2
+            #best_model = poly2
+        #elif best_func == 2:
+            # Exponentielle
+            best_model = lambda x: exp_func(x, *exp_params)
+
+        plt.scatter(x, kchel)
+        plt.plot(x, best_model(x), 'm')
+        plt.show()
+        
+        print("Best model:", best_model)
+        print("R² = {:.5f}".format(r2_score(kchel, best_model(x))))
+        if best_func==0:
+            y_intercept = exp_func(0, *exp_params)
+            print("y_intercept:", y_intercept)
+            x_inter = a*np.log(exp_params[1] /2) / exp_params[2]
+            x_inter=np.array([x_inter])
+            print("x_intercepts:", x_inter)
+            slope = -exp_params[1] * exp_func(x_inter, *exp_params)
+            con_poly3.append(x_inter)
+            con2.append(x_inter)
+            
+        if best_func==1 or best_func==0:     
+            # Calcul de l'ordonnée à l'origine (y_intercept)
+            y_intercept = best_model(0)
+            print("y_intercept:", y_intercept)
+            # Calcul des racines (x_intercept)
+            x_inter = fsolve(best_model, 0)
+            print("x_intercepts:", x_inter)
+    
+            con_poly3.append(x_inter)
+            slope = best_model.coef[0]
+            con2.append(x_inter)
+    
+    return con_poly3
+
+
+# In[ ]:
+
+
+
+
+
+# # **<center><font color='blue'>  Séléctionner les 4 Séries  </font></center>**
+
+# In[12]:
+
+
+def browseFiles2():
+	filename = filedialog.askopenfilenames(initialdir = "http://localhost:8888/tree/Stage",
+										title = "Select a File",
+										filetypes = (("Csv files",
+														"*.csv*"),
+													("all files",
+														"*.*")))
+	return(filename)
+
+
+# In[13]:
+
+
+VARS=browseFiles2()
+
+
+# ## Les fichiers selectionners 
+
+# In[14]:
+
+
+VARS
+
+
+# 
+# # **<center><font color='blue'> Ce qu'on doit changer dans le code </font></center>**
+On modifiera les volumes standards(dans std) , les concentrations  en solution  standrad pour chaque serie , le volume revelatrice , la concentration du polluant A(ref) dans la serie 4 et la concentration du polluant D(ref) dans la seri 3 .
+# In[15]:
+
+
+#unk=3 # volume inconnue 08/06 , 09/06 
+#unk=2.80  ## inconnue 10/06 , 12/06 ,15/06 ,  16/06 
+unk=2.60 ### 19/06 , 20/06 , 21/06
+
+
+#unk=3.5 ## 06/06 , 07/06 
+#std=[0,0,0.025,0.05,0.075,0.1,0.125,0.2,1]
+#std=[0,0,0.025,0.05,0.075,0.1,0.125,0.2]  ## 06/06 
+#std=[0,0,0.025,0.05,0.075,0.1,0.125,0.15,0.175,0.2,1] # Volume standard 07/06 (50,50)  , 12/06 
+#std=[0.00,0.00,0.025,0.050,0.075,0.100,0.125,0.150,0.175,0.200,3.000 ]  ## 15/06 ,  16/06 
+#std=[0,0,0.05,0.075,0.1,0.125,0.15,0.175,0.2,0.5,1] # Volume standard 08/06 , 09/06 
+std=[ 0.00,0.00,0.025,0.075,0.125,0.200,0.500,0.700,1.000,1.500,3.000 ]     ## 19/06
+#std=[ 0.00,0.00,0.025,0.075,0.125,0.200,0.500,0.700,1.000,1.500,4.000]   ## 20/06  , 21/06 
+
+
+ss1=100 # solution standard serie 1
+ss2=100 # standard serie 2
+ss3=100 # standard serie 3
+ss4 =100 # standard serie 4
+rev=0.4 # volume reveratrice ## 08/06 , 09/06 , 15/06 , 16/06 , 19/06 , 20/06 
+#rev=0.3 ## 06/06   12/06
+Ca=10# concentration initiale du polluant A dans la serie 4
+Cd=10# concentration initiale du polluant D dans la serie 3
+
+
+# 
+# 
+# # **<center><font color='blue'>   Resultats    </font></center>**
+
+# 
+# 
+# 
+# ## **<center><font>  mono_exponentielle </font></center>**
+
+# 
+# 
+# 
+# ### **<center><font>    I )  On fit l'intensité avec une mono_exponentielle puis on calcul les concentrations en utilisant une regressions linéaire ensuite non lineaire ( degré 3)  pour chaque serie    </font></center>**
+
+# In[16]:
+
+
+Taux4=pd.DataFrame()
+for VAR in VARS:
+    #print("Serie : " , VAR.split('/')[-1])
+    Q=mono_exp(VAR)
+    T=pd.concat([Taux4,Q], axis=1)
+    Taux4=T
+result4=pd.DataFrame()
+j=[1,1,2,2,3,3,4,4]
+for i in j:
+    for k in range(len(Taux4.columns)) : 
+        if Taux4.columns[k].find('S'+str(i))!=-1:
+            result4=pd.concat([result4,Taux4[Taux4.columns[k]]],axis=1)
+result4 = result4.loc[:,~result4.columns.duplicated()]       
+
+
+# ## **<center><font> Tableau qui contient les taux et les pré_exponentielle de chaque échantillon dans chacune des séries   </font></center>**
+
+# In[17]:
+
+
+result4.style.background_gradient(cmap="Greens")
+
+
+# 
+# ## **<center><font> I-1) Calcul des concentrations par une regression linéaire  </font></center>**
+
+# In[18]:
+
+
+ss=[ss1,ss2,ss3,ss4]
+concentration4=regression1(result4,std,unk,ss) 
+
+
+# ## Concentration obtenue  pour chacune des series 
+
+# In[ ]:
+
+
+
+
+
+# In[19]:
+
+
+concentration4
+serie=['s1','s2','s3','s4']
+concentration4.index=serie
+concentration4.style.background_gradient(cmap="Greens")
+
+
+# ### Les concentrations finales pour chaque polluant 
+
+# In[20]:
+
+
+polyfit=concentration4[concentration4.columns[0]]
+r2=cal_conc(*polyfit,Ca,Cd)
+r2.style.background_gradient(cmap="Blues")
+
+
+# In[ ]:
+
+
+
+
+
+# 
+# ## **<center><font>   I-2 ) Calcul des concentrations en utilisant une regression non lineaire ( degré 3) </font></center>**
+
+# ### Calcul kchel et sum_k pour chaque serie 
+
+# In[85]:
+
+
+def fun(tau):
+    sum_k=1/tau
+    kch=-sum_k+sum_k[0]
+    return(sum_k,kch)
+sum_kchel1=pd.DataFrame() # gaussienne
+sum_kchel2=pd.DataFrame()# double exp
+sum_kchel3=pd.DataFrame() # mono exp
+for j in range(4):
+    tt3=result4[result4.columns[2*j+1]]
+    s_k=pd.DataFrame(fun(tt3))
+    s_k=s_k.T
+    s_k.columns=['sum_k'+result4.columns[2*j+1].split('_')[-1],'kchel'+result4.columns[2*j+1].split('_')[-1]]
+    sum_kchel3=pd.concat([sum_kchel3,s_k],axis=1)
+
+
+# ### Tableau qui donne le nombre d'ion chélaté et le pourcentage de chaque taux pour chaque série 
+
+# In[86]:
+
+
+sum_kchel3.style.background_gradient(cmap="Greens")
+
+
+# In[87]:
+
+
+ss=[ss1,ss2,ss3,ss4]
+concentrationC4=regression2(result4,std,unk,ss,sum_kchel3)
+
+
+# ## Resultast des concentrations obtenuent dans chaque serie 
+
+# ### Resultats des concentrations de chaque polluant
+
+# In[80]:
+
+
+concen =pd.DataFrame(concentrationC4)
+serie=['s1','s2','s3','s4']
+concen.index=serie
+concen.style.background_gradient(cmap="Greens")
+
+
+# In[81]:
+
+
+r1=cal_conc(*concentrationC4,Ca,Cd)
+r1.style.background_gradient(cmap="Greens")
+
+
+# In[ ]:
+
+
+
+
+
+# 
+# # **<center><font>  méthode double_exponentielle   </font></center>**
+
+# In[90]:
+
+
+Taux2=pd.DataFrame()
+for VAR in VARS:
+    #print("Serie : " , VAR.split('/')[-1])
+    Q=double_exp(VAR)
+    T2=pd.concat([Taux2,Q], axis=1)
+    Taux2=T2
+result2=pd.DataFrame()
+j=[1,1,2,2,3,3,4,4]
+for i in j:
+    for k in range(len(Taux2.columns)) : 
+        if Taux2.columns[k].find('S'+str(i))!=-1:
+            result2=pd.concat([result2,Taux2[Taux2.columns[k]]],axis=1)
+result2 = result2.loc[:,~result2.columns.duplicated()]   
+
+
+# ## Tableau qui donne les taux et les pré_exponentielle pour chaque série
+
+# In[91]:
+
+
+result2.style.background_gradient(cmap="Blues")
+
+
+# 
+# # **<center><font>  calcule de la concentration pour la  regression linéaire  </font></center>**
+
+# In[92]:
+
+
+ss=[ss1,ss2,ss3,ss4]
+concentrationC3=regression1(result2,std,unk,ss) 
+
+
+# ## Concentration obtenue dans chacune des series
+
+# In[93]:
+
+
+serie=['s1','s2','s3','s4']
+concentrationC3.index=serie
+concentrationC3.style.background_gradient(cmap="Blues")
+
+
+# In[ ]:
+
+
+
+
+
+# 
+# # **<center><font>  Concentration obtenue pour les deux polluants   </font></center>**
+
+# In[95]:
+
+
+polyfit=concentrationC3[concentrationC3.columns[0]]
+r2=cal_conc(*polyfit,Ca,Cd)
+r2.style.background_gradient(cmap="Blues")
+
+
+# # **<center><font> Calcul de la concentration en utilisant laire sous la courbe de l intensité de fluorescence </font></center>**
+
+# In[48]:
+
+
+### On fixe Tau1 et Tau2 
+## Pour differentes valeurs de Tau1 et tau2 
+t1=[0.429,0.975,0.639,1.199,1.050,1.090,1.151,1.281,1.311,1.347,0.092]
+t2=[0.429,0.423,0.367,0.452,0.428,0.434,0.434,0.434,0.441,0.435,1.317]
+l=0
+while(l<len(t1)):
+    print(colored('les valeurs de Tau : ','red', attrs=['reverse', 'blink']))
+    print('Tau1=',t1[l],'et' , 'Tau2=',t2[l])
+    Taux4=pd.DataFrame()
+    T1=t1[l]   
+    T2=t2[l]
+    for VAR in VARS:
+        #print("Serie : " , VAR.split('/')[-1])
+        Q=double_exp2(VAR,T1,T2)
+        T=pd.concat([Taux4,Q], axis=1)
+        Taux4=T
+    result4=pd.DataFrame()
+    j=[1,1,2,2,3,3,4,4]
+    for i in j:
+        for k in range(len(Taux4.columns)) : 
+             if Taux4.columns[k].find('S'+str(i))!=-1:
+                result4=pd.concat([result4,Taux4[Taux4.columns[k]]],axis=1)
+    result4 = result4.loc[:,~result4.columns.duplicated()] 
+    ss=[ss1,ss2,ss3,ss4]
+    concentrationC1=regression11(result4,std,unk,ss) 
+    serie=['s1','s2','s3','s4']
+    concentrationC1.index=serie
+    print(colored('concentration obtenue avec les courbes de calibrations ','red', attrs=['reverse', 'blink'] ))
+    print(concentrationC1)
+    polyfit=concentrationC1[concentrationC1.columns[0]]
+    r2=cal_conc(*polyfit,Ca,Cd)
+    r5=pd.concat([r2],axis=1)
+    r5.columns=['polyfit']
+    print(colored('Concentrations inconnues des polluants', 'red', attrs=['reverse', 'blink'] ))
+    print(r5)
+    l=l+1
+
+
+# In[ ]:
+
+
+
+
+
+# ## Une des resultats en detail ( tau1= 0.092 et tau2 = 1.317 )
+
+# ## Les Aires pour chacune des series 
+
+# In[49]:
+
+
+result4.style.background_gradient(cmap="Greens")
+
+
+# In[50]:
+
+
+ss=[ss1,ss2,ss3,ss4]
+concentrationC1=regression11(result4,std,unk,ss) 
+
+
+# ## Concentration obtenue pour chaque courbe de calibration lineaire 
+
+# In[332]:
+
+
+concentrationC1
+serie=['s1','s2','s3','s4']
+concentrationC1.index=serie
+concentrationC1.style.background_gradient(cmap="Purples")
+
+
+# ## Concentration inconnue des polluants 
+
+# In[51]:
+
+
+polyfit=concentrationC1[concentrationC1.columns[0]]
+r2=cal_conc(*polyfit,Ca,Cd)
+r5=pd.concat([r2],axis=1)
+r5.columns=['polyfit']
+r5.style.background_gradient(cmap="Purples")
+
+
+# 
+# # **<center><font>  calcule de la concentration pour la  regression non linéaire  </font></center>**
+
+# In[ ]:
+
+
+
+
+
+# In[ ]:
+
+
+
+
+
+# In[54]:
+
+
+def fun(tau):
+    sum_k=1/tau
+    kch=-sum_k+sum_k[0]
+    return(sum_k,kch)
+sum_kchel1=pd.DataFrame() # gaussienne
+sum_kchel2=pd.DataFrame()# double exp
+sum_kchel3=pd.DataFrame() # mono exp
+for j in range(4):
+    tt3=result2[result2.columns[2*j+1]]
+    s_k=pd.DataFrame(fun(tt3))
+    s_k=s_k.T
+    s_k.columns=['sum_k'+result2.columns[2*j+1].split('_')[-1],'kchel'+result2.columns[2*j+1].split('_')[-1]]
+    sum_kchel2=pd.concat([sum_kchel2,s_k],axis=1)
+sum_kchel2.style.background_gradient(cmap="Blues")
+
+
+# In[55]:
+
+
+ss=[ss1,ss2,ss3,ss4]
+concentration3=regression2(result2,std,unk,ss,sum_kchel2) 
+
+
+# ## Concentration obtenue pour chacune des series
+
+# In[341]:
+
+
+concen =pd.DataFrame(concentration3)
+serie=['s1','s2','s3','s4']
+concen.index=serie
+concen.style.background_gradient(cmap="Blues")
+
+
+# In[ ]:
+
+
+
+
+
+# ### Resultats des concentrations de chaque polluant
+
+# In[342]:
+
+
+r1=cal_conc(*concentration3,Ca,Cd)
+r1.style.background_gradient(cmap="Blues")
+
+
+# 
+# # **<center><font>  méthode gaussiennes    </font></center>**
+
+# In[343]:
+
+
+Taux=pd.DataFrame()
+for VAR in VARS:
+    #print("Serie : " , VAR.split('/')[-1])
+    Q=tri_exp(VAR)
+    T=pd.concat([Taux,Q], axis=1)
+    Taux=T
+result=pd.DataFrame()
+j=[1,1,2,2,3,3,4,4]
+for i in j:
+    for k in range(len(Taux.columns)) : 
+        if Taux.columns[k].find('S'+str(i))!=-1:
+            result=pd.concat([result,Taux[Taux.columns[k]]],axis=1)
+result = result.loc[:,~result.columns.duplicated()]       
+
+
+# 
+# # **<center><font>  resultats calcul de Taux et préexponentielle   </font></center>**
+
+# In[ ]:
+
+
+result.style.background_gradient(cmap="Purples")
+
+
+# 
+# # **<center><font>  resultats regression  linéaire  </font></center>**
+
+# In[ ]:
+
+
+ss=[ss1,ss2,ss3,ss4]
+concentrationC1=regression1(result,std,unk,ss) 
+
+
+# ## Concentration obtenue pour chacune des series
+
+# In[ ]:
+
+
+concentrationC1
+serie=['s1','s2','s3','s4']
+concentrationC1.index=serie
+concentrationC1.style.background_gradient(cmap="Purples")
+
+
+# ### Resultats des concentrations de chaque polluant
+
+# In[ ]:
+
+
+concentrationC1=concentrationC1[concentrationC1.columns[2]]
+r1=cal_conc(*concentrationC1,Ca,Cd)
+r1.style.background_gradient(cmap="Purples")
+
+
+# 
+# # **<center><font>  resultats regression non  linéaire  </font></center>**
+
+# In[628]:
+
+
+for j in range(4):
+    tt1=result[result.columns[2*j+1]]
+    s_k=pd.DataFrame(fun(tt1))
+    s_k=s_k.T
+    s_k.columns=['sum_k'+result.columns[2*j+1].split('_')[-1],'kchel'+result.columns[2*j+1].split('_')[-1]]
+    sum_kchel1=pd.concat([sum_kchel1,s_k],axis=1)
+sum_kchel1
+
+
+# In[629]:
+
+
+ss=[ss1,ss2,ss3,ss4]
+concentration1=regression2(result,std,unk,ss,sum_kchel1) 
+
+
+# ## Valeur des concentrations pour chacune des series 
+
+# In[630]:
+
+
+concen =pd.DataFrame(concentration1)
+serie=['s1','s2','s3','s4']
+concen.index=serie
+concen.style.background_gradient(cmap="Purples")
+
+
+# 
+# # **<center><font>  Concentration obtenue pour les deux polluants   </font></center>**
+
+# In[ ]:
+
+
+
+
+
+# In[631]:
+
+
+r2=cal_conc(*concentration1,Ca,Cd)
+r2.style.background_gradient(cmap="Purples")
+
+
+# In[ ]:
+
+
+
+
+
+# In[ ]:
+
+
+
+
+
+# In[ ]:
+
+
+
+
+
+
+  ''',langage='python')
+
+    if __name__ == "__main__":
+	    main()    
+
+		
 	
 	
     
