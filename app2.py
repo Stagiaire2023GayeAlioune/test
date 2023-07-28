@@ -79,9 +79,6 @@ def Code_classification_polluants_heterogene():
 
 # ## Importation des biliotheques necessaires
 
-# In[53]:
-
-
 import pandas as pd
 import numpy as np 
 import matplotlib.pyplot as plt  
@@ -2984,16 +2981,13 @@ r2.style.background_gradient(cmap="Purples")
 	     
 	     main()    
 
-		
 	
-	
-    
-
-
 
 def identification():
     st.sidebar.markdown('<h1 style="text-align: center;">La partie Identification des polluants:  🎈</h1>', unsafe_allow_html=True)
     def main():
+
+	    
         st.markdown('<h1 style="text-align: center;">Identification des polluants</h1>', unsafe_allow_html=True)
         st.markdown('Chercher un model de classification le plus efficace qui permet de mieux classers les polluants :  🎈', unsafe_allow_html=True)
         st.markdown('Charger la base de donnée</h1>',unsafe_allow_html=True)
