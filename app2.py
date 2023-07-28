@@ -817,6 +817,609 @@ c1.style.highlight_max(subset=['accuracy'], color='orange')
          main()    
 
 
+def Code_apprentissage_3D():
+    def main():
+	    st.code('''#!/usr/bin/env python
+# coding: utf-8
+
+# In[11]:
+
+
+import pandas as pd
+import numpy as np 
+import matplotlib.pyplot as plt;
+from tkinter import filedialog
+from tkinter import *
+import seaborn as sns
+import plotly.graph_objs as go
+from plotly.offline import init_notebook_mode, iplot
+import plotly.graph_objects as go
+from plotly.offline import init_notebook_mode, iplot
+from scipy.signal import savgol_filter
+import numpy as np
+import pandas as pd
+import matplotlib as ml
+import matplotlib.pyplot as plt
+from scipy.interpolate import griddata
+import tensorflow as tf
+import keras.preprocessing.image
+import sklearn.preprocessing
+import sklearn.model_selection
+import sklearn.metrics
+import sklearn.linear_model
+import sklearn.naive_bayes
+import sklearn.tree
+import sklearn.ensemble
+import os;
+import datetime  
+import cv2 
+import seaborn as sns
+from PIL import Image
+from tensorflow.keras.models import Sequential
+import cv2
+import numpy as np
+import requests
+import matplotlib.pyplot as plt
+import matplotlib.image as mpimg
+import sys
+import datetime
+from tensorflow import keras
+from tensorflow.keras.models import Model
+import tensorflow as tf
+from PIL import Image
+import os
+import cv2
+from sklearn.model_selection import train_test_split
+
+from tensorflow import keras
+from keras.models import Sequential
+from keras.layers import Conv2D,MaxPooling2D,Dense,Flatten,Dropout
+import os
+from tensorflow.keras.preprocessing.image import ImageDataGenerator
+from tensorflow.keras.preprocessing import image
+from tensorflow.keras.optimizers import RMSprop
+from tensorflow.keras.utils import to_categorical
+from tensorflow.keras.callbacks import TensorBoard
+
+
+# In[12]:
+
+
+def browseFiles2():
+	filename = filedialog.askopenfilenames(initialdir = "http://localhost:8888/tree/Stage",
+										title = "Select a File",
+										filetypes = (("Csv files",
+														"*.csv*"),
+													("all files",
+														"*.*")))
+	return(filename)
+
+
+# ### Selectionner plussieurs fichiers  d'expectre 3D pour creer la base de donnée .
+
+# In[ ]:
+
+
+VAR=browseFiles2()
+VAR
+
+
+# ## fonction pour prendre en compte toute srte de delimiteur 
+
+# In[ ]:
+
+
+import csv
+def find_delimiter(filename):
+    sniffer = csv.Sniffer()
+    with open(filename) as fp:
+        delimiter = sniffer.sniff(fp.read(5000)).delimiter
+    return delimiter
+
+
+# In[ ]:
+
+
+fichier=[]
+col=['A+D','D','E','A']
+labels=[]
+for VAR in range(len(VARS)):
+    image=[]
+    row=int(len(VARS[VAR])/5)
+    i=0
+    for V in VARS[VAR]:
+        df=pd.read_csv(V,sep=';')
+        df=df.dropna()
+        d1=df.drop(df.index[1])
+        d1=d1[1:]
+        x1=df[df.columns[:]]
+        x1=x1[1:].astype(float)
+        y=df[df.columns[0]]
+        I=df[df.columns[1]]
+        y=y[1:].astype(float)
+        I=I[1:].astype(float)
+        z=df[df.columns[2]]
+        z=z[1:].astype(float)
+
+        x1_values = x1.iloc[:, 1:]
+        Y, X = np.meshgrid(y, range(x1_values.shape[1]))
+        fig1, ax = plt.subplots()
+        cmap = ax.contourf(Y, X, x1_values.T)
+        fig1.colorbar(cmap)
+        ax.set_title(V.split('/')[-1])
+        ax.set_xlabel('longueur d \'onde \n '+V.split('/')[-1])
+        ax.set_ylabel('Z_axis')
+        fig1.savefig('Z:/1_Data/1_Experiments/1_FENNEC/2_Stagiaires/2023_Alioune/Identification_2023/spectres_excitation/donnees/3D/image_3D/'+V.split('/')[-1]+'.png')
+        f=r'Z:/1_Data/1_Experiments/1_FENNEC/2_Stagiaires/2023_Alioune/Identification_2023/spectres_excitation/donnees/3D/image_3D/'+V.split('/')[-1]+'.png'
+        fichier.append(f)
+        labels.append(col[VAR])
+    plt.show()
+
+
+# ## Calcul des contribution de chaque pollant
+
+# In[ ]:
+
+
+ratio=[]
+for V in VAR:
+    r=[]
+    r.append(V.split('-')[0].split('/')[8])
+    r.append(V.split('-')[1])
+    ratio.append(r)
+
+
+# In[ ]:
+
+
+ratio=pd.DataFrame(ratio)
+ratio=ratio.astype(float)
+ratio=ratio*0.01
+
+
+# In[ ]:
+
+
+ratio
+
+
+# In[ ]:
+
+
+VV=list(fichier)
+VV=pd.DataFrame(VV)
+
+
+# In[ ]:
+
+
+data=pd.concat([VV,ratio],axis=1)
+
+
+# In[ ]:
+
+
+fichier[0].split('/')[-1]
+
+
+# In[ ]:
+
+
+from PIL import Image
+labels1=[]
+fichier1=[]
+for j in range(len(fichier)):
+    im = Image.open(fichier[j])
+    im = im.rotate(180)
+    im.save("Z:/1_Data/1_Experiments/1_FENNEC/2_Stagiaires/2023_Alioune/Identification_2023/spectres_excitation/donnees/3D/image_3D/base/"+labels[j]+"rotation"+fichier[j].split('/')[-1])
+    f="Z:/1_Data/1_Experiments/1_FENNEC/2_Stagiaires/2023_Alioune/Identification_2023/spectres_excitation/donnees/3D/image_3D//base/"+labels[j]+"rotation"+fichier[j].split('/')[-1]
+    fichier1.append(f)
+    labels1.append(labels[j])
+    plt.imshow(im)
+    plt.show()
+
+
+# In[ ]:
+
+
+from PIL import Image
+labels2=[]
+fichier2=[]
+for j in range(len(fichier)):
+    im = Image.open(fichier[j])
+    im = im.convert("L")  # Grayscale
+    plt.imshow(im)
+    im.save("Z:/1_Data/1_Experiments/1_FENNEC/2_Stagiaires/2023_Alioune/Identification_2023/spectres_excitation/donnees/3D/image_3D/base/"+labels[j]+"couleur"+fichier[j].split('/')[-1])
+    f="Z:/1_Data/1_Experiments/1_FENNEC/2_Stagiaires/2023_Alioune/Identification_2023/spectres_excitation/donnees/3D/image_3D/base/"+labels[j]+"couleur"+fichier[j].split('/')[-1]
+    fichier2.append(f)
+    labels2.append(labels[j])
+
+
+# #### Creation d'une base de donnée  et la statistique descriptive des données 
+
+# In[ ]:
+
+
+base=np.transpose(pd.DataFrame([fichier,labels]))
+base1=np.transpose(pd.DataFrame([fichier1,labels1]))
+base2=np.transpose(pd.DataFrame([fichier2,labels2]))
+Base=pd.concat([base,base1,base2],axis=0)
+Base.columns=['image','labels']
+Base['labels'].value_counts().plot.bar()
+base=Base
+base
+
+
+# ## On a remarquer qu'on a pas assez se données ainsi , on essaye d'augmenter les données en fessant des rotations d'image de changer les contratstes ....
+
+# In[ ]:
+
+
+### from PIL import Image
+from PIL import Image, ImageOps
+from PIL import Image, ImageFilter
+labels3=[]
+fichier3=[]
+t=base[base['labels']=='D']
+
+for j in range(len(t)):
+    im = Image.open(t['image'].values[j])
+    im = im.rotate(30)
+    im.save("Z:/1_Data/1_Experiments/1_FENNEC/2_Stagiaires/2023_Alioune/Identification_2023/spectres_excitation/donnees/3D/image_3D/base/"+t['labels'].values[j]+"couleur_D_30"+t['image'].values[j].split('/')[-1])
+    f="Z:/1_Data/1_Experiments/1_FENNEC/2_Stagiaires/2023_Alioune/Identification_2023/spectres_excitation/donnees/3D/image_3D/base/"+t['labels'].values[j]+"couleur_D_30"+t['image'].values[j].split('/')[-1]
+    fichier3.append(f)
+    labels3.append(t['labels'].values[j])
+    plt.show()
+
+for j in range(len(t)):
+    im = Image.open(t['image'].values[j])
+    im = im.rotate(60)
+    im.save("Z:/1_Data/1_Experiments/1_FENNEC/2_Stagiaires/2023_Alioune/Identification_2023/spectres_excitation/donnees/3D/image_3D/base/"+t['labels'].values[j]+"couleur_D_60"+t['image'].values[j].split('/')[-1])
+    f="Z:/1_Data/1_Experiments/1_FENNEC/2_Stagiaires/2023_Alioune/Identification_2023/spectres_excitation/donnees/3D/image_3D/base/"+t['labels'].values[j]+"couleur_D_60"+t['image'].values[j].split('/')[-1]
+    fichier3.append(f)
+    labels3.append(t['labels'].values[j])
+    plt.show()
+for j in range(len(t)):
+    im = Image.open(t['image'].values[j])
+    im = im.rotate(130)
+    im.save("Z:/1_Data/1_Experiments/1_FENNEC/2_Stagiaires/2023_Alioune/Identification_2023/spectres_excitation/donnees/3D/image_3D/base/"+t['labels'].values[j]+"couleur_D_130"+t['image'].values[j].split('/')[-1])
+    f="Z:/1_Data/1_Experiments/1_FENNEC/2_Stagiaires/2023_Alioune/Identification_2023/spectres_excitation/donnees/3D/image_3D/base/"+t['labels'].values[j]+"couleur_D_130"+t['image'].values[j].split('/')[-1]
+    fichier3.append(f)
+    labels3.append(t['labels'].values[j])
+    plt.show()
+
+
+for j in range(len(t)):
+    im = Image.open(t['image'].values[j])
+    im.putalpha(128)
+    im.save("Z:/1_Data/1_Experiments/1_FENNEC/2_Stagiaires/2023_Alioune/Identification_2023/spectres_excitation/donnees/3D/image_3D/base/base/"+t['labels'].values[j]+"couleur_D_60_col"+t['image'].values[j].split('/')[-1])
+    f="Z:/1_Data/1_Experiments/1_FENNEC/2_Stagiaires/2023_Alioune/Identification_2023/spectres_excitation/donnees/3D/image_3D/base/"+t['labels'].values[j]+"couleur_D_60_col"+t['image'].values[j].split('/')[-1]
+    fichier3.append(f)
+    labels3.append(t['labels'].values[j])
+    plt.show()
+
+for j in range(len(t)):
+    im = Image.open(t['image'].values[j])
+    im= im.convert("L")
+    im= im.filter(ImageFilter.FIND_EDGES)
+    im.save("Z:/1_Data/1_Experiments/1_FENNEC/2_Stagiaires/2023_Alioune/Identification_2023/spectres_excitation/donnees/3D/image_3D/base/"+t['labels'].values[j]+"couleur_D_bruit"+t['image'].values[j].split('/')[-1])
+    f="Z:/1_Data/1_Experiments/1_FENNEC/2_Stagiaires/2023_Alioune/Identification_2023/spectres_excitation/donnees/3D/image_3D/base/"+t['labels'].values[j]+"couleur_D_bruit"+t['image'].values[j].split('/')[-1]
+    fichier3.append(f)
+    labels3.append(t['labels'].values[j])
+    plt.show()
+    
+t=base[base['labels']=='A']
+fichier4=[]
+labels4=[]
+for j in range(len(t)):
+    im = Image.open(t['image'].values[j])
+    im = im.rotate(30)
+    im.save("Z:/1_Data/1_Experiments/1_FENNEC/2_Stagiaires/2023_Alioune/Identification_2023/spectres_excitation/donnees/3D/image_3D/base/"+t['labels'].values[j]+"couleur_A_30"+t['image'].values[j].split('/')[-1])
+    f="Z:/1_Data/1_Experiments/1_FENNEC/2_Stagiaires/2023_Alioune/Identification_2023/spectres_excitation/donnees/3D/image_3D/base/"+t['labels'].values[j]+"couleur_A_30"+t['image'].values[j].split('/')[-1]
+    fichier4.append(f)
+    labels4.append(t['labels'].values[j])
+    plt.show()
+
+for j in range(len(t)):
+    im = Image.open(t['image'].values[j])
+    im = im.rotate(60)
+    im.save("Z:/1_Data/1_Experiments/1_FENNEC/2_Stagiaires/2023_Alioune/Identification_2023/spectres_excitation/donnees/3D/image_3D/base/"+t['labels'].values[j]+"couleur_A_60"+t['image'].values[j].split('/')[-1])
+    f="Z:/1_Data/1_Experiments/1_FENNEC/2_Stagiaires/2023_Alioune/Identification_2023/spectres_excitation/donnees/3D/image_3D/base/"+t['labels'].values[j]+"couleur_A_60"+t['image'].values[j].split('/')[-1]
+    fichier4.append(f)
+    labels4.append(t['labels'].values[j])
+    plt.show()
+for j in range(len(t)):
+    im = Image.open(t['image'].values[j])
+    im = im.rotate(130)
+    im.save("Z:/1_Data/1_Experiments/1_FENNEC/2_Stagiaires/2023_Alioune/Identification_2023/spectres_excitation/donnees/3D/image_3D/base/"+t['labels'].values[j]+"couleur_A_130"+t['image'].values[j].split('/')[-1])
+    f="Z:/1_Data/1_Experiments/1_FENNEC/2_Stagiaires/2023_Alioune/Identification_2023/spectres_excitation/donnees/3D/image_3D/base/"+t['labels'].values[j]+"couleur_A_130"+t['image'].values[j].split('/')[-1]
+    fichier4.append(f)
+    labels4.append(t['labels'].values[j])
+    plt.show()
+
+
+for j in range(len(t)):
+    im = Image.open(t['image'].values[j])
+    im.putalpha(128)
+    im.save("Z:/1_Data/1_Experiments/1_FENNEC/2_Stagiaires/2023_Faty_M2/csv 3D/image_3D/base/"+t['labels'].values[j]+"couleur_A_60_col"+t['image'].values[j].split('/')[-1])
+    f="Z:/1_Data/1_Experiments/1_FENNEC/2_Stagiaires/2023_Faty_M2/csv 3D/image_3D/base/"+t['labels'].values[j]+"couleur_A_60_col"+t['image'].values[j].split('/')[-1]
+    fichier4.append(f)
+    labels4.append(t['labels'].values[j])
+    plt.show()
+
+for j in range(len(t)):
+    im = Image.open(t['image'].values[j])
+    im= im.convert("L")
+    im= im.filter(ImageFilter.FIND_EDGES)
+    im.save("Z:/1_Data/1_Experiments/1_FENNEC/2_Stagiaires/2023_Alioune/Identification_2023/spectres_excitation/donnees/3D/image_3D/base/"+t['labels'].values[j]+"couleur_A_bruit"+t['image'].values[j].split('/')[-1])
+    f="Z:/1_Data/1_Experiments/1_FENNEC/2_Stagiaires/2023_Alioune/Identification_2023/spectres_excitation/donnees/3D/image_3D/base/"+t['labels'].values[j]+"couleur_A_bruit"+t['image'].values[j].split('/')[-1]
+    fichier4.append(f)
+    labels4.append(t['labels'].values[j])
+    plt.show()
+    
+    
+t=base[base['labels']=='E']
+fichier5=[]
+labels5=[]
+for j in range(len(t)):
+    im = Image.open(t['image'].values[j])
+    im = im.rotate(30)
+    im.save("Z:/1_Data/1_Experiments/1_FENNEC/2_Stagiaires/2023_Alioune/Identification_2023/spectres_excitation/donnees/3D/image_3D/base/"+t['labels'].values[j]+"couleur_E_30"+t['image'].values[j].split('/')[-1])
+    f="Z:/1_Data/1_Experiments/1_FENNEC/2_Stagiaires/2023_Alioune/Identification_2023/spectres_excitation/donnees/3D/image_3D/base/"+t['labels'].values[j]+"couleur_E_30"+t['image'].values[j].split('/')[-1]
+    fichier5.append(f)
+    labels5.append(t['labels'].values[j])
+    plt.show()
+
+for j in range(len(t)):
+    im = Image.open(t['image'].values[j])
+    im = im.rotate(60)
+    im.save("Z:/1_Data/1_Experiments/1_FENNEC/2_Stagiaires/2023_Alioune/Identification_2023/spectres_excitation/donnees/3D/image_3D/base/"+t['labels'].values[j]+"couleur_E_60"+t['image'].values[j].split('/')[-1])
+    f="Z:/1_Data/1_Experiments/1_FENNEC/2_Stagiaires/2023_Alioune/Identification_2023/spectres_excitation/donnees/3D/image_3D/base/"+t['labels'].values[j]+"couleur_E_60"+t['image'].values[j].split('/')[-1]
+    fichier5.append(f)
+    labels5.append(t['labels'].values[j])
+    plt.show()
+    
+for j in range(len(t)):
+    im = Image.open(t['image'].values[j])
+    im = im.rotate(130)
+    im.save("Z:/1_Data/1_Experiments/1_FENNEC/2_Stagiaires/2023_Alioune/Identification_2023/spectres_excitation/donnees/3D/image_3D/base/"+t['labels'].values[j]+"couleur_E_130"+t['image'].values[j].split('/')[-1])
+    f="Z:/1_Data/1_Experiments/1_FENNEC/2_Stagiaires/2023_Alioune/Identification_2023/spectres_excitation/donnees/3D/image_3D/base/"+t['labels'].values[j]+"couleur_E_130"+t['image'].values[j].split('/')[-1]
+    fichier5.append(f)
+    labels5.append(t['labels'].values[j])
+    plt.show()
+
+for j in range(len(t)):
+    im = Image.open(t['image'].values[j])
+    im.putalpha(128)
+    im.save("Z:/1_Data/1_Experiments/1_FENNEC/2_Stagiaires/2023_Alioune/Identification_2023/spectres_excitation/donnees/3D/image_3D/base/"+t['labels'].values[j]+"couleur_E_60_col"+t['image'].values[j].split('/')[-1])
+    f="Z:/1_Data/1_Experiments/1_FENNEC/2_Stagiaires/2023_Alioune/Identification_2023/spectres_excitation/donnees/3D/image_3D/base/"+t['labels'].values[j]+"couleur_E_60_col"+t['image'].values[j].split('/')[-1]
+    fichier5.append(f)
+    labels5.append(t['labels'].values[j])
+    plt.show()
+
+for j in range(len(t)):
+    im = Image.open(t['image'].values[j])
+    im= im.convert("L")
+    im= im.filter(ImageFilter.FIND_EDGES)
+    im.save("Z:/1_Data/1_Experiments/1_FENNEC/2_Stagiaires/2023_Alioune/Identification_2023/spectres_excitation/donnees/3D/image_3D/base/"+t['labels'].values[j]+"couleur_E_bruit"+t['image'].values[j].split('/')[-1])
+    f="Z:/1_Data/1_Experiments/1_FENNEC/2_Stagiaires/2023_Alioune/Identification_2023/spectres_excitation/donnees/3D/image_3D/base/"+t['labels'].values[j]+"couleur_E_bruit"+t['image'].values[j].split('/')[-1]
+    fichier5.append(f)
+    labels5.append(t['labels'].values[j])
+    plt.show()
+
+
+# In[ ]:
+
+
+base=np.transpose(pd.DataFrame([fichier,labels]))
+base1=np.transpose(pd.DataFrame([fichier1,labels1]))
+base2=np.transpose(pd.DataFrame([fichier2,labels2]))
+base3=np.transpose(pd.DataFrame([fichier3,labels3]))
+base4=np.transpose(pd.DataFrame([fichier4,labels4]))
+base5=np.transpose(pd.DataFrame([fichier5,labels5]))
+Base=pd.concat([base,base1,base2,base3,base4,base5],axis=0)
+Base.columns=['image','labels']
+Base['labels'].value_counts().plot.bar()
+base=Base
+base.index=range(len(base))
+
+
+# In[ ]:
+
+
+base=base[base.duplicated()!=True]
+
+
+# In[ ]:
+
+
+base.index=range(len(base))
+
+
+# ### separation des données en base de train et de validation 
+
+# In[ ]:
+
+
+train_df, test_df= train_test_split(base, test_size=0.05)
+train_df, validate_df = train_test_split(train_df, test_size=0.3)
+train_df = train_df.reset_index()
+validate_df = validate_df.reset_index()
+total_train = train_df.shape[0]
+total_validate = validate_df.shape[0]
+print(f' ==> base train contient  : {train_df.shape[0]} images \n  ==> base de validation contient :  {validate_df.shape[0]} images  ')
+print(' ==> base train contient  :' ,train_df['labels'].unique(),'  ==> base de validation contient : ' ,validate_df['labels'].unique() ) 
+
+
+# In[ ]:
+
+
+for i in test_df['image'].values:
+    im = Image.open(i)
+    plt.savefig('Z:/1_Data/1_Experiments/1_FENNEC/2_Stagiaires/2023_Alioune/Identification_2023/spectres_excitation/donnees/3D/image_3D/test/')
+
+
+# In[ ]:
+
+
+im
+
+
+# In[ ]:
+
+
+
+
+
+# In[ ]:
+
+
+
+
+
+# ### Algorithme reseau des neurones en utilisant  VGG16 de keras   , les performance du model , et l'enregistrement du model 
+
+# In[10]:
+
+
+from sklearn.model_selection import train_test_split
+#import streamlit as st
+from PIL import Image, ImageOps
+import ydata_profiling   
+import numpy as np
+##from streamlit_pandas_profiling import st_profile_report
+import pandas as pd
+from pycaret.regression import setup as setup_reg, compare_models as compare_models_reg , predict_model as predict_model_reg, plot_model as plot_model_reg,create_model as create_model_reg
+from pycaret.classification import setup, compare_models, blend_models, finalize_model, predict_model, plot_model,create_model
+from pycaret.classification import *
+#from pycaret.regression import *
+from pycaret import *
+import tensorflow as tf
+import keras.preprocessing.image
+from keras.models import Sequential
+from keras import layers
+from keras.layers import Conv2D, MaxPooling2D, Dropout, Flatten, Dense, Activation,GlobalMaxPooling2D
+from keras import applications
+from keras.preprocessing.image import ImageDataGenerator
+from keras import optimizers
+from keras.applications import VGG16
+from keras.models import Model
+import os;
+import cv2
+import seaborn as sns
+from PIL import Image
+from tensorflow import keras
+import tensorflow as tf
+from sklearn.model_selection import train_test_split
+from keras.models import Sequential
+from keras.layers import Conv2D,MaxPooling2D,Dense,Flatten,Dropout
+import os
+from tensorflow.keras.preprocessing import image
+dir_path='Z:/1_Data/1_Experiments/1_FENNEC/2_Stagiaires/2023_Alioune/Identification_2023/spectres_excitation/donnees/3D/image_3D/base1'
+fichier=[]
+labels=[]
+for i in os.listdir(dir_path):
+    fichier.append(dir_path+'/'+i)
+    labels.append(i)
+l=[]
+for j in range(len(labels)):
+    if (labels[j].find('A+D')!=-1) | (labels[j].find('D+A')!=-1) | (labels[j].find('DA')!=-1 ):
+        l.append('A+D')
+    elif labels[j].find('EDTA')!=-1:
+        l.append('E')
+    elif labels[j].find('AMPA')!=-1:
+        l.append('A')
+    else :
+        l.append('D')
+labels=l
+base=np.transpose(pd.DataFrame([fichier,labels]))
+
+Base=base
+base.columns=['image','labels']
+train_df, validate_df = train_test_split(base, test_size=0.3)
+train_df = train_df.reset_index()
+validate_df = validate_df.reset_index()
+total_train = train_df.shape[0]
+total_validate = validate_df.shape[0]
+image_size = 224
+input_shape = (image_size, image_size, 3)
+epochs = 30
+batch_size = 10
+pre_trained_model = VGG16(input_shape=input_shape, include_top=False, weights="imagenet")
+
+for layer in pre_trained_model.layers[:15]:
+    layer.trainable = False
+for layer in pre_trained_model.layers[15:]:
+    layer.trainable = True
+last_layer = pre_trained_model.get_layer('block5_pool')
+last_output = last_layer.output
+# Flatten la couche de sortie 1 dimension
+x = GlobalMaxPooling2D()(last_output)
+# # Ajoutez une couche entièrement connectée avec 512 unités cachées et activation ReLU
+x = Dense(512, activation='relu')(x)
+# ajouter un taux d'abandon 0.5
+x = Dropout(0.5)(x)
+# il faut donner le nombre de classe et ajouter l'activation sigmoid
+x = layers.Dense(4, activation='sigmoid')(x)
+
+model = Model(pre_trained_model.input, x)
+model.compile(loss='binary_crossentropy',
+              optimizer=optimizers.SGD(lr=1e-4, momentum=0.9),
+              metrics=['accuracy'])
+train_datagen = ImageDataGenerator(
+    rotation_range=15,
+    rescale=1./255,
+    shear_range=0.2,
+    zoom_range=0.2,
+    horizontal_flip=True,
+    fill_mode='nearest',
+    width_shift_range=0.1,
+    height_shift_range=0.1
+)
+train_generator = train_datagen.flow_from_dataframe(
+    train_df,
+    x_col='image',
+    y_col='labels',
+    target_size=(image_size, image_size),
+    batch_size=batch_size
+)
+validation_datagen = ImageDataGenerator(rescale=1./255)
+validation_generator = validation_datagen.flow_from_dataframe(
+    validate_df,
+    x_col='image',
+    y_col='labels',
+    target_size=(image_size, image_size),
+    batch_size=batch_size
+)
+
+
+
+history = model.fit(
+    train_generator,
+    epochs=epochs,
+    validation_data=validation_generator,validation_steps=total_validate//batch_size,
+    steps_per_epoch=total_train//batch_size)
+model.save('Z:/1_Data/1_Experiments/1_FENNEC/2_Stagiaires/2023_Alioune/Identification_2023/spectres_excitation/donnees/3D/image_3D/model_final3.pkl')
+##### Les performances de notre model 
+plotter = tfdocs.plots.HistoryPlotter(metric = 'binary_crossentropy', smoothing_std=10)
+plotter.plot(size_histories)
+plt.ylim([0, 1])
+
+
+#### accurancy et loss model 
+plot_accuracy(history_11class,'accuracy')
+plot_loss(history_11class,'loss')
+
+
+# In[ ]:
+
+
+
+
+  ''',language='python')
+
+    if __name__ == "__main__":
+         main()    
 
 def Code_lissage_deconvolution_spectrale():
     def main():
