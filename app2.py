@@ -957,7 +957,6 @@ def liss_deconv():
                                       'M2':pop1[4],'E2':pop1[5],'C2':c2,'A3':pop1[6],'M3':pop1[7],
                                       'E3':pop1[8],'C3':c3,'A4':pop1[9],'M4':pop1[10],'E4':pop1[11],
                                       'C4':c4},ignore_index=True) 
-	        st.write(df_dp)
         st.write("Nouvelle base de donnée")
 	df_dp=df_dp[df_dp.columns[2:]]
 	for k in len(df_dp.columns):
