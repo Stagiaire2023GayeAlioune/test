@@ -712,8 +712,6 @@ def Quantification():
 import pandas as pd
 import numpy as np 
 import matplotlib.pyplot as plt;
-from tkinter import filedialog
-from tkinter import *
 from scipy.signal import find_peaks
 from scipy.signal import savgol_filter
 from scipy.optimize import curve_fit;
@@ -1367,8 +1365,7 @@ X_train.head()
     if col3.button("# code Image 3D"):  
         st.markdown('# <h1 style="text-align: center;"> code Image 3D </h1>',unsafe_allow_html=True)    
         code=''' 
-from tkinter import filedialog
-from tkinter import *
+
 import seaborn as sns
 import plotly.graph_objs as go
 from plotly.offline import init_notebook_mode, iplot
@@ -1629,8 +1626,6 @@ import scipy.integrate as spi
 from sklearn import preprocessing
 from scipy import stats
 from sklearn.linear_model import LinearRegression
-from tkinter import *
-from tkinter import filedialog
 from sklearn.preprocessing import StandardScaler
 import statsmodels.api as sm
 import statsmodels.formula.api as smf
@@ -2677,8 +2672,6 @@ import scipy.integrate as spi
 from sklearn import preprocessing
 from scipy import stats
 from sklearn.linear_model import LinearRegression
-from tkinter import *
-from tkinter import filedialog
 from sklearn.preprocessing import StandardScaler
 import statsmodels.api as sm
 import statsmodels.formula.api as smf
