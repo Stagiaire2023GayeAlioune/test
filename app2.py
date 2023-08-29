@@ -913,7 +913,10 @@ def liss_deconv():
             return(bounds)
         Basse=pd.DataFrame()
         for uploaded_file in uploaded_files:
-            df = pd.read_csv(uploaded_file, delimiter=";") 
+	    file=get_image_path(uploaded_file)
+	    delim=find_delimiter(file)
+	    
+            df = pd.read_csv(uploaded_file, delimiter=delim) 
             for i in df.columns:
                 if (df[i].isnull()[0]==True): # On elimine les colonnes vides
                     del df[i];
@@ -941,9 +944,9 @@ def liss_deconv():
                 if (len(bor)==4):
                    borne.append(bor)
             bounds=interval(borne)
-            for i in range(int(len(df.columns)/2)):
-		df_dp=pd.DataFrame(columns = ['Fichier','Type','A1','M1','E1','C1','A2',
+	    df_dp=pd.DataFrame(columns = ['Fichier','Type','A1','M1','E1','C1','A2',
                                   'M2','E2','C2','A3','M3','E3','C3','A4','M4','E4','C4'])
+            for i in range(int(len(df.columns)/2)):
                 x=df[df.columns[0]]
                 y=df[df.columns[2*i+1]]/max(df[df.columns[2*i+1]]); # 
                 #y = (y - np.min(y)) / (np.max(y) - np.min(y)) # pour normaliser les intensités
@@ -958,7 +961,8 @@ def liss_deconv():
                                       'M2':pop1[4],'E2':pop1[5],'C2':c2,'A3':pop1[6],'M3':pop1[7],
                                       'E3':pop1[8],'C3':c3,'A4':pop1[9],'M4':pop1[10],'E4':pop1[11],
                                       'C4':c4},ignore_index=True)
-	    Basse=pd.concat([df_dp, Basse], ignore_index=True)	    
+	    Basse=pd.concat([df_dp, Basse], ignore_index=True)
+	Basse.index=range(len(Basse))
 	df_dp=Basse       
 	st.write(df_dp)	    
         st.write("Nouvelle base de donnée")
