@@ -243,7 +243,7 @@ def image():
     st.sidebar.markdown("<p style='text-align: center;'> Nous utilisons l'optimiseur Adam et la fonction de perte 'sparse_categorical_crossentropy' car les étiquettes sont encodées sous forme d'entiers.</p>", unsafe_allow_html=True)    
     from keras.models import load_model
     st.markdown('<h1 style="text-align: center;">Prédiction image 3D </h1>', unsafe_allow_html=True)
-    model = load_model('model_final2.h6')
+    model = load_model('model_final2.pkl')
     f=np.array(['ATMP+DTPMP', 'DTPMP', 'DTPMP+DTPA', 'EDTA'])
     from PIL import Image
     from tensorflow.keras.preprocessing import image
@@ -1015,8 +1015,6 @@ def code_python():
 import pandas as pd
 import numpy as np 
 import matplotlib.pyplot as plt;
-from tkinter import filedialog
-from tkinter import *
 from scipy.signal import find_peaks
 from scipy.signal import savgol_filter
 from scipy.optimize import curve_fit;
@@ -1266,8 +1264,6 @@ def calcul_para(VARS):
 import numpy as np 
 import matplotlib.pyplot as plt;
 import seaborn as sns
-from tkinter import filedialog
-from tkinter import *
 import time
 import pickle
 from pycaret.classification import *
@@ -1394,8 +1390,6 @@ X_train.head()
     if col3.button("# code Image 3D"):  
         st.markdown('# <h1 style="text-align: center;"> code Image 3D </h1>',unsafe_allow_html=True)    
         code=''' 
-from tkinter import filedialog
-from tkinter import *
 import seaborn as sns
 import plotly.graph_objs as go
 from plotly.offline import init_notebook_mode, iplot
@@ -1656,8 +1650,6 @@ import scipy.integrate as spi
 from sklearn import preprocessing
 from scipy import stats
 from sklearn.linear_model import LinearRegression
-from tkinter import *
-from tkinter import filedialog
 from sklearn.preprocessing import StandardScaler
 import statsmodels.api as sm
 import statsmodels.formula.api as smf
