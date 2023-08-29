@@ -794,6 +794,7 @@ def liss_deconv():
                 ax.legend()
             st.pyplot(fig)
             return()      
+		
         #for uploaded_file in uploaded_files:
         if uploaded_files is not None:
            file=get_image_path(uploaded_files)
@@ -914,7 +915,7 @@ def liss_deconv():
                np.inf,np.inf,born[3][1],np.inf]
             bounds = (bounds_lower, bounds_upper)  
             return(bounds)
-        
+        Borne=pd.DataFrame()
         for uploaded_file in uploaded_files:
             df = pd.read_csv(uploaded_file, delimiter=";") 
             for i in df.columns:
@@ -961,8 +962,11 @@ def liss_deconv():
                                       'M2':pop1[4],'E2':pop1[5],'C2':c2,'A3':pop1[6],'M3':pop1[7],
                                       'E3':pop1[8],'C3':c3,'A4':pop1[9],'M4':pop1[10],'E4':pop1[11],
                                       'C4':c4},ignore_index=True)
-            st.write("Création de la base de donnée")
-            st.write(df_dp)
+            Basse=pd.cancat([df_dp,Basse],ignore_index=True)	
+	df_dp=Basse
+	df_dp.index=range(len(df_dp))
+        st.write("Création de la base de donnée")
+        st.write(df_dp)
     
     
     if __name__ == "__main__":
