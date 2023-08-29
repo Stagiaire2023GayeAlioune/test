@@ -911,6 +911,7 @@ def liss_deconv():
                np.inf,np.inf,born[3][1],np.inf]
             bounds = (bounds_lower, bounds_upper)  
             return(bounds)
+        Basse=pd.DataFrame()
         df_dp=pd.DataFrame(columns = ['Fichier','Type','A1','M1','E1','C1','A2',
                                   'M2','E2','C2','A3','M3','E3','C3','A4','M4','E4','C4'])
         for uploaded_file in uploaded_files:
@@ -956,8 +957,10 @@ def liss_deconv():
                                       'A1':pop1[0],'M1':pop1[1],'E1':pop1[2],'C1':c1,'A2':pop1[3],
                                       'M2':pop1[4],'E2':pop1[5],'C2':c2,'A3':pop1[6],'M3':pop1[7],
                                       'E3':pop1[8],'C3':c3,'A4':pop1[9],'M4':pop1[10],'E4':pop1[11],
-                                      'C4':c4},ignore_index=True)  
-	st.table(df_dp)	    
+                                      'C4':c4},ignore_index=True)
+	    Basse=pd.concat([df_dp, Basse], ignore_index=True)	    
+	df_dp=Basse       
+	st.write(df_dp)	    
         st.write("Nouvelle base de donnée")
 	df_dp=df_dp[df_dp.columns[2:]]
 	for k in len(df_dp.columns):
