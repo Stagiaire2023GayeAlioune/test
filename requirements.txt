@@ -1,5 +1,5 @@
-pip==23.2.1
 absl-py==1.4.0
+opencv_version = "4.7.0.72"
 aionotify==0.2.0
 alabaster==0.7.13
 alembic==1.11.1
@@ -41,7 +41,6 @@ cx-Freeze==6.15.4
 cx-Logging==3.1.0
 cycler==0.11.0
 Cython==3.0.0
-cv2
 dacite==1.8.1
 dash==2.10.2
 dash-core-components==2.0.0
@@ -308,7 +307,7 @@ xgboost==1.7.6
 xlrd==2.0.1
 xxhash==3.2.0
 yarg==0.1.9
-ydata-profiling==4.3.2
+ydata-profiling
 yellowbrick==1.5
 zipp==3.15.0
 zope.event==5.0
