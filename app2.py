@@ -958,7 +958,8 @@ def liss_deconv():
                                       'E3':pop1[8],'C3':c3,'A4':pop1[9],'M4':pop1[10],'E4':pop1[11],
                                       'C4':c4},ignore_index=True)  
         st.write("Nouvelle base de donnée")
-	#st.write(df_dp)
+	df_dp=pd.DataFrame(df_dp)
+	st.write(df_dp)
 	df_dp=df_dp[df_dp.columns[2:]]
 	for k in len(df_dp.columns):
             clf.append('df_dp[df_dp.columns[0]][k].split(',')[0]')	
