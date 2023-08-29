@@ -1,5 +1,5 @@
 absl-py
-opencv_version==4.7.0.72
+opencv_version==4.5.3
 aionotify==0.2.0
 alabaster==0.7.13
 alembic==1.11.1
