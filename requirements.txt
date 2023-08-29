@@ -1,4 +1,4 @@
-absl-py==1.4.0
+absl-py
 opencv_version
 aionotify==0.2.0
 alabaster==0.7.13
