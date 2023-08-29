@@ -958,9 +958,23 @@ def liss_deconv():
                                       'M2':pop1[4],'E2':pop1[5],'C2':c2,'A3':pop1[6],'M3':pop1[7],
                                       'E3':pop1[8],'C3':c3,'A4':pop1[9],'M4':pop1[10],'E4':pop1[11],
                                       'C4':c4},ignore_index=True)
-            st.write("Création de la base de donnée")
-            st.write(df_dp)
-    
+        from pathlib import Path    
+        st.write("Nouvelle base de donnée")
+        st.write(df_dp)
+	clf=[]    
+	df_dp=df_dp[df_dp.columns[2:]]
+	for k in len(df_dp.columns):
+            clf.append(df_dp[df_dp.columns[0]][k].split(',')[0])	
+	df_dp['clf']=clf	
+	st.write("Concatener la base de donnée avec la nouvelle base de donnée")
+	filepath=Path("Z:/1_Data/1_Experiments/1_FENNEC/2_Stagiaires/2023_Alioune/Identification_2023/machine_Learning/base_de_donnee/csv_Melange de polluant/base de donnée/ma_base.csv")
+        filepath.parent.mkdir(parents=True, exist_ok=True)	
+	base=pd.read_csv("Z:/1_Data/1_Experiments/1_FENNEC/2_Stagiaires/2023_Alioune/Identification_2023/machine_Learning/base_de_donnee/csv_Melange de polluant/base de donnée/ma_base.csv")
+	base.drop(base.columns[0],axis=1,inplace=True)
+	base_de_donnee_modif=pd.concat([df_dp, base], ignore_index=True)	
+	base_de_donnee_modif.to_csv(filepath,index=False)	    
+	st.download_button('Enregistrer votre base de donne en CSV',base_de_donnee_modif)	
+	        
     
     if __name__ == "__main__":
         main()
