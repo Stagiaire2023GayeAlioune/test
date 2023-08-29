@@ -61,9 +61,8 @@ from colorama import init, Style
 from termcolor import colored
 import streamlit as st
 
-
-url = "https://www.linkedin.com/in/sokhna-faty-bousso-110891190/"
-url2="https://github.com/Fatybousso"
+url ="https://www.linkedin.com/in/alioune-gaye-1a5161172/"
+url2="https://github.com/Stagiaire2023GayeAlioune"
 @st.cache_data
 def load_data(file):
     data=pd.read_csv(file)
@@ -80,7 +79,7 @@ def home():
     st.sidebar.image("https://th.bing.com/th/id/OIP.hxQSgpDEPe0xWlxVsLqxFQHaCm?w=346&h=123&c=7&r=0&o=5&dpr=1.5&pid=1.7", use_column_width=True)
     
     st.write('          ')
-    st.sidebar.write("<p style='text-align: center;'> Sokhna Faty Bousso : Stagiaire ILM %s</p>" % url, unsafe_allow_html=True)
+    st.sidebar.write("<p style='text-align: center;'> Alioune Gaye: Stagiaire ILM %s</p>" % url, unsafe_allow_html=True)
     st.sidebar.write( "<p style='text-align: center;'> Github : %s</p>" % url2, unsafe_allow_html=True)
     col3,col4=st.columns(2)
     col3.image("t1.png")
@@ -100,7 +99,7 @@ def identification():
         col3,col4=st.sidebar.columns(2)
         col3.image("https://ilm.univ-lyon1.fr/templates/mojito/images/logo.jpg", use_column_width=True)
         col4.image("https://formation-professionnelle.universite-lyon.fr/var/site/storage/images/3/3/5/0/533-17-fre-FR/Lyon-1-Claude-Bernard.png", use_column_width=True)
-        st.sidebar.write("<p style='text-align: center;'> Sokhna Faty Bousso : Stagiaire ILM %s</p>" % url, unsafe_allow_html=True)
+        st.sidebar.write("<p style='text-align: center;'> Alioune Gaye : Stagiaire ILM %s</p>" % url, unsafe_allow_html=True)
         st.sidebar.write( "<p style='text-align: center;'> Github : %s</p>" % url2, unsafe_allow_html=True)
         st.sidebar.write("<p style='text-align: center;'>Apprentissage par régression ou classification.</p>", unsafe_allow_html=True)
         st.sidebar.markdown("<p style='text-align: center;'>Nous allons procéder comme suit :</p>", unsafe_allow_html=True)
@@ -217,7 +216,7 @@ def image():
     st.sidebar.image("RNN.png")
     st.markdown("# image 3D ❄️")
     #st.sidebar.markdown('<h1 style="text-align: center;">Identification d\'images ❄️ </h1>', unsafe_allow_html=True)
-    st.sidebar.write("<p style='text-align: center;'> Sokhna Faty Bousso : Stagiaire ILM %s</p>" % url, unsafe_allow_html=True)
+    st.sidebar.write("<p style='text-align: center;'> Alioune Gaye : Stagiaire ILM %s</p>" % url, unsafe_allow_html=True)
     st.sidebar.write( "<p style='text-align: center;'> Github : %s</p>" % url2, unsafe_allow_html=True)
     # Création du modèle Keras
     st.sidebar.markdown("<p style='text-align: center;'> Création du modèle Keras </p>", unsafe_allow_html=True)
@@ -512,7 +511,7 @@ def Quantification():
         col3,col4=st.sidebar.columns(2)
         col3.image("https://ilm.univ-lyon1.fr/templates/mojito/images/logo.jpg", use_column_width=True)
         col4.image("https://formation-professionnelle.universite-lyon.fr/var/site/storage/images/3/3/5/0/533-17-fre-FR/Lyon-1-Claude-Bernard.png", use_column_width=True)
-        st.sidebar.write("<p style='text-align: center;'> Sokhna Faty Bousso : Stagiaire ILM %s</p>" % url, unsafe_allow_html=True)
+        st.sidebar.write("<p style='text-align: center;'> Alioune Gaye : Stagiaire ILM %s</p>" % url, unsafe_allow_html=True)
         st.sidebar.write( "<p style='text-align: center;'> Github : %s</p>" % url2, unsafe_allow_html=True)
         st.sidebar.write("<p style='text-align: center;'>  Mélange de polluants  </p>", unsafe_allow_html=True)
         st.sidebar.markdown("<p style='text-align: center;'>1 - Méthode mono_exponentielle : </p>", unsafe_allow_html=True)
@@ -967,7 +966,7 @@ def liss_deconv():
         main()
 
 def code_python():
-    st.sidebar.write("<p style='text-align: center;'> Sokhna Faty Bousso : Stagiaire ILM %s</p>" % url, unsafe_allow_html=True)
+    st.sidebar.write("<p style='text-align: center;'> Alioune Gaye : Stagiaire ILM %s</p>" % url, unsafe_allow_html=True)
     st.sidebar.write( "<p style='text-align: center;'> Github : %s</p>" % url2, unsafe_allow_html=True)
     col1,col2=st.columns(2)
     col3,col4=st.columns(2)
