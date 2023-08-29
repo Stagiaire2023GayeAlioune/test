@@ -63,21 +63,47 @@ from colorama import init, Style
 from termcolor import colored
 import streamlit as st
 
+
 url = "https://www.linkedin.com/in/sokhna-faty-bousso-110891190/"
+url2="https://github.com/Fatybousso"
 @st.cache_data
 def load_data(file):
     data=pd.read_csv(file)
     return data
 
+def home():
+    st.markdown('<h1 style="text-align: center;"> VAI-TRF </h1>', unsafe_allow_html=True)
+    st.markdown(' <h2 style="text-align: center;"> Validation of Artificial Intelligence Time-Resolved Fluorescence method for the real-time monitoring of critical pollutants in industrial and municipal effluents </h2>', unsafe_allow_html=True)
+    
+    st.image("https://github.com/dKosarevsky/AI-Talks/raw/main/ai_talks/assets/img/ai_face.png")
+    st.sidebar.image("https://th.bing.com/th/id/OIP.yP8OOsRFeygNvQFJr7SYJQHaB5?w=328&h=89&c=7&r=0&o=5&dpr=1.5&pid=1.7", use_column_width=True)
+    st.sidebar.image("https://th.bing.com/th/id/OIP.CKq0LG-laXKo7RW19OIAcwHaCi?w=345&h=119&c=7&r=0&o=5&dpr=1.5&pid=1.7", use_column_width=True)
+    st.sidebar.image("https://ilm.univ-lyon1.fr/templates/mojito/images/logo.jpg", use_column_width=True)
+    st.sidebar.image("https://th.bing.com/th/id/OIP.hxQSgpDEPe0xWlxVsLqxFQHaCm?w=346&h=123&c=7&r=0&o=5&dpr=1.5&pid=1.7", use_column_width=True)
+    
+    st.write('          ')
+    st.sidebar.write("<p style='text-align: center;'> Sokhna Faty Bousso : Stagiaire ILM %s</p>" % url, unsafe_allow_html=True)
+    st.sidebar.write( "<p style='text-align: center;'> Github : %s</p>" % url2, unsafe_allow_html=True)
+    col3,col4=st.columns(2)
+    col3.image("t1.png")
+    col4.image("t2.png")
+    col5,col6=st.columns(2)
+    col5.image("t3.png")
+    col6.image("t4.png")
+
+
+
 def identification():
-    st.sidebar.markdown('<h1 style="text-align: center;">Identification du polluants 🎈</h1>', unsafe_allow_html=True)
+    st.sidebar.image("https://th.bing.com/th/id/OIP.NztfNu6p_efe7yI8BXI4iAHaEK?w=330&h=181&c=7&r=0&o=5&dpr=1.5&pid=1.7", use_column_width=True)
+    #st.sidebar.markdown('<h1 style="text-align: center;">Identification du polluants 🎈</h1>', unsafe_allow_html=True)
     def main():
         st.markdown('<h1 style="text-align: center;">Identification du polluants</h1>', unsafe_allow_html=True)
         st.markdown('<h1 style="text-align: center;">Base de donnée</h1>',unsafe_allow_html=True)
         col3,col4=st.sidebar.columns(2)
         col3.image("https://ilm.univ-lyon1.fr/templates/mojito/images/logo.jpg", use_column_width=True)
         col4.image("https://formation-professionnelle.universite-lyon.fr/var/site/storage/images/3/3/5/0/533-17-fre-FR/Lyon-1-Claude-Bernard.png", use_column_width=True)
-        st.sidebar.write("<p style='text-align: center;'> Sokhna Faty Bousso : Stagiaire ILM (%s)</p>" % url, unsafe_allow_html=True)
+        st.sidebar.write("<p style='text-align: center;'> Sokhna Faty Bousso : Stagiaire ILM %s</p>" % url, unsafe_allow_html=True)
+        st.sidebar.write( "<p style='text-align: center;'> Github : %s</p>" % url2, unsafe_allow_html=True)
         st.sidebar.write("<p style='text-align: center;'>Apprentissage par régression ou classification.</p>", unsafe_allow_html=True)
         st.sidebar.markdown("<p style='text-align: center;'>Nous allons procéder comme suit :</p>", unsafe_allow_html=True)
         st.sidebar.markdown("<p style='text-align: center;'>1 - Chargement des données</p>", unsafe_allow_html=True)
@@ -90,6 +116,9 @@ def identification():
         if file is not None:
             df=load_data(file)
             #type=st.selectbox("selectionner le target",["Homogene","Heterogene"])
+            df=df[df.columns[1:]]
+            n=len(df.columns)
+            df=df[df[df.columns[:(n-1)]].duplicated()!=True]
             n=len(df.columns)
             X=df[df.columns[:(n-1)]]# on prend les variables numériques 
             y=df[df.columns[-1]] # le target
@@ -97,48 +126,53 @@ def identification():
             pr = df.profile_report()
             if st.button('statistique descriptive'):
                  st_profile_report(pr)
-            if st.button('Save'):
-                 df.to_csv('data.csv')
             target=st.selectbox("selectionner le target",df.columns)
             methode=st.selectbox("selectionner la méthode ",["Regression","Classification"])
             df=df.dropna(subset=target)
             if methode=="Classification":
-                if st.button(" les performances du modèle "):
+                if st.button(" Machine learning "):
                      setup_data = setup(data=df,target = target,
                         train_size =0.75,categorical_features =None,
                         normalize = False,normalize_method = None,fold=5)
-                     r=compare_models(round=2)
-                     save_model(r,"best_model")
-                     st.success("youpiiiii classification fonctionne \U0001F604")
-                     st.write("Performances du modèle :")
-                
-                     final_model1 = create_model(r,fold=5,round=2)
+                     conf_df = pd.DataFrame(setup_data._display_container[0])
+                     st.write('Configuration')
+                     st.write(conf_df)
+                     #r=compare_models(round=2)
+                     #save_model(r,"best_model")
+                     st.success("youpiiiii classification fonctionne \U0001F600")
+                     st.write(" Les meilleurs algorithmes ")
+                     #results = pull()
+                     #st.write(results)
+                     st.write(" Performances du modèle :")
+                     
+                     #final_model1 = create_model(r,fold=5,round=2)
                      col5,col6=st.columns(2)
                      col5.write('AUC')
-                     plot_model(final_model1,plot='auc',save=True)
+                     #plot_model(final_model1,plot='auc',save=True)
                      col5.image("AUC.png")
                      col6.write("class_report")
-                     plot_model(final_model1,plot='class_report',save=True)
+                     #plot_model(final_model1,plot='class_report',save=True)
                      col6.image("Class Report.png")
                   
                      col7,col8=st.columns(2)
                      col7.write("confusion_matrix")
-                     plot_model(final_model1,plot='confusion_matrix',save=True)
+                     #plot_model(final_model1,plot='confusion_matrix',save=True)
                      col7.image("Confusion Matrix.png")
-                     tuned_model = tune_model(final_model1,optimize='AUC',round=2,n_iter=10);# optimiser le modéle
+                     #tuned_model = tune_model(final_model1,optimize='AUC',round=2,n_iter=10);# optimiser le modéle
                      col8.write("boundary")
-                     plot_model(final_model1 , plot='boundary',save=True)
+                     #plot_model(final_model1 , plot='boundary',save=True)
                      col8.image("Decision Boundary.png")
                     
                      col9,col10=st.columns(2)
                      col9.write("feature")
-                     plot_model(estimator = tuned_model, plot = 'feature',save=True)
+                     #plot_model(estimator = tuned_model, plot = 'feature',save=True)
                      col9.image("Feature Importance.png")
                      col10.write("learning")
-                     plot_model(estimator = final_model1, plot = 'learning',save=True)
+                     #plot_model(estimator = final_model1, plot = 'learning',save=True)
                      col10.image("Learning Curve.png")
                      with open("best_model.pkl",'rb') as f :
                           st.download_button("Telecharger le pipline du modele" , f, file_name="best_model.pkl")
+                
           
           
             if methode=="Regression":
@@ -182,53 +216,76 @@ def identification():
 
 
 def image():
+    st.sidebar.image("RNN.png")
     st.markdown("# image 3D ❄️")
-    st.sidebar.markdown('<h1 style="text-align: center;">Identification d\'images ❄️ </h1>', unsafe_allow_html=True)
-    col3,col4=st.sidebar.columns(2)
-    col3.image("https://ilm.univ-lyon1.fr/templates/mojito/images/logo.jpg", use_column_width=True)
-    col4.image("https://formation-professionnelle.universite-lyon.fr/var/site/storage/images/3/3/5/0/533-17-fre-FR/Lyon-1-Claude-Bernard.png", use_column_width=True)
-    st.sidebar.write("<p style='text-align: center;'> Sokhna Faty Bousso : Stagiaire ILM (%s)</p>" % url, unsafe_allow_html=True)
-    st.sidebar.write("<p style='text-align: center;'> modèle pré-entrainé </p>", unsafe_allow_html=True)
-    st.sidebar.markdown("<p style='text-align: center;'>Nous allons procéder comme suit :</p>", unsafe_allow_html=True)
-    st.sidebar.markdown("<p style='text-align: center;'>1 - Aprés avoir la base d'images , nous avons divisé la base de données en ensembles d'entraînement  et de validation </p>", unsafe_allow_html=True)
-    st.sidebar.markdown("<p style='text-align: center;'>2 - créé un modèle de classification basé sur le modèle VGG16 en utilisant Keras</p>", unsafe_allow_html=True)
-    st.sidebar.markdown("<p style='text-align: center;'>3 -  utilisé les 15 premiers couches du modèle </p>", unsafe_allow_html=True)
-    st.sidebar.markdown("<p style='text-align: center;'>4 - ajouté une couche de classification à la sortie du modèle avec une activation sigmoid pour la classification multi-classes.</p>", unsafe_allow_html=True)
-    st.sidebar.markdown("<p style='text-align: center;'>5 - compilé le modèle en utilisant une fonction de perte de binary_crossentropy (car les étiquettes sont encodées en tant que vecteurs binaires) et un optimiseur SGD</p>", unsafe_allow_html=True)
-    st.sidebar.markdown("<p style='text-align: center;'>6 -  créé des générateurs d'images d'apprentissage  et de validation pour alimenter le modèle pendant l'entraînement, en utilisant ImageDataGenerator de Keras pour augmenter les données d'entraînement (rotation, ré-échelle, retournement, etc.).</p>", unsafe_allow_html=True)
+    #st.sidebar.markdown('<h1 style="text-align: center;">Identification d\'images ❄️ </h1>', unsafe_allow_html=True)
+    st.sidebar.write("<p style='text-align: center;'> Sokhna Faty Bousso : Stagiaire ILM %s</p>" % url, unsafe_allow_html=True)
+    st.sidebar.write( "<p style='text-align: center;'> Github : %s</p>" % url2, unsafe_allow_html=True)
+    # Création du modèle Keras
+    st.sidebar.markdown("<p style='text-align: center;'> Création du modèle Keras </p>", unsafe_allow_html=True)
+    st.sidebar.markdown("<p style='text-align: center;'> Voici les principales couches du modèle : </p>", unsafe_allow_html=True)
+
+    # Couches du modèle
+    model_layers_info = [
+    "Couche de Convolution (32 filtres, taille 3x3) avec fonction d'activation ReLU, prenant une image en entrée de taille (224, 224, 3)",
+    "Couche de MaxPooling (taille 2x2) pour réduire la dimensionnalité",
+    "Couche de Convolution (32 filtres, taille 3x3) avec fonction d'activation ReLU",
+    "Nouvelle couche de MaxPooling (taille 2x2)",
+    "Couche d'aplatissement (Flatten) pour convertir les données en vecteur",
+    "Couche Dense (128 neurones) avec fonction d'activation ReLU",
+    "Couche Dense de sortie (4 neurones) avec fonction d'activation Softmax pour la classification multi-classes"
+    ]
+
+    for i in range(len(model_layers_info)):
+        st.sidebar.markdown( "<p style='text-align: center;'>" + "{} - ".format(i) + model_layers_info[i] +" </p>", unsafe_allow_html=True)
+
+    # Compilation du modèle
+    st.sidebar.markdown("<p style='text-align: center;'> Une fois les couches définies, nous compilons le modèle en spécifiant l'optimiseur et la fonction de perte :</p>", unsafe_allow_html=True)
+    #st.sidebar.code("model.compile(optimizer='adam', loss='sparse_categorical_crossentropy', metrics=['accuracy'])")
+    st.sidebar.markdown("<p style='text-align: center;'> Nous utilisons l'optimiseur Adam et la fonction de perte 'sparse_categorical_crossentropy' car les étiquettes sont encodées sous forme d'entiers.</p>", unsafe_allow_html=True)    
     from keras.models import load_model
     st.markdown('<h1 style="text-align: center;">Prédiction image 3D </h1>', unsafe_allow_html=True)
-    model = load_model('model_final2.h5')
-    f=['A','A+D','D','E']
+    model = load_model('model_final2.h6')
+    f=np.array(['ATMP+DTPMP', 'DTPMP', 'DTPMP+DTPA', 'EDTA'])
     from PIL import Image
-    def preprocess_image(image_path, target_size=(224, 224)):
-        image = Image.open(image_path)
-        if image.mode == 'RGBA':
-            image = image.convert('RGB')
-        image = image.resize(target_size)
-        return np.array(image) / 255.0
-
-    def predict_class(model, image_path):
-        img = preprocess_image(image_path)
-        img = np.expand_dims(img, axis=0)
-        pred = model.predict(img)
-        index = np.argmax(pred)
+    from tensorflow.keras.preprocessing import image
+    from PIL import Image
+    f=np.array(['ATMP+DTPMP', 'DTPMP', 'EDTA', 'DTPMP+DTPA'])
+    def get_image_path(img):
+        # Create a directory and save the uploaded image.
+        file_path = f"data/uploadedImages/{img.name}"
+        os.makedirs(os.path.dirname(file_path), exist_ok=True)
+        with open(file_path, "wb") as img_file:
+             img_file.write(img.getbuffer())
+        return file_path
+    def predict_class(model,image):
+        img2 = cv2.imread(image)
+        if img2 is not None:
+             img2 = cv2.resize(img2, (224, 224))
+             img2=[img2]
+        else:
+             print(f"Erreur lors du chargement de l'image : {img2}")
+        # Convertir en numpy array et normaliser les valeurs des pixels
+        imag = np.array(img2) / 255.0
+        pred=model.predict(imag)
+        index = np.argmax(pred,axis=1)
         f.sort()
         pred_value = f[index]
-        return pred_value
-
+        score=np.max(pred)
+        return(pred_value,score)
     file = st.file_uploader("Entrer l'image", type=["jpg", "png"])
     if file is None:
         st.text("entrer l'image à prédire")
     else:
-        label = predict_class(model, file)
+        file=get_image_path(file)
+        label,score = predict_class(model, file)
         st.image(file, use_column_width=True)
-        st.markdown("## Résultats de la prédiction ")
-        st.markdown("## Il s'agit du polluant")
-        st.write(label)
+        
+        st.markdown("##  🤖  Il s'agit du polluant ")
+        st.markdown('<h1 style="text-align: center;">'+'{}'.format(label[0])+'</h1>', unsafe_allow_html=True)
+        st.markdown('<h2 style="text-align: center;">'+'Avec un score =  {}'.format(score)+'</h2>', unsafe_allow_html=True)
     st.image("https://ilm.univ-lyon1.fr//images/slides/SLIDER7.png")
-    if __name__ == "__main__":
-        main()
+    
    
 
 
@@ -457,7 +514,8 @@ def Quantification():
         col3,col4=st.sidebar.columns(2)
         col3.image("https://ilm.univ-lyon1.fr/templates/mojito/images/logo.jpg", use_column_width=True)
         col4.image("https://formation-professionnelle.universite-lyon.fr/var/site/storage/images/3/3/5/0/533-17-fre-FR/Lyon-1-Claude-Bernard.png", use_column_width=True)
-        st.sidebar.write("<p style='text-align: center;'> Sokhna Faty Bousso : Stagiaire ILM (%s)</p>" % url, unsafe_allow_html=True)
+        st.sidebar.write("<p style='text-align: center;'> Sokhna Faty Bousso : Stagiaire ILM %s</p>" % url, unsafe_allow_html=True)
+        st.sidebar.write( "<p style='text-align: center;'> Github : %s</p>" % url2, unsafe_allow_html=True)
         st.sidebar.write("<p style='text-align: center;'>  Mélange de polluants  </p>", unsafe_allow_html=True)
         st.sidebar.markdown("<p style='text-align: center;'>1 - Méthode mono_exponentielle : </p>", unsafe_allow_html=True)
         st.sidebar.markdown("<p style='text-align: center;'>2 - Méthode double_exponentielle :</p>", unsafe_allow_html=True)
@@ -666,14 +724,26 @@ import scipy.integrate as spi
 import csv
 def liss_deconv():
     def main():
-    
-        uploaded_files = st.file_uploader("entrer les données ", type=['csv'])
+        st.sidebar.write("<p style='text-align: center;'> Lissage avec algorithme de Savitz-golay, la fonction savgol_filter prend en paramètre: y ou x : il s\'agit de la donnée à filtrer, la longueur de la fenetre de lissage, le degré du polynome de lissage. Elle renvoie: La donnée filtrée.</p>",unsafe_allow_html=True)
+        st.sidebar.image("savot.png")
+        st.sidebar.write("Déconvolution formule : ")
+        st.sidebar.latex(r''' \fcolorbox{black}{brown}{$I(\lambda) =  \sum_{i=1}^{4}I_i \frac{\exp\left(-\frac{(\lambda - \lambda_i)^2}{2\sigma_i^2}\right)}{\sigma_i \sqrt{2\pi}}  $}''')
+        st.sidebar.image("deconv.png")
+        st.markdown('# <h1 style="text-align: center;"> Lissage et Déconvolution spectre  :</h1>', unsafe_allow_html=True)
+        uploaded_files = st.file_uploader(" Choisir un fichier ", type=['csv'])
         st.image("https://ilm.univ-lyon1.fr//images/slides/CARROUSSEL-15.png")
         def find_delimiter(filename):
             sniffer = csv.Sniffer()
             with open(filename) as fp:
                 delimiter = sniffer.sniff(fp.read(5000)).delimiter
             return delimiter
+        def get_image_path(img):
+            # Create a directory and save the uploaded image.
+            file_path = f"data/uploadedImages/{img.name}"
+            os.makedirs(os.path.dirname(file_path), exist_ok=True)
+            with open(file_path, "wb") as img_file:
+                 img_file.write(img.getbuffer())
+            return file_path
         def expS(x,I,m,b):
             return(I*np.exp(-((x-m)**2)/(2*(b**2)))/(b*np.sqrt(2*np.pi)))
         def expT(x,I1,m1,b1,I2,m2,b2,I3,m3,b3,I4,m4,b4,I5,m5,b5):
@@ -728,7 +798,9 @@ def liss_deconv():
             return()      
         #for uploaded_file in uploaded_files:
         if uploaded_files is not None:
-           df = pd.read_csv(uploaded_files, delimiter=";") 
+           file=get_image_path(uploaded_files)
+           delim=find_delimiter(file)
+           df = pd.read_csv(uploaded_files, delimiter=delim) 
            for i in df.columns:
                if (df[i].isnull()[0]==True): # On elimine les colonnes vides
                    del df[i];
@@ -814,9 +886,21 @@ def liss_deconv():
         main()
     
     def main():
-    
+        st.markdown('# <h1 style="text-align: center;"> Construction de la base de donnée  :</h1>', unsafe_allow_html=True)
         uploaded_files = st.file_uploader("Choisir les fichiers csv ", accept_multiple_files=True)
         st.image("https://ilm.univ-lyon1.fr//images/slides/CARROUSSEL-15.png")
+        def find_delimiter(filename):
+            sniffer = csv.Sniffer()
+            with open(filename) as fp:
+                delimiter = sniffer.sniff(fp.read(5000)).delimiter
+            return delimiter
+        def get_image_path(img):
+            # Create a directory and save the uploaded image.
+            file_path = f"data/uploadedImages/{img.name}"
+            os.makedirs(os.path.dirname(file_path), exist_ok=True)
+            with open(file_path, "wb") as img_file:
+                 img_file.write(img.getbuffer())
+            return file_path
         def expS(x,I,m,b):
             return(I*np.exp(-((x-m)**2)/(2*(b**2)))/(b*np.sqrt(2*np.pi)))
         def expT(x,I1,m1,b1,I2,m2,b2,I3,m3,b3,I4,m4,b4,I5,m5,b5):
@@ -844,9 +928,11 @@ def liss_deconv():
                np.inf,np.inf,born[3][1],np.inf]
             bounds = (bounds_lower, bounds_upper)  
             return(bounds)
-        
+        Base=pd.DataFrame()
         for uploaded_file in uploaded_files:
-            df = pd.read_csv(uploaded_file, delimiter=";") 
+            file = get_image_path(uploaded_file)
+            delim=find_delimiter(file)
+            df = pd.read_csv(uploaded_file, delimiter=delim) 
             for i in df.columns:
                 if (df[i].isnull()[0]==True): # On elimine les colonnes vides
                     del df[i];
@@ -891,20 +977,23 @@ def liss_deconv():
                                       'M2':pop1[4],'E2':pop1[5],'C2':c2,'A3':pop1[6],'M3':pop1[7],
                                       'E3':pop1[8],'C3':c3,'A4':pop1[9],'M4':pop1[10],'E4':pop1[11],
                                       'C4':c4},ignore_index=True)
-            st.write("Création de la base de donnée")
-            st.write(df_dp)
-            
-
-            
-            
+            Base=pd.concat([df_dp,Base])
+        st.write("Création de la base de donnée")
+        st.write(Base)
     
     
     if __name__ == "__main__":
         main()
 
 def code_python():
-    st.markdown("# Code Lissage et Déconvolution ")
-    code='''#!/usr/bin/env python
+    st.sidebar.write("<p style='text-align: center;'> Sokhna Faty Bousso : Stagiaire ILM %s</p>" % url, unsafe_allow_html=True)
+    st.sidebar.write( "<p style='text-align: center;'> Github : %s</p>" % url2, unsafe_allow_html=True)
+    col1,col2=st.columns(2)
+    col3,col4=st.columns(2)
+    
+    if col1.button("# Code Lissage et Déconvolution "):
+        st.markdown('# <h1 style="text-align: center;"> Code Lissage et Déconvolution </h1>',unsafe_allow_html=True)
+        code='''#!/usr/bin/env python
 # coding: utf-8
 
 # 
@@ -926,27 +1015,6 @@ import scipy.integrate as spi
 import csv
 
 
-# # Préparation des données 
-
-# In[2]:
-
-
-def browseFiles():
-	filename = filedialog.askopenfilename(initialdir = "http://localhost:8888/tree/Stage",
-										title = "Select a File",
-										filetypes = (("Csv files",
-														"*.csv*"),
-													("all files",
-														"*.*")))
-	return(filename)
-
-
-# In[4]:
-
-
-VAR=browseFiles()
-
-
 # ## Spectre d'excitation
 
 # In[3]:
@@ -958,41 +1026,6 @@ def find_delimiter(filename):
         delimiter = sniffer.sniff(fp.read(5000)).delimiter
     return delimiter
 
-
-# In[5]:
-
-
-delimit=find_delimiter(VAR)
-
-
-# In[6]:
-
-
-df=pd.read_csv(VAR,delimiter=delimit)
-for i in df.columns:
-        if (df[i].isnull()[0]==True): # On elimine les colonnes vides
-            del df[i];
-df=df.dropna(axis=0); # On elimine les lignes qui contiennent des na;
-df=df[1:];
-df=df.astype(float)
-df
-
-
-# In[7]:
-
-
-row=int(len(df.columns)/4)
-row2=int(len(df.columns)/2)
-
-fig, axs = plt.subplots(nrows=2, ncols=row, figsize=(20, 6))
-for ax, i in zip(axs.flat, range(row2)):
-    x = df[df.columns[0]]
-    y = df[df.columns[2*i+1]]
-    ax.plot(x,y, label=df.columns[2*i])
-    ax.set_xlabel("Longeur d'onde")
-    ax.set_ylabel("Intensité")
-    ax.legend()
-plt.show()
 
 
 # ## Lissage 
@@ -1007,47 +1040,6 @@ plt.show()
 # - Le degré du polynome de lissage. 
 # Elle renvoie: La donnée filtrée.
 
-# In[8]:
-
-
-row=int(len(df.columns)/6)
-row2=int(len(df.columns)/2)
-p=[]
-les_peaks=[]
-borne=[]
-fig, axs = plt.subplots(nrows=3, ncols=row, figsize=(20, 10))
-for ax, i in zip(axs.flat, range(row2)):
-    bor=[]
-    x1=df[df.columns[0]]
-    y=df[df.columns[2*i+1]];
-    y_hat=savgol_filter(y, 15, 2);
-    ax.plot(x1,y, label=df.columns[2*i])
-    ax.plot(x1,y_hat,label='Savitzki-gol')
-    x = y_hat
-    peaks, properties = find_peaks(x, prominence=1, width=1)
-    p.append(len(peaks))
-    xmin=properties["left_ips"]
-    xmax=properties["right_ips"]
-    print("moyenne longeur d'onde de : ",df.columns[2*i],list(x1[peaks]),"nombre de peaks : ",len(peaks))
-    for j in range(len(properties['left_ips'])):
-        bor.append(list([x1[np.around(properties['left_ips'][j])],x1[np.around(properties['right_ips'][j])]]))
-    ax.plot(x1[peaks], x[peaks], "x")
-    ax.vlines(x=x1[peaks], ymin=0,ymax = x[peaks], color = "C1")
-    #ax.hlines(y=properties["widths"], xmin=properties['left_ips'],xmax=properties['right_ips'], color = "C1")
-    ax.set_xlabel("Longeur d'onde")
-    ax.set_ylabel("Intensité")
-    ax.legend()
-    les_peaks.append(list(x1[peaks]))
-    les_peak=pd.DataFrame(les_peaks)
-    if (len(bor)==5):
-        borne.append(bor)
-plt.show()
-
-
-# In[9]:
-
-
-borne
 
 
 # ## Déconvolution 
@@ -1118,43 +1110,6 @@ def deconvol3(df1,bounds,nombre_peak):
     return()          
 
 
-# In[12]:
-
-
-print("déconvolution avec 5 gaussiennes ")
-nbr_p=5
-if borne==[]:
-    bounds_lower =[0,250,0,0,270,0,0,300,0,0,340,0,0,360,0]
-    bounds_upper =[np.inf,270,np.inf,np.inf,300,np.inf,np.inf,340,np.inf,np.inf,360,np.inf,np.inf,400,np.inf]
-    bounds = (bounds_lower, bounds_upper)
-else :
-    born=borne[0]
-    bounds_lower =[0,born[0][0],0,0,born[0][1],0,0,born[2][0],0,0,born[3][0],0,0,born[4][0],0]
-    bounds_upper =[np.inf,born[0][1],np.inf,np.inf,born[1][1],np.inf,np.inf,born[2][1],
-               np.inf,np.inf,born[3][1],np.inf,np.inf,born[4][1],np.inf]
-    bounds = (bounds_lower, bounds_upper)
-deconvol1(df,bounds,nbr_p)  
-print("déconvolution avec 4 gaussiennes ")
-nbr_p=4
-if borne==[]:
-    bounds_lower =[0,250,0,0,300,0,0,340,0,0,360,0]
-    bounds_upper =[np.inf,300,np.inf,np.inf,340,np.inf,np.inf,360,np.inf,np.inf,400,np.inf]
-    bounds = (bounds_lower, bounds_upper)
-else :
-    born=borne[0]
-    bounds_lower =[0,born[0][0],0,0,born[0][1],0,0,born[2][0],0,0,born[3][0],0]
-    bounds_upper =[np.inf,born[0][1],np.inf,np.inf,born[1][1],np.inf,np.inf,born[2][1],
-               np.inf,np.inf,born[3][1],np.inf]
-    bounds = (bounds_lower, bounds_upper)
-deconvol3(df,bounds,nbr_p)
-
-
-# In[ ]:
-
-
-
-
-
 # # Construction de la base de donnée
 
 # In[13]:
@@ -1180,7 +1135,6 @@ VARS=browseFiles2()
 
 
 df_dp=pd.DataFrame();
-
 
 # In[24]:
 
@@ -1291,246 +1245,14 @@ def calcul_para(VARS):
     return(df_dp)
 
 
-# In[27]:
 
-
-dp=calcul_para(VARS)
-
-
-# ## Calcul Ratio 
-
-# In[29]:
-
-
-dp
-
-
-# In[ ]:
-
-
-
-
-
-# In[108]:
-
-
-import re
-T=[]
-for i in range(len(dp)):
-    t=dp['Fichier'][i]
-    if t.find('AMPA')!=-1:
-        dp['Fichier'][i]="A-"+dp['Fichier'][i]
-    if t.find('DTPA')!=-1:
-        dp['Fichier'][i]="D-"+dp['Fichier'][i]
-    if t.find('EDTA')!=-1:
-        dp['Fichier'][i]="E-"+dp['Fichier'][i]
-    if t.find('GLY')!=-1:
-        dp['Fichier'][i]="G-"+dp['Fichier'][i]
-    liste=re.split('; |-', t)
-    liste2=re.findall(r'\b\d+\b', t)
-    T.append(t)
-    print(t)
-    
-
-
-# In[109]:
-
-
-dp['Fichier']=T
-
-
-# In[110]:
-
-
-dp['A']=0
-dp['D']=0
-dp['E']=0
-dp['G']=0
-
-
-# In[ ]:
-
-
-
-
-
-# In[112]:
-
-
-for j in range(len(dp['Fichier'])):
-    if dp['Fichier'][j][0]=='A':
-        dp['A'][j]=1
-    elif dp['Fichier'][j][0]=='D':
-        dp['D'][j]=1
-    elif dp['Fichier'][j][0]=='E':
-        dp['E'][j]=1
-    else :
-        dp['G'][j]=1
-
-
-# In[113]:
-
-
-dp['clf']=0
-
-
-# In[114]:
-
-
-for j in range(len(dp['Fichier'])):
-    if dp['Fichier'][j][0]=='A':
-        dp['clf'][j]='A'
-    elif dp['Fichier'][j][0]=='D':
-        dp['clf'][j]='D'
-    elif dp['Fichier'][j][0]=='E':
-        dp['clf'][j]='E'
-    else :
-        dp['clf'][j]='G'
-
-
-# In[ ]:
-
-
-
-
-
-# In[ ]:
-
-
-dp=dp.drop(columns=['A','D','E','G']
-
-
-# In[116]:
-
-
-dp
-
-
-# In[160]:
-
-
-Base1.to_csv('Base.csv', index=False)
-
-
-# In[ ]:
-
-
-
-
-
-# ## Ratio 2 polluants 
-
-# In[95]:
-
-
-VARS2=browseFiles2()
-
-
-# In[ ]:
-
-
-
-
-
-# In[96]:
-
-
-dp2=calcul_para(VARS2)
-
-
-# In[94]:
-
-
-dp2
-
-
-# In[15]:
-
-
-
-
-
-# ## Calcul concentration pour chaque ajouts 
-
-# In[16]:
-
-
-# Serie 1
-v_total=3.3
-unk=2.8
-es=9
-std=[0,0,0.025,0.05,0.075,0.1,0.125,0.15,0.175,0.2,1]
-std=np.array(std)
-ss=100
-purity=50
-chemicals=573.2
-npol1=(unk*es+std*ss)*purity/(chemicals*100)
-npol2=[(unk*es)*purity/(chemicals*100)]*len(std)
-npol2=np.array(npol2)
-
-
-# Serie 2
-unk=2.8
-es=1
-std=[0,0,0.025,0.05,0.075,0.1,0.125,0.15,0.175,0.2,1]
-std=np.array(std)
-ss=100
-purity=50
-chemicals=299.1
-npol21=(unk*es+std*ss)*purity/(chemicals*100)
-npol22=[(unk*es)*purity/(chemicals*100)]*len(std)
-
-# Serie 3
-unk=2.8
-es=9
-std=[0,0,0.025,0.05,0.075,0.1,0.125,0.15,0.175,0.2,1]
-std=np.array(std)
-ss=100
-purity=50
-chemicals=573.2
-npol3=(unk*es+std*ss)*purity/(chemicals*100)
-
-# Serie 4
-unk=2.8
-es=1
-std=[0,0,0.025,0.05,0.075,0.1,0.125,0.15,0.175,0.2,1]
-std=np.array(std)
-ss=100
-purity=50
-chemicals=299.1
-npol4=(unk*es+std*ss)*purity/(chemicals*100)
-
-
-# In[21]:
-
-
-c1=npol1/3.3*0.001
-c2=npol2/3.3*0.001
-
-
-# In[25]:
-
-
-c1,c2
-
-
-# In[46]:
-
-
-for i in range(4):
-    print(dp2['Fichier'][i].find('S{}'.format(i)))
-
-
-# In[45]:
-
-
-['S{}'.format(i) for i in range(1, 5)]
 
 '''
-    st.code(code,language="python") 
+        st.code(code,language="python") 
     
-    st.markdown("# code Identification")  
-    code=''' import pandas as pd
+    if col2.button("Identification 2D"):
+        st.markdown('# <h1 style="text-align: center;"> Identification 2D </h1>',unsafe_allow_html=True)
+        code=''' import pandas as pd
 import numpy as np 
 import matplotlib.pyplot as plt;
 import seaborn as sns
@@ -1583,61 +1305,6 @@ df.index=range(0,len(df))
 
 X=df[df.columns[:(n-1)]]# on prend les variables numériques 
 y=df[df.columns[-1]] # le target
-
-# Etude des variables 
-
-print(X.shape,y.shape) # la dimension
-print("taille des données : ", df.shape,"\n taille de X:" ,X.shape,"\n taille de y : ",y.shape ) 
-pour_A=np.sum(y=='A')/len(y)
-pour_D=np.sum(y=='D')/len(y)
-pour_G=np.sum(y=='G')/len(y)
-pour_A_G=np.sum(y=='A+G')/len(y)
-pour_D_G=np.sum(y=='D+G')/len(y)
-pour_A_D=np.sum(y=='A+D')/len(y)
-print(" A :",np.sum(y=='A'),"D :",np.sum(y=='D'),"G :",np.sum(y=='G'))
-print("pourcentage d'exemple A :",pour_A*100,"%")
-print("pourcentage d'exemple D :",pour_D*100,"%")
-print("pourcentage d'exemple G :",pour_G*100,"%")
-print("pourcentage d'exemple A+G :",pour_A_G*100,"%")
-print("pourcentage d'exemple D+G :",pour_D_G*100,"%")
-print("pourcentage d'exemple A+D :",pour_A_D*100,"%")
-
-colors = ['#06344d', '#00b2ff']
-sns.set(palette = colors, font = 'Serif', style = 'white', 
-        rc = {'axes.facecolor':'#f1f1f1', 'figure.facecolor':'#f1f1f1'})
-
-fig = plt.figure(figsize = (10, 6))
-ax = sns.countplot(x = 'clf', data = df)
-for i in ax.patches:
-    ax.text(x = i.get_x() + i.get_width()/2, y = i.get_height()/7, 
-            s = f"{np.round(i.get_height()/len(df)*100, 0)}%", 
-            ha = 'center', size = 50, weight = 'bold', rotation = 90, color = 'white')
-plt.title("histogramme des polluants", size = 20, weight = 'bold')
-plt.xlabel('classes', weight = 'bold')
-plt.ylabel('observation', weight = 'bold');
-
-## histogramme des variables numériques
-
-numerical = [var for var in df.columns ]
-features = numerical
-colors = ['blue']
-df[features[:(n-1)]].hist(figsize=(10, 6), color=colors, alpha=0.7)
-plt.show()
-
-# matrice de corrélation 
-plt.figure(figsize=(12,6))
-corr_matrix = df[features[:(n-1)]].corr()
-sns.heatmap(corr_matrix,annot=True)
-plt.show()
-
-# grâce à sklearn on peut importer standardscaler .
-ss=StandardScaler()# enleve la moyenne et divise par l'ecartype
-ss.fit(X)
-X_norm=ss.transform(X)# tranform X 
-## PCA
-figure, correlation_matrix = plot_pca_correlation_graph(X_norm, features[:(n-1)], dimensions=(1, 2),figure_axis_size=8)
-figure, correlation_matrix = plot_pca_correlation_graph(X_norm, features[:(n-1)],dimensions=(1, 3),figure_axis_size=8)
-figure, correlation_matrix = plot_pca_correlation_graph(X_norm, features[:(n-1)],dimensions=(1, 4),figure_axis_size=8)
 
 ## Pycaret
 
@@ -1712,10 +1379,11 @@ set_config(display='diagram')
 X_train = get_config('X_train')
 X_train.head()
  '''
-    st.code(code , language="python") 
+        st.code(code , language="python") 
     
-    st.markdown("# code Image 3D")         
-    code=''' 
+    if col3.button("# code Image 3D"):  
+        st.markdown('# <h1 style="text-align: center;"> code Image 3D </h1>',unsafe_allow_html=True)    
+        code=''' 
 from tkinter import filedialog
 from tkinter import *
 import seaborn as sns
@@ -1831,313 +1499,136 @@ for VAR in range(len(VARS)):
         labels.append(col[VAR])
     plt.show()
     
-## Augmenter les données 
-from PIL import Image
-labels1=[]
-fichier1=[]
-for j in range(len(fichier)):
-    im = Image.open(fichier[j])
-    im = im.rotate(180)
-    im.save("Z:/1_Data/1_Experiments/1_FENNEC/2_Stagiaires/2023_Faty_M2/csv 3D/image_3D/base/"+labels[j]+"rotation"+fichier[j].split('/')[-1])
-    f="Z:/1_Data/1_Experiments/1_FENNEC/2_Stagiaires/2023_Faty_M2/csv 3D/image_3D/base/"+labels[j]+"rotation"+fichier[j].split('/')[-1]
-    fichier1.append(f)
-    labels1.append(labels[j])
-    plt.imshow(im)
-    plt.show()
-labels2=[]
+dir_path2='Z:/1_Data/1_Experiments/1_FENNEC/2_Stagiaires/2023_Faty_M2/csv 3D/base2'
 fichier2=[]
-for j in range(len(fichier)):
-    im = Image.open(fichier[j])
-    im = im.convert("L")  # Grayscale
-    plt.imshow(im)
-    im.save("Z:/1_Data/1_Experiments/1_FENNEC/2_Stagiaires/2023_Faty_M2/csv 3D/image_3D/base/"+labels[j]+"couleur"+fichier[j].split('/')[-1])
-    f="Z:/1_Data/1_Experiments/1_FENNEC/2_Stagiaires/2023_Faty_M2/csv 3D/image_3D/base/"+labels[j]+"couleur"+fichier[j].split('/')[-1]
-    fichier2.append(f)
-    labels2.append(labels[j])
-base=np.transpose(pd.DataFrame([fichier,labels]))
-base1=np.transpose(pd.DataFrame([fichier1,labels1]))
+labels2=[]
+for i in os.listdir(dir_path2):
+    fichier2.append(dir_path2+'/'+i)
+    labels2.append(i)
+l=[]
+for j in range(len(labels2)):
+    if (labels2[j].find('A+D')!=-1) | (labels2[j].find('D+A')!=-1) | (labels2[j].find('DA')!=-1 ) | (labels2[j].find('ATMP+DTPMP')!=-1 ):
+        l.append('ATMP+DTPMP')
+    elif labels2[j].find('EDTA')!=-1:
+        l.append('EDTA')
+    elif (labels2[j].find('DTMP-DTPA')!=-1)|(labels2[j].find('DTPMP +DTPA')!=-1):
+        l.append('DTPMP+DTPA')
+    else :
+        l.append('DTPMP')
+labels2=l
 base2=np.transpose(pd.DataFrame([fichier2,labels2]))
-base=pd.concat([base,base1,base2],axis=0)
-base.columns=['image','labels']
-from PIL import Image, ImageOps
-from PIL import Image, ImageFilter
-labels3=[]
-fichier3=[]
-t=base[base['labels']=='D']
+Base=base2
+base2.columns=['image','labels']
 
-for j in range(len(t)):
-    im = Image.open(t['image'].values[j])
-    im = im.rotate(30)
-    im.save("Z:/1_Data/1_Experiments/1_FENNEC/2_Stagiaires/2023_Faty_M2/csv 3D/image_3D/base/"+t['labels'].values[j]+"couleur_D_30"+t['image'].values[j].split('/')[-1])
-    f="Z:/1_Data/1_Experiments/1_FENNEC/2_Stagiaires/2023_Faty_M2/csv 3D/image_3D/base/"+t['labels'].values[j]+"couleur_D_30"+t['image'].values[j].split('/')[-1]
-    fichier3.append(f)
-    labels3.append(t['labels'].values[j])
-    plt.show()
-
-for j in range(len(t)):
-    im = Image.open(t['image'].values[j])
-    im = im.rotate(60)
-    im.save("Z:/1_Data/1_Experiments/1_FENNEC/2_Stagiaires/2023_Faty_M2/csv 3D/image_3D/base/"+t['labels'].values[j]+"couleur_D_60"+t['image'].values[j].split('/')[-1])
-    f="Z:/1_Data/1_Experiments/1_FENNEC/2_Stagiaires/2023_Faty_M2/csv 3D/image_3D/base/"+t['labels'].values[j]+"couleur_D_60"+t['image'].values[j].split('/')[-1]
-    fichier3.append(f)
-    labels3.append(t['labels'].values[j])
-    plt.show()
-for j in range(len(t)):
-    im = Image.open(t['image'].values[j])
-    im = im.rotate(130)
-    im.save("Z:/1_Data/1_Experiments/1_FENNEC/2_Stagiaires/2023_Faty_M2/csv 3D/image_3D/base/"+t['labels'].values[j]+"couleur_D_130"+t['image'].values[j].split('/')[-1])
-    f="Z:/1_Data/1_Experiments/1_FENNEC/2_Stagiaires/2023_Faty_M2/csv 3D/image_3D/base/"+t['labels'].values[j]+"couleur_D_130"+t['image'].values[j].split('/')[-1]
-    fichier3.append(f)
-    labels3.append(t['labels'].values[j])
-    plt.show()
-
-
-for j in range(len(t)):
-    im = Image.open(t['image'].values[j])
-    im.putalpha(128)
-    im.save("Z:/1_Data/1_Experiments/1_FENNEC/2_Stagiaires/2023_Faty_M2/csv 3D/image_3D/base/"+t['labels'].values[j]+"couleur_D_60_col"+t['image'].values[j].split('/')[-1])
-    f="Z:/1_Data/1_Experiments/1_FENNEC/2_Stagiaires/2023_Faty_M2/csv 3D/image_3D/base/"+t['labels'].values[j]+"couleur_D_60_col"+t['image'].values[j].split('/')[-1]
-    fichier3.append(f)
-    labels3.append(t['labels'].values[j])
-    plt.show()
-
-for j in range(len(t)):
-    im = Image.open(t['image'].values[j])
-    im= im.convert("L")
-    im= im.filter(ImageFilter.FIND_EDGES)
-    im.save("Z:/1_Data/1_Experiments/1_FENNEC/2_Stagiaires/2023_Faty_M2/csv 3D/image_3D/base/"+t['labels'].values[j]+"couleur_D_bruit"+t['image'].values[j].split('/')[-1])
-    f="Z:/1_Data/1_Experiments/1_FENNEC/2_Stagiaires/2023_Faty_M2/csv 3D/image_3D/base/"+t['labels'].values[j]+"couleur_D_bruit"+t['image'].values[j].split('/')[-1]
-    fichier3.append(f)
-    labels3.append(t['labels'].values[j])
-    plt.show()
-    
-t=base[base['labels']=='A']
-fichier4=[]
-labels4=[]
-for j in range(len(t)):
-    im = Image.open(t['image'].values[j])
-    im = im.rotate(30)
-    im.save("Z:/1_Data/1_Experiments/1_FENNEC/2_Stagiaires/2023_Faty_M2/csv 3D/image_3D/base/"+t['labels'].values[j]+"couleur_A_30"+t['image'].values[j].split('/')[-1])
-    f="Z:/1_Data/1_Experiments/1_FENNEC/2_Stagiaires/2023_Faty_M2/csv 3D/image_3D/base/"+t['labels'].values[j]+"couleur_A_30"+t['image'].values[j].split('/')[-1]
-    fichier4.append(f)
-    labels4.append(t['labels'].values[j])
-    plt.show()
-
-for j in range(len(t)):
-    im = Image.open(t['image'].values[j])
-    im = im.rotate(60)
-    im.save("Z:/1_Data/1_Experiments/1_FENNEC/2_Stagiaires/2023_Faty_M2/csv 3D/image_3D/base/"+t['labels'].values[j]+"couleur_A_60"+t['image'].values[j].split('/')[-1])
-    f="Z:/1_Data/1_Experiments/1_FENNEC/2_Stagiaires/2023_Faty_M2/csv 3D/image_3D/base/"+t['labels'].values[j]+"couleur_A_60"+t['image'].values[j].split('/')[-1]
-    fichier4.append(f)
-    labels4.append(t['labels'].values[j])
-    plt.show()
-for j in range(len(t)):
-    im = Image.open(t['image'].values[j])
-    im = im.rotate(130)
-    im.save("Z:/1_Data/1_Experiments/1_FENNEC/2_Stagiaires/2023_Faty_M2/csv 3D/image_3D/base/"+t['labels'].values[j]+"couleur_A_130"+t['image'].values[j].split('/')[-1])
-    f="Z:/1_Data/1_Experiments/1_FENNEC/2_Stagiaires/2023_Faty_M2/csv 3D/image_3D/base/"+t['labels'].values[j]+"couleur_A_130"+t['image'].values[j].split('/')[-1]
-    fichier4.append(f)
-    labels4.append(t['labels'].values[j])
-    plt.show()
-
-
-for j in range(len(t)):
-    im = Image.open(t['image'].values[j])
-    im.putalpha(128)
-    im.save("Z:/1_Data/1_Experiments/1_FENNEC/2_Stagiaires/2023_Faty_M2/csv 3D/image_3D/base/"+t['labels'].values[j]+"couleur_A_60_col"+t['image'].values[j].split('/')[-1])
-    f="Z:/1_Data/1_Experiments/1_FENNEC/2_Stagiaires/2023_Faty_M2/csv 3D/image_3D/base/"+t['labels'].values[j]+"couleur_A_60_col"+t['image'].values[j].split('/')[-1]
-    fichier4.append(f)
-    labels4.append(t['labels'].values[j])
-    plt.show()
-
-for j in range(len(t)):
-    im = Image.open(t['image'].values[j])
-    im= im.convert("L")
-    im= im.filter(ImageFilter.FIND_EDGES)
-    im.save("Z:/1_Data/1_Experiments/1_FENNEC/2_Stagiaires/2023_Faty_M2/csv 3D/image_3D/base/"+t['labels'].values[j]+"couleur_A_bruit"+t['image'].values[j].split('/')[-1])
-    f="Z:/1_Data/1_Experiments/1_FENNEC/2_Stagiaires/2023_Faty_M2/csv 3D/image_3D/base/"+t['labels'].values[j]+"couleur_A_bruit"+t['image'].values[j].split('/')[-1]
-    fichier4.append(f)
-    labels4.append(t['labels'].values[j])
-    plt.show()
+## Creation modéle keras
+ 
+ train_df, test_df= train_test_split(base2, test_size=0.2)
+ model = tf.keras.Sequential([
+    tf.keras.layers.Conv2D(32, (3, 3), activation = 'relu', input_shape = (224, 224, 3)), 
+    tf.keras.layers.MaxPooling2D(2,2),
+    tf.keras.layers.Conv2D(32, (3, 3), activation = 'relu'),
+    tf.keras.layers.MaxPooling2D(2,2),
+    tf.keras.layers.Flatten(),
     
     
-t=base[base['labels']=='E']
-fichier5=[]
-labels5=[]
-for j in range(len(t)):
-    im = Image.open(t['image'].values[j])
-    im = im.rotate(30)
-    im.save("Z:/1_Data/1_Experiments/1_FENNEC/2_Stagiaires/2023_Faty_M2/csv 3D/image_3D/base/"+t['labels'].values[j]+"couleur_E_30"+t['image'].values[j].split('/')[-1])
-    f="Z:/1_Data/1_Experiments/1_FENNEC/2_Stagiaires/2023_Faty_M2/csv 3D/image_3D/base/"+t['labels'].values[j]+"couleur_E_30"+t['image'].values[j].split('/')[-1]
-    fichier5.append(f)
-    labels5.append(t['labels'].values[j])
-    plt.show()
+    tf.keras.layers.Dense(128, activation=tf.nn.relu),
+    tf.keras.layers.Dense(4, activation=tf.nn.softmax)
+])
+model.compile(optimizer = 'adam', loss = 'sparse_categorical_crossentropy', metrics=['accuracy'])
+import cv2
+import os
+train_df=base2
+# Charger les images et les redimensionner
+images = []
+for img_path in train_df['image'].values:
+    if "Thumbs.db" not in img_path:  # Vérifier si le chemin ne contient pas "Thumbs.db"
+        img = cv2.imread(img_path)
+        if img is not None:
+            img = cv2.resize(img, (224, 224))
+            images.append(img)
+        else:
+            print(f"Erreur lors du chargement de l'image : {img_path}")
 
-for j in range(len(t)):
-    im = Image.open(t['image'].values[j])
-    im = im.rotate(60)
-    im.save("Z:/1_Data/1_Experiments/1_FENNEC/2_Stagiaires/2023_Faty_M2/csv 3D/image_3D/base/"+t['labels'].values[j]+"couleur_E_60"+t['image'].values[j].split('/')[-1])
-    f="Z:/1_Data/1_Experiments/1_FENNEC/2_Stagiaires/2023_Faty_M2/csv 3D/image_3D/base/"+t['labels'].values[j]+"couleur_E_60"+t['image'].values[j].split('/')[-1]
-    fichier5.append(f)
-    labels5.append(t['labels'].values[j])
+# Convertir en numpy array et normaliser les valeurs des pixels
+images = np.array(images) / 255.0
+from sklearn.preprocessing import LabelEncoder
+# Créer un encodeur d'étiquettes
+label_encoder = LabelEncoder()
+# Convertir les étiquettes en valeurs numériques
+train_df['labels_encoded'] = label_encoder.fit_transform(train_df['labels'])
+# Maintenant, vous pouvez utiliser ces images et étiquettes pour entraîner votre modèle
+history = model.fit(images, train_df['labels_encoded'] , batch_size=128, epochs=20, validation_split=0.2)
+model.save('Z:/1_Data/1_Experiments/1_FENNEC/2_Stagiaires/2023_Faty_M2/csv 3D/model_final2.h6')
+def plot_accuracy_loss(history):
+    """
+        Plot the accuracy and the loss during the training of the nn.
+    """
+    fig = plt.figure(figsize=(10,5))
+
+    # Plot accuracy
+    plt.subplot(221)
+    plt.plot(history.history['accuracy'],'bo--', label = "acc")
+    plt.plot(history.history['val_accuracy'], 'ro--', label = "val_acc")
+    plt.title("train_acc vs val_acc")
+    plt.ylabel("accuracy")
+    plt.xlabel("epochs")
+    plt.legend()
+
+    # Plot loss function
+    plt.subplot(222)
+    plt.plot(history.history['loss'],'bo--', label = "loss")
+    plt.plot(history.history['val_loss'], 'ro--', label = "val_loss")
+    plt.title("train_loss vs val_loss")
+    plt.ylabel("loss")
+    plt.xlabel("epochs")
+
+    plt.legend()
     plt.show()
+plot_accuracy_loss(history)
+images2 = []
+for img_path2 in test_df['image'].values:
+    if "Thumbs.db" not in img_path2:  # Vérifier si le chemin ne contient pas "Thumbs.db"
+        img2 = cv2.imread(img_path2)
+        if img2 is not None:
+            img2 = cv2.resize(img2, (224, 224))
+            images2.append(img2)
+        else:
+            print(f"Erreur lors du chargement de l'image : {img_path2}")
+
+# Convertir en numpy array et normaliser les valeurs des pixels
+images2 = np.array(images2) / 255.0
+from sklearn.preprocessing import LabelEncoder
+
+# Créer un encodeur d'étiquettes
+label_encoder = LabelEncoder()
+class_names=base2['labels'].unique()
+# Convertir les étiquettes en valeurs numériques
+test_df['labels_encoded'] = label_encoder.fit_transform(test_df['labels'])
+predictions = model.predict(images2)     # Vector of probabilities
+pred_labels = np.argmax(predictions, axis = 1) # We take the highest probability
+f=np.array(['ATMP+DTPMP', 'DTPMP', 'EDTA', 'DTPMP+DTPA'])
+def predict_class(model,image):
+    img2 = cv2.imread(image)
+    if img2 is not None:
+        img2 = cv2.resize(img2, (224, 224))
+        img2=[img2]
+    else:
+        print(f"Erreur lors du chargement de l'image : {img_path2}")
+    # Convertir en numpy array et normaliser les valeurs des pixels
+    imag = np.array(img2) / 255.0
+    pred=model.predict(imag)
+    index = np.argmax(pred,axis=1)
+    f.sort()
+    pred_value = f[index]
+    score=np.max(pred)
+    return(pred_value,score)
+ 
+ '''
+        st.code(code,language="python")
     
-for j in range(len(t)):
-    im = Image.open(t['image'].values[j])
-    im = im.rotate(130)
-    im.save("Z:/1_Data/1_Experiments/1_FENNEC/2_Stagiaires/2023_Faty_M2/csv 3D/image_3D/base/"+t['labels'].values[j]+"couleur_E_130"+t['image'].values[j].split('/')[-1])
-    f="Z:/1_Data/1_Experiments/1_FENNEC/2_Stagiaires/2023_Faty_M2/csv 3D/image_3D/base/"+t['labels'].values[j]+"couleur_E_130"+t['image'].values[j].split('/')[-1]
-    fichier5.append(f)
-    labels5.append(t['labels'].values[j])
-    plt.show()
-
-for j in range(len(t)):
-    im = Image.open(t['image'].values[j])
-    im.putalpha(128)
-    im.save("Z:/1_Data/1_Experiments/1_FENNEC/2_Stagiaires/2023_Faty_M2/csv 3D/image_3D/base/"+t['labels'].values[j]+"couleur_E_60_col"+t['image'].values[j].split('/')[-1])
-    f="Z:/1_Data/1_Experiments/1_FENNEC/2_Stagiaires/2023_Faty_M2/csv 3D/image_3D/base/"+t['labels'].values[j]+"couleur_E_60_col"+t['image'].values[j].split('/')[-1]
-    fichier5.append(f)
-    labels5.append(t['labels'].values[j])
-    plt.show()
-
-for j in range(len(t)):
-    im = Image.open(t['image'].values[j])
-    im= im.convert("L")
-    im= im.filter(ImageFilter.FIND_EDGES)
-    im.save("Z:/1_Data/1_Experiments/1_FENNEC/2_Stagiaires/2023_Faty_M2/csv 3D/image_3D/base/"+t['labels'].values[j]+"couleur_E_bruit"+t['image'].values[j].split('/')[-1])
-    f="Z:/1_Data/1_Experiments/1_FENNEC/2_Stagiaires/2023_Faty_M2/csv 3D/image_3D/base/"+t['labels'].values[j]+"couleur_E_bruit"+t['image'].values[j].split('/')[-1]
-    fichier5.append(f)
-    labels5.append(t['labels'].values[j])
-    plt.show()
-## Creation de la base de données
-base=np.transpose(pd.DataFrame([fichier,labels]))
-base1=np.transpose(pd.DataFrame([fichier1,labels1]))
-base2=np.transpose(pd.DataFrame([fichier2,labels2]))
-base3=np.transpose(pd.DataFrame([fichier3,labels3]))
-base4=np.transpose(pd.DataFrame([fichier4,labels4]))
-base5=np.transpose(pd.DataFrame([fichier5,labels5]))
-base=pd.concat([base,base1,base2,base3,base4,base5],axis=0)
-base.columns=['image','labels']
-base['labels'].value_counts().plot.bar()
-base=base[base.duplicated()!=True]
-
-## Séparer la base train et de validation
-
-train_df, validate_df = train_test_split(base, test_size=0.3)
-train_df = train_df.reset_index()
-validate_df = validate_df.reset_index()
-total_train = train_df.shape[0]
-total_validate = validate_df.shape[0]
-
-## Creation modéle pré_entrainer 
-
-image_size = 224
-input_shape = (image_size, image_size, 3)
-epochs = 30
-batch_size = 10
-pre_trained_model = VGG16(input_shape=input_shape, include_top=False, weights="imagenet")
-
-for layer in pre_trained_model.layers[:15]:
-    layer.trainable = False
-for layer in pre_trained_model.layers[15:]:
-    layer.trainable = True
-last_layer = pre_trained_model.get_layer('block5_pool')
-last_output = last_layer.output
-# Flatten la couche de sortie 1 dimension
-x = GlobalMaxPooling2D()(last_output)
-# # Ajoutez une couche entièrement connectée avec 512 unités cachées et activation ReLU
-x = Dense(512, activation='relu')(x)
-# ajouter un taux d'abandon 0.5
-x = Dropout(0.5)(x)
-# il faut donner le nombre de classe et ajouter l'activation sigmoid
-x = layers.Dense(4, activation='sigmoid')(x)
-
-model = Model(pre_trained_model.input, x)
-model.compile(loss='binary_crossentropy',
-              optimizer=optimizers.SGD(lr=1e-4, momentum=0.9),
-              metrics=['accuracy'])
-train_datagen = ImageDataGenerator(
-    rotation_range=15,
-    rescale=1./255,
-    shear_range=0.2,
-    zoom_range=0.2,
-    horizontal_flip=True,
-    fill_mode='nearest',
-    width_shift_range=0.1,
-    height_shift_range=0.1
-)
-train_generator = train_datagen.flow_from_dataframe(
-    train_df,
-    x_col='image',
-    y_col='labels',
-    target_size=(image_size, image_size),
-    batch_size=batch_size
-)
-validation_datagen = ImageDataGenerator(rescale=1./255)
-validation_generator = validation_datagen.flow_from_dataframe(
-    validate_df,
-    x_col='image',
-    y_col='labels',
-    target_size=(image_size, image_size),
-    batch_size=batch_size
-)
-
-history = model.fit(
-    train_generator,
-    epochs=epochs,
-    validation_data=validation_generator,validation_steps=total_validate//batch_size,
-    steps_per_epoch=total_train//batch_size)
-
-## graphe des performances
-def plot_model_history(model_history, acc ='accuracy', val_acc='val_accuracy'):
-    fig, axs = plt.subplots(1,2,figsize=(15,5))
-    axs[0].plot(range(1,len(model_history.history[acc])+1),model_history.history[acc])
-    axs[0].plot(range(1,len(model_history.history[val_acc])+1),model_history.history[val_acc])
-    axs[0].set_title('Model Accuracy')
-    axs[0].set_ylabel('Accuracy')
-    axs[0].set_xlabel('Epoch')
-    #axs[0].set_xticks(np.arange(1,len(model_history.history[acc])+1),len(model_history.history[acc])/10)
-    axs[0].legend(['train', 'val'], loc='best')
-    axs[1].plot(range(1,len(model_history.history['loss'])+1),model_history.history['loss'])
-    axs[1].plot(range(1,len(model_history.history['val_loss'])+1),model_history.history['val_loss'])
-    axs[1].set_title('Model Loss')
-    axs[1].set_ylabel('Loss')
-    axs[1].set_xlabel('Epoch')
-    #axs[1].set_xticks(np.arange(1,len(model_history.history['loss'])+1),len(model_history.history['loss'])/10)
-    axs[1].legend(['train', 'val'], loc='best')
-    plt.show()
-    
-plot_model_history(history)
-
-## Prédiction des images 
-from tensorflow.keras.preprocessing import image
-from PIL import Image
-food_list=base['labels'].unique()
-def predict_class(model, images, show = True):
-    for img in images:
-        img = image.load_img(img, target_size=(224, 224))
-        img = image.img_to_array(img)                    
-        img = np.expand_dims(img, axis=0)         
-        img /= 255.                                      
-
-        pred = model.predict(img)
-        index = np.argmax(pred)
-        food_list.sort()
-        pred_value = food_list[index]
-        if show:
-            plt.imshow(img[0])                           
-            plt.axis('off')
-            plt.title(pred_value)
-            plt.show()
-        print(pred,index,pred_value)
-
-
-## Enregistrer le model 
-model.save('Z:/1_Data/1_Experiments/1_FENNEC/2_Stagiaires/2023_Faty_M2/csv 3D/model_final3.pkl')'''
-    st.code(code,language="python")
-    
-    st.markdown("# code Quantification")
-    code='''#!/usr/bin/env python
+    if col4.button("# Quantification "):
+        st.markdown('# <h1 style="text-align: center;">Quantification </h1>',unsafe_allow_html=True) 
+        code='''#!/usr/bin/env python
 # coding: utf-8
 
 # In[1]:
@@ -3139,17 +2630,18 @@ r2.style.background_gradient(cmap="Purples")
 
 
 '''
-    st.code(code,language="python")
+        st.code(code,language="python")
 
    
 
 
 page_names_to_funcs = {
+    "Home":home,
     "identification": identification,
     "image": image,
     "Quantification": Quantification,
-    "code python":code_python ,
     "lissage et déconvolution":liss_deconv ,
+    "code python":code_python 
 }
 
 selected_page = st.sidebar.selectbox("Selectionner ", page_names_to_funcs.keys())
