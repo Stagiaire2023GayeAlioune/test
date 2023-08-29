@@ -1,5 +1,5 @@
 absl-py==1.4.0
-opencv_version = "4.7.0.72"
+opencv_version ==?
 aionotify==0.2.0
 alabaster==0.7.13
 alembic==1.11.1
