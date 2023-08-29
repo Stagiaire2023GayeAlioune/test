@@ -961,10 +961,10 @@ def liss_deconv():
         from pathlib import Path    
         st.write("Nouvelle base de donnée")
         st.write(df_dp)
-	clf=[]    
+	clf=[]  
 	df_dp=df_dp[df_dp.columns[2:]]
 	for k in len(df_dp.columns):
-            clf.append(df_dp[df_dp.columns[0]][k].split(',')[0])	
+            clf.append('df_dp[df_dp.columns[0]][k].split(',')[0]')	
 	df_dp['clf']=clf	
 	st.write("Concatener la base de donnée avec la nouvelle base de donnée")
 	filepath=Path("Z:/1_Data/1_Experiments/1_FENNEC/2_Stagiaires/2023_Alioune/Identification_2023/machine_Learning/base_de_donnee/csv_Melange de polluant/base de donnée/ma_base.csv")
