@@ -911,7 +911,8 @@ def liss_deconv():
                np.inf,np.inf,born[3][1],np.inf]
             bounds = (bounds_lower, bounds_upper)  
             return(bounds)
-        
+        df_dp=pd.DataFrame(columns = ['Fichier','Type','A1','M1','E1','C1','A2',
+                                  'M2','E2','C2','A3','M3','E3','C3','A4','M4','E4','C4'])
         for uploaded_file in uploaded_files:
             df = pd.read_csv(uploaded_file, delimiter=";") 
             for i in df.columns:
@@ -941,8 +942,6 @@ def liss_deconv():
                 if (len(bor)==4):
                    borne.append(bor)
             bounds=interval(borne)
-            df_dp=pd.DataFrame(columns = ['Fichier','Type','A1','M1','E1','C1','A2',
-                                  'M2','E2','C2','A3','M3','E3','C3','A4','M4','E4','C4'])
             for i in range(int(len(df.columns)/2)):
                 x=df[df.columns[0]]
                 y=df[df.columns[2*i+1]]/max(df[df.columns[2*i+1]]); # 
