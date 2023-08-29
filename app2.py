@@ -1,4 +1,4 @@
-# Contents of ~/my_app/streamlit_app.py
+## Contents of ~/my_app/streamlit_app.py
 import streamlit as st
 from PIL import Image, ImageOps
 import ydata_profiling   
@@ -21,7 +21,7 @@ from keras import optimizers
 from keras.applications import VGG16
 from keras.models import Model
 import os;
-import cv2 
+import cv2;
 import seaborn as sns
 from PIL import Image
 from tensorflow import keras
@@ -61,8 +61,9 @@ from colorama import init, Style
 from termcolor import colored
 import streamlit as st
 
-url ="https://www.linkedin.com/in/alioune-gaye-1a5161172/"
-url2="https://github.com/Stagiaire2023GayeAlioune"
+
+url = "https://www.linkedin.com/in/sokhna-faty-bousso-110891190/"
+url2="https://github.com/Fatybousso"
 @st.cache_data
 def load_data(file):
     data=pd.read_csv(file)
@@ -79,7 +80,7 @@ def home():
     st.sidebar.image("https://th.bing.com/th/id/OIP.hxQSgpDEPe0xWlxVsLqxFQHaCm?w=346&h=123&c=7&r=0&o=5&dpr=1.5&pid=1.7", use_column_width=True)
     
     st.write('          ')
-    st.sidebar.write("<p style='text-align: center;'> Alioune Gaye: Stagiaire ILM %s</p>" % url, unsafe_allow_html=True)
+    st.sidebar.write("<p style='text-align: center;'> Sokhna Faty Bousso : Stagiaire ILM %s</p>" % url, unsafe_allow_html=True)
     st.sidebar.write( "<p style='text-align: center;'> Github : %s</p>" % url2, unsafe_allow_html=True)
     col3,col4=st.columns(2)
     col3.image("t1.png")
@@ -99,7 +100,7 @@ def identification():
         col3,col4=st.sidebar.columns(2)
         col3.image("https://ilm.univ-lyon1.fr/templates/mojito/images/logo.jpg", use_column_width=True)
         col4.image("https://formation-professionnelle.universite-lyon.fr/var/site/storage/images/3/3/5/0/533-17-fre-FR/Lyon-1-Claude-Bernard.png", use_column_width=True)
-        st.sidebar.write("<p style='text-align: center;'> Alioune Gaye : Stagiaire ILM %s</p>" % url, unsafe_allow_html=True)
+        st.sidebar.write("<p style='text-align: center;'> Sokhna Faty Bousso : Stagiaire ILM %s</p>" % url, unsafe_allow_html=True)
         st.sidebar.write( "<p style='text-align: center;'> Github : %s</p>" % url2, unsafe_allow_html=True)
         st.sidebar.write("<p style='text-align: center;'>Apprentissage par régression ou classification.</p>", unsafe_allow_html=True)
         st.sidebar.markdown("<p style='text-align: center;'>Nous allons procéder comme suit :</p>", unsafe_allow_html=True)
@@ -216,7 +217,7 @@ def image():
     st.sidebar.image("RNN.png")
     st.markdown("# image 3D ❄️")
     #st.sidebar.markdown('<h1 style="text-align: center;">Identification d\'images ❄️ </h1>', unsafe_allow_html=True)
-    st.sidebar.write("<p style='text-align: center;'> Alioune Gaye : Stagiaire ILM %s</p>" % url, unsafe_allow_html=True)
+    st.sidebar.write("<p style='text-align: center;'> Sokhna Faty Bousso : Stagiaire ILM %s</p>" % url, unsafe_allow_html=True)
     st.sidebar.write( "<p style='text-align: center;'> Github : %s</p>" % url2, unsafe_allow_html=True)
     # Création du modèle Keras
     st.sidebar.markdown("<p style='text-align: center;'> Création du modèle Keras </p>", unsafe_allow_html=True)
@@ -241,8 +242,10 @@ def image():
     #st.sidebar.code("model.compile(optimizer='adam', loss='sparse_categorical_crossentropy', metrics=['accuracy'])")
     st.sidebar.markdown("<p style='text-align: center;'> Nous utilisons l'optimiseur Adam et la fonction de perte 'sparse_categorical_crossentropy' car les étiquettes sont encodées sous forme d'entiers.</p>", unsafe_allow_html=True)    
     from keras.models import load_model
+    from tensorflow.keras.models import load_model
     st.markdown('<h1 style="text-align: center;">Prédiction image 3D </h1>', unsafe_allow_html=True)
-    model = load_model('model_final2.pkl')
+    
+    model = load_model("model_2.h5")
     f=np.array(['ATMP+DTPMP', 'DTPMP', 'DTPMP+DTPA', 'EDTA'])
     from PIL import Image
     from tensorflow.keras.preprocessing import image
@@ -511,7 +514,7 @@ def Quantification():
         col3,col4=st.sidebar.columns(2)
         col3.image("https://ilm.univ-lyon1.fr/templates/mojito/images/logo.jpg", use_column_width=True)
         col4.image("https://formation-professionnelle.universite-lyon.fr/var/site/storage/images/3/3/5/0/533-17-fre-FR/Lyon-1-Claude-Bernard.png", use_column_width=True)
-        st.sidebar.write("<p style='text-align: center;'> Alioune Gaye : Stagiaire ILM %s</p>" % url, unsafe_allow_html=True)
+        st.sidebar.write("<p style='text-align: center;'> Sokhna Faty Bousso : Stagiaire ILM %s</p>" % url, unsafe_allow_html=True)
         st.sidebar.write( "<p style='text-align: center;'> Github : %s</p>" % url2, unsafe_allow_html=True)
         st.sidebar.write("<p style='text-align: center;'>  Mélange de polluants  </p>", unsafe_allow_html=True)
         st.sidebar.markdown("<p style='text-align: center;'>1 - Méthode mono_exponentielle : </p>", unsafe_allow_html=True)
@@ -911,12 +914,9 @@ def liss_deconv():
                np.inf,np.inf,born[3][1],np.inf]
             bounds = (bounds_lower, bounds_upper)  
             return(bounds)
-        Basse=pd.DataFrame()
+        
         for uploaded_file in uploaded_files:
-	    file=get_image_path(uploaded_file)
-	    delim=find_delimiter(file)
-	    
-            df = pd.read_csv(uploaded_file, delimiter=delim) 
+            df = pd.read_csv(uploaded_file, delimiter=";") 
             for i in df.columns:
                 if (df[i].isnull()[0]==True): # On elimine les colonnes vides
                     del df[i];
@@ -944,7 +944,7 @@ def liss_deconv():
                 if (len(bor)==4):
                    borne.append(bor)
             bounds=interval(borne)
-	    df_dp=pd.DataFrame(columns = ['Fichier','Type','A1','M1','E1','C1','A2',
+            df_dp=pd.DataFrame(columns = ['Fichier','Type','A1','M1','E1','C1','A2',
                                   'M2','E2','C2','A3','M3','E3','C3','A4','M4','E4','C4'])
             for i in range(int(len(df.columns)/2)):
                 x=df[df.columns[0]]
@@ -961,30 +961,15 @@ def liss_deconv():
                                       'M2':pop1[4],'E2':pop1[5],'C2':c2,'A3':pop1[6],'M3':pop1[7],
                                       'E3':pop1[8],'C3':c3,'A4':pop1[9],'M4':pop1[10],'E4':pop1[11],
                                       'C4':c4},ignore_index=True)
-	    Basse=pd.concat([df_dp, Basse], ignore_index=True)
-	Basse.index=range(len(Basse))
-	df_dp=Basse       
-	st.write(df_dp)	    
-        st.write("Nouvelle base de donnée")
-	df_dp=df_dp[df_dp.columns[2:]]
-	for k in len(df_dp.columns):
-            clf.append('df_dp[df_dp.columns[0]][k].split(',')[0]')	
-	df_dp['clf']=clf	
-	st.write("Concatener la base de donnée avec la nouvelle base de donnée")
-	filepath=Path("Z:/1_Data/1_Experiments/1_FENNEC/2_Stagiaires/2023_Alioune/Identification_2023/machine_Learning/base_de_donnee/csv_Melange de polluant/base de donnée/ma_base.csv")
-        filepath.parent.mkdir(parents=True, exist_ok=True)	
-	base=pd.read_csv("Z:/1_Data/1_Experiments/1_FENNEC/2_Stagiaires/2023_Alioune/Identification_2023/machine_Learning/base_de_donnee/csv_Melange de polluant/base de donnée/ma_base.csv")
-	base.drop(base.columns[0],axis=1,inplace=True)
-	base_de_donnee_modif=pd.concat([df_dp, base], ignore_index=True)	
-	base_de_donnee_modif.to_csv(filepath,index=False)	    
-	st.download_button('Enregistrer votre base de donne en CSV',base_de_donnee_modif)	
-	        
+            st.write("Création de la base de donnée")
+            st.write(df_dp)
+    
     
     if __name__ == "__main__":
         main()
 
 def code_python():
-    st.sidebar.write("<p style='text-align: center;'> Alioune Gaye : Stagiaire ILM %s</p>" % url, unsafe_allow_html=True)
+    st.sidebar.write("<p style='text-align: center;'> Sokhna Faty Bousso : Stagiaire ILM %s</p>" % url, unsafe_allow_html=True)
     st.sidebar.write( "<p style='text-align: center;'> Github : %s</p>" % url2, unsafe_allow_html=True)
     col1,col2=st.columns(2)
     col3,col4=st.columns(2)
@@ -1382,7 +1367,8 @@ X_train.head()
     if col3.button("# code Image 3D"):  
         st.markdown('# <h1 style="text-align: center;"> code Image 3D </h1>',unsafe_allow_html=True)    
         code=''' 
-
+from tkinter import filedialog
+from tkinter import *
 import seaborn as sns
 import plotly.graph_objs as go
 from plotly.offline import init_notebook_mode, iplot
@@ -1643,6 +1629,8 @@ import scipy.integrate as spi
 from sklearn import preprocessing
 from scipy import stats
 from sklearn.linear_model import LinearRegression
+from tkinter import *
+from tkinter import filedialog
 from sklearn.preprocessing import StandardScaler
 import statsmodels.api as sm
 import statsmodels.formula.api as smf
