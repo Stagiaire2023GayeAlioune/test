@@ -961,7 +961,7 @@ def liss_deconv():
         from pathlib import Path    
         st.write("Nouvelle base de donnée")
         st.write(df_dp)
-	clf=[]  
+	clf=['']  
 	df_dp=df_dp[df_dp.columns[2:]]
 	for k in len(df_dp.columns):
             clf.append('df_dp[df_dp.columns[0]][k].split(',')[0]')	
