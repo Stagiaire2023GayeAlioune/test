@@ -20,7 +20,6 @@ from keras import optimizers
 from keras.applications import VGG16
 from keras.models import Model
 import os;
-import cv2 
 import seaborn as sns
 from PIL import Image
 from tensorflow import keras
