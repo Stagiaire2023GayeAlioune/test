@@ -80,7 +80,6 @@ def home():
     
     st.write('          ')
     st.sidebar.write("<p style='text-align: center;'> Alioune Gaye: Stagiaire ILM %s</p>" % url, unsafe_allow_html=True)
-    st.sidebar.write( "<p style='text-align: center;'> Github : %s</p>" % url2, unsafe_allow_html=True)
     col3,col4=st.columns(2)
     col3.image("t1.png")
     col4.image("t2.png")
@@ -216,7 +215,6 @@ def image():
     st.markdown("# image 3D ❄️")
     #st.sidebar.markdown('<h1 style="text-align: center;">Identification d\'images ❄️ </h1>', unsafe_allow_html=True)
     st.sidebar.write("<p style='text-align: center;'> Alioune Gaye : Stagiaire ILM %s</p>" % url, unsafe_allow_html=True)
-    st.sidebar.write( "<p style='text-align: center;'> Github : %s</p>" % url2, unsafe_allow_html=True)
     # Création du modèle Keras
     st.sidebar.markdown("<p style='text-align: center;'> Création du modèle Keras </p>", unsafe_allow_html=True)
     st.sidebar.markdown("<p style='text-align: center;'> Voici les principales couches du modèle : </p>", unsafe_allow_html=True)
@@ -979,7 +977,6 @@ def liss_deconv():
 
 def code_python():
     st.sidebar.write("<p style='text-align: center;'> Alioune Gaye : Stagiaire ILM %s</p>" % url, unsafe_allow_html=True)
-    st.sidebar.write( "<p style='text-align: center;'> Github : %s</p>" % url2, unsafe_allow_html=True)
     col1,col2=st.columns(2)
     col3,col4=st.columns(2)
     
