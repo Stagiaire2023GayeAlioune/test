@@ -62,13 +62,13 @@ from termcolor import colored
 import streamlit as st
 
 
-url = "https://www.linkedin.com/in/sokhna-faty-bousso-110891190/"
+url ="https://www.linkedin.com/in/alioune-gaye-1a5161172/"
 url2="https://github.com/Fatybousso"
 @st.cache_data
 def load_data(file):
     data=pd.read_csv(file)
     return data
-
+	
 def home():
     st.markdown('<h1 style="text-align: center;"> VAI-TRF </h1>', unsafe_allow_html=True)
     st.markdown(' <h2 style="text-align: center;"> Validation of Artificial Intelligence Time-Resolved Fluorescence method for the real-time monitoring of critical pollutants in industrial and municipal effluents </h2>', unsafe_allow_html=True)
@@ -88,7 +88,6 @@ def home():
     col5,col6=st.columns(2)
     col5.image("t3.png")
     col6.image("t4.png")
-
 
 
 def identification():
@@ -285,8 +284,6 @@ def image():
     st.image("https://ilm.univ-lyon1.fr//images/slides/SLIDER7.png")
     
    
-
-
 def Quantification():
     st.markdown('<h1 style="text-align: center;"> Quantification du polluants 🎉 </h1>', unsafe_allow_html=True)
     st.sidebar.markdown('<h1 style="text-align: center;"> Quantification du polluants 🎉 </h1>', unsafe_allow_html=True)
@@ -982,7 +979,7 @@ def liss_deconv():
         main()
 
 def code_python():
-    st.sidebar.write("<p style='text-align: center;'> Sokhna Faty Bousso : Stagiaire ILM %s</p>" % url, unsafe_allow_html=True)
+    st.sidebar.write("<p style='text-align: center;'> Alioune Gaye : Stagiaire ILM %s</p>" % url, unsafe_allow_html=True)
     st.sidebar.write( "<p style='text-align: center;'> Github : %s</p>" % url2, unsafe_allow_html=True)
     col1,col2=st.columns(2)
     col3,col4=st.columns(2)
@@ -1519,8 +1516,6 @@ base2.columns=['image','labels']
     tf.keras.layers.Conv2D(32, (3, 3), activation = 'relu'),
     tf.keras.layers.MaxPooling2D(2,2),
     tf.keras.layers.Flatten(),
-    
-    
     tf.keras.layers.Dense(128, activation=tf.nn.relu),
     tf.keras.layers.Dense(4, activation=tf.nn.softmax)
 ])
