@@ -976,21 +976,7 @@ def liss_deconv():
             Base=pd.concat([df_dp,Base])
         st.write("Création de la base de donnée")
         st.write(Base)
-	Base=Base[Base.columns[2:]]
-	    clf=[]
-	for k in len(Base.columns):
-	    clf.append('Base[Base.columns[0]][k].split(',')[0])
-	Base['clf']=clf	       
-	       
-	from pathlib import Path
-        file=pd.read_csv("Z:/1_Data/1_Experiments/1_FENNEC/2_Stagiaires/2023_Alioune/Identification_2023/machine_Learning/base_de_donnee/csv_Melange de polluant/base de donnée/ma_base.csv")
-        ma_base=pd.concat([file,Base],ignore_index=True)
-	filepath=Path("Z:/1_Data/1_Experiments/1_FENNEC/2_Stagiaires/2023_Alioune/Identification_2023/machine_Learning/base_de_donnee/csv_Melange de polluant/base de donnée/ma_base.csv")
-	filepath.parent.mkdir(parents=True,exist_ok=True)
-	ma_base.to_csv(filpath,index=False)
-	
-	
-    
+	           
     
     if __name__ == "__main__":
         main()
