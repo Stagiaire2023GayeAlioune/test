@@ -110,7 +110,7 @@ def identification():
         if file is not None:
             df=load_data(file)
             #type=st.selectbox("selectionner le target",["Homogene","Heterogene"])
-            df=df[df.columns[1:]]
+            df=df[df.columns[0:]]
             n=len(df.columns)
             df=df[df[df.columns[:(n-1)]].duplicated()!=True]
             n=len(df.columns)
