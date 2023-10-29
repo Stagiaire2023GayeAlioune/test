@@ -15,7 +15,7 @@ def main():
     st.sidebar.write("<p style='text-align: center;'>Automatisation de l'emploi du temps de ma princesse</p>", unsafe_allow_html=True)
     methode1=st.selectbox("selectionner l'heure que tu termine les cours demain",("Weekend","8","9","10","11","12","13","14","15","16","17","18"))
     methode2=st.selectbox("Est ce que tu iras au boulot demain?",("Oui","Non"))   
-    if methode1=="8" or "9" or "10" or "11" or "12" or "13" or "14" or "15" or "16" or "17" or "18" and methode1!="Weekend" and methode1!="18": 
+    if methode1=="8" or methode1=="9" or methode1=="10" or methode1=="11" or methode1=="12" or methode1=="13" or methode1=="14" or methode1=="15" or methode1=="16" or methode1=="17" or methode1=="18": 
         if methode2=="Non":
             st.write("Ma cherie, demain tu va rester à la BU pour apprendre les cours, TD ou Tp que tu aura aprés demain et tu rentrera a la maison vers 20h merci:")
         if methode2=="Oui":  
