@@ -8,17 +8,13 @@ import pandas_profiling
 
 from streamlit_pandas_profiling import st_profile_report
 
-
-
-@st.cache_data
-
 def main():
     st.markdown('<h1 style="text-align: center;">Emploie du temps</h1>', unsafe_allow_html=True)
     col3,col4=st.sidebar.columns(2)
     #st.sidebar.write("<p style='text-align: center;'> Sokhna Faty Bousso : Stagiaire ILM (%s)</p>" % url, unsafe_allow_html=True)
     st.sidebar.write("<p style='text-align: center;'>Automatisation de l'emploi du temps de ma princesse</p>", unsafe_allow_html=True)
-    methode1=st.selectbox("selectionner l'heure que tu termine les cours demain",["Week-end","8","9","10","11","12","13","14","15","16","17","18"])
-    methode2=st.selectbox("Est ce que tu iras au boulot demain?",["Oui","Non"])
+    methode1=st.selectbox("selectionner l'heure que tu termine les cours demain",("Week-end","8","9","10","11","12","13","14","15","16","17","18"))
+    methode2=st.selectbox("Est ce que tu iras au boulot demain?",("Oui","Non"))
     if methode1=="8" or "9" or "10" or "11" or "12" or "13" or "14" or "15" or "16" or "17":
         if methode2=="Non":
             st.write("Ma cherie, demain tu va rester à la BU pour apprendre les cours, TD ou Tp que tu aura aprés demain et tu rentrera a la maison vers 20h merci:")
