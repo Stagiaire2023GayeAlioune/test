@@ -20,11 +20,11 @@ def main():
             st.write("Ma cherie, demain tu va rester à la BU pour apprendre les cours, TD ou Tp que tu aura aprés demain et tu rentrera a la maison vers 20h merci:")
         if methode2=="Oui":  
             st.write("Demain Tu rentre aprés les cours pour aller au boulot. Bon courage et prend bien soin de toi merci")   
-    else if methode1=="Weekend" and methode2=="Non":
+    elif methode1=="Weekend" and methode2=="Non":
         st.write("Demain essaye de te reveiller le plus tot possible pour apprendre les cours, TD ou Tp du lundi si possible du mardi aussi ") 
-    else if methode1=="Weekend" and methode2=="Oui":
+    elif methode1=="Weekend" and methode2=="Oui":
         st.write("Demain, Tu pourras te reposer à condition que tu travail le matin et le soir")
-    else if methode1=="18":
+    elif methode1=="18":
             st.write("Ma princesse, demain tu rentre à la maison aprés les cours")      
             
         #if st.button(" les performances du modèle "):    
