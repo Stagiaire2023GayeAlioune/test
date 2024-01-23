@@ -86,6 +86,8 @@ def home():
     col5,col6=st.columns(2)
     col5.image("t3.png")
     col6.image("t4.png")
+    COL=st.columns(1)
+    COL.image("opentrons.png")
 
 
 def identification():
